@@ -25,7 +25,7 @@ type ModalState = 'input' | 'loading' | 'preview' | 'done';
 export function ImportCVModal({ open, onOpenChange }: ImportCVModalProps) {
   const [state, setState] = useState<ModalState>('input');
   const [rawText, setRawText] = useState('');
-  const [parsedData, setParsedData] = useState<Partial<CVContent> | null>(null);
+  const [parsedData, setParsedData] = useState<CVContent | null>(null);
   const setCurrentCV = useCVStore((s) => s.setCurrentCV);
   const currentCV = useCVStore((s) => s.currentCV);
 

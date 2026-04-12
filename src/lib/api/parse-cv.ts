@@ -1,4 +1,6 @@
-export async function parseCV(rawText: string): Promise<any> {
+import type { CVContent } from '@/types/cv'
+
+export async function parseCV(rawText: string): Promise<CVContent> {
   const response = await fetch('/api/ai/parse-cv', {
     method: 'POST',
     headers: {
@@ -13,5 +15,5 @@ export async function parseCV(rawText: string): Promise<any> {
     throw new Error(result.error || 'Erreur lors de l\'analyse du CV');
   }
 
-  return result.data;
+  return result.data as CVContent;
 }
