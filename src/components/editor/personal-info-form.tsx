@@ -4,6 +4,10 @@ import { useEffect, useRef } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Sparkles, UserCircle, X, Camera } from "lucide-react"
+import { useState } from "react"
+import { toast } from "sonner"
+import { enhanceSummary } from "@/lib/api/enhance"
+import { Loader2 } from "lucide-react"
 
 import { personalInfoSchema, type PersonalInfo } from "@/types/cv"
 import { useCVStore } from "@/store/cv-store"
@@ -23,6 +27,7 @@ import { Button } from "@/components/ui/button"
 export function PersonalInfoForm() {
   const { currentCV, updatePersonalInfo, setPhoto, removePhoto } = useCVStore()
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [isEnhancing, setIsEnhancing] = useState(false)
   
   const form = useForm<PersonalInfo>({
     resolver: zodResolver(personalInfoSchema),
@@ -254,17 +259,36 @@ export function PersonalInfoForm() {
                 <FormItem className="md:col-span-2">
                   <div className="flex items-center justify-between">
                     <FormLabel>Résumé professionnel</FormLabel>
-                    <Button 
+                    <Button disabled={isEnhancing}
                       type="button" 
                       variant="ghost" 
                       size="sm" 
                       className="h-8 text-xs font-semibold text-primary"
                       onClick={() => {
-                        // AI Enhancement logic
+                        const currentSummary = form.getValues("summary") || ""
+                        const jobTitle = form.getValues("jobTitle") || ""
+                        const fullName = form.getValues("fullName") || ""
+
+                        if (!currentSummary && !jobTitle) {
+                          toast.error("Veuillez saisir un poste recherché ou un début de résumé.")
+                          return
+                        }
+
+                        setIsEnhancing(true)
+                        enhanceSummary(currentSummary, jobTitle, fullName)
+                          .then((enhancedText) => {
+                            form.setValue("summary", enhancedText)
+                            updatePersonalInfo({ summary: enhancedText })
+                            toast.success("Résumé amélioré avec succès !")
+                          })
+                          .catch((err) => {
+                            toast.error(err.message || "Erreur lors de l'amélioration du résumé.")
+                          })
+                          .finally(() => setIsEnhancing(false))
                       }}
                     >
-                      <Sparkles className="h-3 w-3 mr-1" />
-                      Améliorer avec l'IA
+                      {isEnhancing ? <Loader2 className="h-3 w-3 mr-1 animate-spin" /> : <Sparkles className="h-3 w-3 mr-1" />}
+                      {isEnhancing ? "Amélioration..." : "Améliorer avec l'IA"}
                     </Button>
                   </div>
                   <FormControl>
