@@ -1,6 +1,10 @@
 "use client"
 
 import { useState, useMemo } from "react"
+import { pdf } from '@react-pdf/renderer'
+import { CVPDFDocument } from '@/components/pdf/pdf-document'
+import { toast } from 'sonner'
+import { Loader2 } from 'lucide-react'
 import { useRouter } from "next/navigation"
 import { 
   Sparkles, 
@@ -48,8 +52,31 @@ export default function NewEditorPage() {
   const { currentCV, isHydrated } = useCVStore()
   const [activeTab, setActiveTab] = useState("personal")
   const [isImportModalOpen, setIsImportModalOpen] = useState(false)
+  const [isGenerating, setIsGenerating] = useState(false)
 
   // Calculate completion progress
+
+  const handleDownloadPDF = async () => {
+    setIsGenerating(true)
+    try {
+      const blob = await pdf(
+        <CVPDFDocument content={currentCV.content} settings={currentCV.settings} />
+      ).toBlob()
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `${currentCV.content.personalInfo.fullName || 'MonCV'}.pdf`
+      link.click()
+      URL.revokeObjectURL(url)
+      toast.success('PDF téléchargé avec succès !')
+    } catch (error) {
+      toast.error('Erreur lors de la génération du PDF')
+    } finally {
+      setIsGenerating(false)
+    }
+  }
+
+  // Load animation check
   const completionPercentage = useMemo(() => {
     if (!currentCV) return 0
     let score = 0
@@ -171,10 +198,12 @@ export default function NewEditorPage() {
               </SheetContent>
             </Sheet>
 
-            <Button disabled className="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold group h-9 px-4 sm:px-6">
-              <Download className="h-4 w-4 mr-2 group-hover:animate-bounce" />
-              <span className="hidden sm:inline">PDF</span>
-              <span className="sm:hidden text-xs">PDF</span>
+            <Button onClick={handleDownloadPDF} disabled={isGenerating} className="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold group h-9 px-4 sm:px-6">
+              {isGenerating ? (
+                <><Loader2 className="h-4 w-4 mr-2 animate-spin" /><span className="hidden sm:inline">Génération...</span></>
+              ) : (
+                <><Download className="h-4 w-4 mr-2 group-hover:animate-bounce" /><span className="hidden sm:inline">Télécharger PDF</span><span className="sm:hidden text-xs">PDF</span></>
+              )}
             </Button>
           </div>
         </div>
