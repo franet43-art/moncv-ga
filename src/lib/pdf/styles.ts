@@ -29,7 +29,7 @@ export const createStyles = (accentColor: string, fontSize: keyof typeof fontSiz
     },
     // Typographic elements
     name: {
-      fontSize: sizes.name,
+      fontSize: sizes.name + 8,
       fontWeight: 'bold',
       color: '#111827',
       marginBottom: 5,
