@@ -19,6 +19,8 @@ import {
 
 import { useCVStore } from "@/store/cv-store"
 import { Button } from "@/components/ui/button"
+import { ImportCVModal } from "@/components/editor/import-cv-modal"
+import { Upload } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { 
@@ -45,6 +47,7 @@ export default function NewEditorPage() {
   const router = useRouter()
   const { currentCV, isHydrated } = useCVStore()
   const [activeTab, setActiveTab] = useState("personal")
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false)
 
   // Calculate completion progress
   const completionPercentage = useMemo(() => {
@@ -119,6 +122,10 @@ export default function NewEditorPage() {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4">
+            <Button variant="outline" size="sm" onClick={() => setIsImportModalOpen(true)} className="hidden sm:flex hover:bg-zinc-100 dark:hover:bg-zinc-800">
+              <Upload className="h-4 w-4 mr-2" />
+              Importer un CV
+            </Button>
             {/* Design Customization Button (Sheet) */}
             <Sheet>
               <SheetTrigger asChild>
@@ -173,6 +180,7 @@ export default function NewEditorPage() {
         </div>
       </header>
 
+      <ImportCVModal open={isImportModalOpen} onOpenChange={setIsImportModalOpen} />
       {/* Main Content Area */}
       <main className="flex-1 max-w-[1600px] mx-auto w-full flex overflow-hidden">
         {/* Left Side: Forms */}
