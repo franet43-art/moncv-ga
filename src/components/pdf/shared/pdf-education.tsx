@@ -5,7 +5,7 @@ import { formatDate } from '@/lib/pdf/helpers'
 
 interface PDFEducationProps {
   education: Education
-  styles: any
+  styles: ReturnType<typeof import("@/lib/pdf/styles").createStyles>
 }
 
 export function PDFEducation({ education, styles }: PDFEducationProps) {

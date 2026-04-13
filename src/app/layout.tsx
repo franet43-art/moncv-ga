@@ -10,22 +10,30 @@ import { Footer } from "@/components/layout/footer";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
+  preload: false,
 });
 
 const merriweather = Merriweather({
   variable: "--font-merriweather",
   subsets: ["latin"],
+  display: "swap",
+  preload: false,
   weight: ["400", "700"],
 });
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
+  display: "swap",
+  preload: false,
 });
 
 const roboto = Roboto({
   variable: "--font-roboto",
   subsets: ["latin"],
+  display: "swap",
+  preload: false,
   weight: ["400", "500", "700"],
 });
 

@@ -46,8 +46,8 @@ export function ImportCVModal({ open, onOpenChange }: ImportCVModalProps) {
       const data = await parseCV(rawText);
       setParsedData(data);
       setState('preview');
-    } catch (error: any) {
-      toast.error(error.message || 'Une erreur est survenue lors de l\'analyse.');
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : 'Une erreur est survenue lors de l\'analyse.');
       setState('input');
     }
   };

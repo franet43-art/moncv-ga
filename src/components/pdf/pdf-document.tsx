@@ -1,3 +1,4 @@
+import "@/lib/pdf/fonts"
 import React from 'react'
 import { Document, Page, StyleSheet } from '@react-pdf/renderer'
 import { CVContent, CVSettings } from '@/types/cv'

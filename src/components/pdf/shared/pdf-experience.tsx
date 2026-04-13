@@ -5,7 +5,7 @@ import { formatDate } from '@/lib/pdf/helpers'
 
 interface PDFExperienceProps {
   experience: Experience
-  styles: any
+  styles: ReturnType<typeof import("@/lib/pdf/styles").createStyles>
 }
 
 export function PDFExperience({ experience, styles }: PDFExperienceProps) {
