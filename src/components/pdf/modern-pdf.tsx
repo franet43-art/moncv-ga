@@ -36,7 +36,7 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
 
         <View style={{ marginBottom: 24, alignItems: 'center' }}>
           <Text style={[styles.name, { color: 'white', textAlign: 'center', marginBottom: 4 }]}>
-            {personalInfo.fullName}
+            {personalInfo.fullName || ''}
           </Text>
           {personalInfo.jobTitle && (
             <Text style={{ 
@@ -47,7 +47,7 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
               textAlign: 'center',
               fontWeight: 'bold'
             }}>
-              {personalInfo.jobTitle}
+              {personalInfo.jobTitle || ''}
             </Text>
           )}
         </View>
@@ -63,9 +63,9 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
           <View style={{ marginBottom: 20 }}>
             <Text style={styles.modernSectionTitle}>Compétences</Text>
             <View style={{ gap: 4 }}>
-              {skills.map(skill => (
+              {(skills || []).map(skill => (
                 <Text key={skill.id} style={[styles.body, { color: 'rgba(255,255,255,0.9)' }]}>
-                  • {skill.name} {skill.level && `(${skill.level})`}
+                  • {skill.name || ''} {skill.level ? `(${skill.level})` : ''}
                 </Text>
               ))}
             </View>
@@ -76,9 +76,9 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
           <View>
             <Text style={styles.modernSectionTitle}>Langues</Text>
             <View style={{ gap: 4 }}>
-              {languages.map(lang => (
+              {(languages || []).map(lang => (
                 <Text key={lang.id} style={[styles.body, { color: 'rgba(255,255,255,0.9)' }]}>
-                  • {lang.name} ({lang.level})
+                  • {lang.name || ''} {lang.level ? `(${lang.level})` : ''}
                 </Text>
               ))}
             </View>
@@ -90,7 +90,7 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
       <View style={styles.modernMain} wrap>
         {personalInfo.summary && (
           <View style={{ marginBottom: 24 }} wrap={false}>
-            <Text style={styles.body}>{personalInfo.summary}</Text>
+            <Text style={styles.body}>{personalInfo.summary || ''}</Text>
           </View>
         )}
 
@@ -103,7 +103,7 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
             }]}>
               Expériences
             </Text>
-            {experiences.map((exp) => (
+            {(experiences || []).map((exp) => (
               <PDFExperience key={exp.id} experience={exp} styles={styles} />
             ))}
           </View>
@@ -118,7 +118,7 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
             }]}>
               Formation
             </Text>
-            {education.map((edu) => (
+            {(education || []).map((edu) => (
               <PDFEducation key={edu.id} education={edu} styles={styles} />
             ))}
           </View>
@@ -134,11 +134,11 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
               Références
             </Text>
             <View style={{ gap: 12 }}>
-              {references.map((ref) => (
+              {(references || []).map((ref) => (
                 <View key={ref.id} wrap={false}>
-                  <Text style={[styles.body, { fontWeight: 'bold' }]}>{ref.name}</Text>
+                  <Text style={[styles.body, { fontWeight: 'bold' }]}>{ref.name || ''}</Text>
                   {(ref.position || ref.company) && (
-                    <Text style={styles.body}>{ref.position} - {ref.company}</Text>
+                    <Text style={styles.body}>{ref.position || ''} {ref.company ? `- ${ref.company}` : ''}</Text>
                   )}
                   {ref.email && <Text style={styles.body}>{ref.email}</Text>}
                   {ref.phone && <Text style={styles.body}>{ref.phone}</Text>}

@@ -21,9 +21,9 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
       {/* Header */}
       <View style={[styles.flexRowBetween, { marginBottom: 20 }]}>
         <View style={{ flex: 1 }}>
-          <Text style={styles.name}>{personalInfo.fullName}</Text>
+          <Text style={styles.name}>{personalInfo.fullName || ''}</Text>
           {personalInfo.jobTitle && (
-            <Text style={styles.jobTitle}>{personalInfo.jobTitle}</Text>
+            <Text style={styles.jobTitle}>{personalInfo.jobTitle || ''}</Text>
           )}
           <View style={styles.gap1}>
             {personalInfo.email && <Text style={styles.body}>{personalInfo.email}</Text>}
@@ -40,7 +40,7 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
       {/* Summary */}
       {personalInfo.summary && (
         <View style={{ marginBottom: 15 }} wrap={false}>
-          <Text style={styles.body}>{personalInfo.summary}</Text>
+          <Text style={styles.body}>{personalInfo.summary || ''}</Text>
         </View>
       )}
 
@@ -48,7 +48,7 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
       {experiences.length > 0 && (
         <View wrap>
           <Text style={styles.sectionTitle}>Expérience Professionnelle</Text>
-          {experiences.map((exp) => (
+          {(experiences || []).map((exp) => (
             <PDFExperience key={exp.id} experience={exp} styles={styles} />
           ))}
         </View>
@@ -58,7 +58,7 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
       {education.length > 0 && (
         <View wrap>
           <Text style={styles.sectionTitle}>Formation</Text>
-          {education.map((edu) => (
+          {(education || []).map((edu) => (
             <PDFEducation key={edu.id} education={edu} styles={styles} />
           ))}
         </View>
@@ -69,9 +69,9 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
         <View wrap={false}>
           <Text style={styles.sectionTitle}>Compétences</Text>
           <View style={[styles.flexRow, { flexWrap: 'wrap', gap: 10 }]}>
-            {skills.map((skill) => (
+            {(skills || []).map((skill) => (
               <Text key={skill.id} style={styles.body}>
-                • {skill.name} {skill.level && `(${skill.level})`}
+                • {skill.name || ''} {skill.level ? `(${skill.level})` : ''}
               </Text>
             ))}
           </View>
@@ -83,9 +83,9 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
         <View wrap={false}>
           <Text style={styles.sectionTitle}>Langues</Text>
           <View style={[styles.flexRow, { flexWrap: 'wrap', gap: 10 }]}>
-            {languages.map((lang) => (
+            {(languages || []).map((lang) => (
               <Text key={lang.id} style={styles.body}>
-                • {lang.name} ({lang.level})
+                • {lang.name || ''} {lang.level ? `(${lang.level})` : ''}
               </Text>
             ))}
           </View>
@@ -97,12 +97,12 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
         <View wrap>
           <Text style={styles.sectionTitle}>Références</Text>
           <View style={{ gap: spacing.md }}>
-            {references.map((ref) => (
+            {(references || []).map((ref) => (
               <View key={ref.id} wrap={false}>
-                <Text style={[styles.body, { fontWeight: 'bold' }]}>{ref.name}</Text>
+                <Text style={[styles.body, { fontWeight: 'bold' }]}>{ref.name || ''}</Text>
                 {(ref.position || ref.company) && (
                   <Text style={styles.body}>
-                    {ref.position} {ref.position && ref.company && 'chez '} {ref.company}
+                    {ref.position || ''} {ref.position && ref.company && 'chez '} {ref.company || ''}
                   </Text>
                 )}
                 {ref.email && <Text style={styles.body}>{ref.email}</Text>}

@@ -99,6 +99,7 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
         toast.success('PDF téléchargé avec succès !')
       }
     } catch (error) {
+      console.error('Erreur React-PDF détaillée:', error)
       toast.error('Erreur lors de la génération du PDF')
     } finally {
       setIsGenerating(false)
