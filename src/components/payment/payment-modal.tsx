@@ -101,9 +101,15 @@ export function PaymentModal({ isOpen, onClose, cvId, onAlreadyPaid }: PaymentMo
       }
 
       if (data.already_paid) {
-        toast.info("Ce CV a déjà été payé.")
-        onAlreadyPaid()
-        onClose()
+        // Redirect to the polling page which will detect is_paid=true (set by Fix 2 in the API)
+        // and show the success UI with the real PDF download button.
+        if (cvId) {
+          window.location.href = `/payment/return?cv_id=${cvId}`
+        } else {
+          toast.info("Ce CV a déjà été payé.")
+          onAlreadyPaid()
+          onClose()
+        }
         return
       }
 

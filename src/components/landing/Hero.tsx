@@ -39,7 +39,7 @@ export function Hero() {
               className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-12"
             >
               <Button size="lg" className="h-14 px-8 text-lg font-semibold" asChild>
-                <Link href="/editor/new">Create My CV — It's Free</Link>
+                <Link href="/editor/new?reset=true">Create My CV — It's Free</Link>
               </Button>
               <Button size="lg" variant="outline" className="h-14 px-8 text-lg font-semibold" asChild>
                 <Link href="#templates">See Templates</Link>

@@ -145,7 +145,7 @@ export function DashboardContent() {
           </p>
         </div>
         <Button asChild className="bg-primary text-primary-foreground shadow-lg shadow-primary/20">
-          <Link href="/editor/new">
+          <Link href="/editor/new?reset=true">
             <Plus className="mr-2 h-4 w-4" />
             Créer un nouveau CV
           </Link>
@@ -162,7 +162,7 @@ export function DashboardContent() {
             Créez votre premier CV professionnel en quelques minutes avec nos templates optimisés par l'IA.
           </p>
           <Button asChild className="mt-8 px-8">
-            <Link href="/editor/new">Créer mon premier CV</Link>
+            <Link href="/editor/new?reset=true">Créer mon premier CV</Link>
           </Button>
         </div>
       ) : (

@@ -88,7 +88,18 @@ export async function POST(req: Request) {
     }
 
     if (resData.step === 'completed') {
-      // Free product or instant completion
+      // Free product or instant completion — mark as paid in DB so polling works
+      const { error: updateError } = await supabase
+        .from('cvs')
+        .update({ is_paid: true })
+        .eq('id', cvId)
+        .eq('user_id', user.id) // extra safety guard
+
+      if (updateError) {
+        console.error('Failed to mark CV as paid:', updateError)
+        // Non-blocking: still return success to frontend
+      }
+
       return NextResponse.json({ already_paid: true })
     }
 

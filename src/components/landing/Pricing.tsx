@@ -75,7 +75,7 @@ export function Pricing() {
               <CardFooter className="px-8 pb-10">
                 <div className="w-full space-y-4 text-center">
                   <Button asChild size="lg" className="w-full h-14 text-lg font-bold">
-                    <Link href="/editor/new">Start Building Now</Link>
+                    <Link href="/editor/new?reset=true">Start Building Now</Link>
                   </Button>
                   <p className="text-xs text-muted-foreground">
                     What you see is what you get — no subscriptions, no hidden fees.

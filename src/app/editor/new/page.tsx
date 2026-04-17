@@ -1,11 +1,11 @@
 "use client"
 
-import { useState, useMemo, useEffect } from "react"
+import { useState, useMemo, useEffect, Suspense } from "react"
 import { pdf } from '@react-pdf/renderer'
 import { CVPDFDocument } from '@/components/pdf/pdf-document'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { 
   Sparkles, 
   ChevronLeft, 
@@ -52,8 +52,9 @@ import { CVPreview } from "@/components/editor/cv-preview"
 import { PaymentModal } from "@/components/payment/payment-modal"
 import { cn } from "@/lib/utils"
 
-export default function NewEditorPage({ initialCvId }: { initialCvId?: string }) {
+function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { currentCV, isHydrated } = useCVStore()
   const { user } = useAuth()
   const [activeTab, setActiveTab] = useState("personal")
@@ -65,12 +66,14 @@ export default function NewEditorPage({ initialCvId }: { initialCvId?: string })
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
   const { resetCV } = useCVStore()
 
-  // Reset store if it's a new CV
+  // Reset store ONLY when the user explicitly requests a new CV via ?reset=true.
+  // This prevents wiping the store when the user comes back from login
+  // via ?next=/editor/new (which never carries ?reset=true).
   useEffect(() => {
-    if (!initialCvId) {
+    if (!initialCvId && searchParams.get('reset') === 'true') {
       resetCV()
     }
-  }, [initialCvId, resetCV])
+  }, [initialCvId, searchParams, resetCV])
 
   // Calculate completion progress
 
@@ -395,5 +398,22 @@ export default function NewEditorPage({ initialCvId }: { initialCvId?: string })
         </div>
       </footer>
     </div>
+  )
+}
+
+export default function NewEditorPage({ initialCvId }: { initialCvId?: string }) {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex h-screen w-full items-center justify-center bg-zinc-50 dark:bg-zinc-950">
+          <div className="flex flex-col items-center gap-4 text-center">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+            <p className="text-sm font-medium text-muted-foreground">Chargement de votre éditeur...</p>
+          </div>
+        </div>
+      }
+    >
+      <NewEditorInner initialCvId={initialCvId} />
+    </Suspense>
   )
 }

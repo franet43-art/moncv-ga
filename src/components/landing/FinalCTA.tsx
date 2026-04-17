@@ -30,7 +30,7 @@ export function FinalCTA() {
               Join thousands of professionals who have used MonCV to land their perfect roles. Start your journey today.
             </p>
             <Button asChild size="lg" className="h-14 px-10 text-lg font-bold shadow-lg shadow-primary/20 hover:scale-105 transition-transform">
-              <Link href="/editor/new">Create My CV Now — It's Free</Link>
+              <Link href="/editor/new?reset=true">Create My CV Now — It's Free</Link>
             </Button>
           </motion.div>
         </div>

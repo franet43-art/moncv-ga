@@ -30,7 +30,7 @@ export function UserMenu() {
           <Link href="/login">Se connecter</Link>
         </Button>
         <Button size="sm" asChild className="hidden sm:inline-flex bg-primary text-primary-foreground hover:bg-primary/90">
-          <Link href="/editor/new">Créer un CV</Link>
+          <Link href="/editor/new?reset=true">Créer un CV</Link>
         </Button>
       </div>
     )
@@ -71,7 +71,7 @@ export function UserMenu() {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild className="cursor-pointer">
-          <Link href="/editor/new" className="flex items-center">
+          <Link href="/editor/new?reset=true" className="flex items-center">
             <Plus className="mr-2 h-4 w-4" />
             <span>Nouveau CV</span>
           </Link>
