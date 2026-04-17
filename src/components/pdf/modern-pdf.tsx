@@ -161,12 +161,7 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
             {education.map((edu) => (
               <View key={edu.id} style={{ marginBottom: 12 }}>
                 <Text style={[baseStyles.body, { fontWeight: 700 }]}>{sanitizeForPDF(edu.degree)}</Text>
-                <Text style={[baseStyles.body, { fontWeight: 600 }]}>{sanitizeForPDF(edu.school)}</Text>
-                {edu.description && (
-                  <View style={{ width: '100%', marginTop: 2 }}>
-                    <Text style={baseStyles.body}>{sanitizeForPDF(edu.description)}</Text>
-                  </View>
-                )}
+                <Text style={[baseStyles.body, { fontWeight: 600 }]}>{sanitizeForPDF(edu.institution)}</Text>
               </View>
             ))}
           </View>

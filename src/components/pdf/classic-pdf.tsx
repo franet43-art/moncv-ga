@@ -153,12 +153,7 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
             {education.map(edu => (
               <View key={edu.id} style={{ marginBottom: 10 }}>
                 <Text style={[styles.body, { fontWeight: 700 }]}>{sanitizeForPDF(edu.degree)}</Text>
-                <Text style={[styles.body, { fontWeight: 600 }]}>{sanitizeForPDF(edu.school)}</Text>
-                {edu.description && (
-                  <View style={{ width: '100%', marginTop: 2 }}>
-                    <Text style={styles.body}>{sanitizeForPDF(edu.description)}</Text>
-                  </View>
-                )}
+                <Text style={[styles.body, { fontWeight: 600 }]}>{sanitizeForPDF(edu.institution)}</Text>
               </View>
             ))}
           </View>
