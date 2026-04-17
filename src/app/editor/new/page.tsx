@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useMemo, useEffect, Suspense } from "react"
-import { pdf } from '@react-pdf/renderer'
+import { pdf, Font } from '@react-pdf/renderer'
 import { CVPDFDocument } from '@/components/pdf/pdf-document'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
@@ -65,6 +65,17 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
   const [isSaving, setIsSaving] = useState(false)
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
   const { resetCV } = useCVStore()
+  const [fontReady, setFontReady] = useState(false)
+
+  // Load fonts on mount
+  useEffect(() => {
+    Font.load({ fontFamily: 'Inter' })
+      .then(() => setFontReady(true))
+      .catch((err) => {
+        console.error('[PDF] Font load error:', err)
+        toast.error("Impossible de charger les polices. Rechargez la page.")
+      })
+  }, [])
 
   // Reset store ONLY when the user explicitly requests a new CV via ?reset=true.
   // This prevents wiping the store when the user comes back from login
@@ -280,13 +291,15 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
               )}
             </Button>
 
-            <Button onClick={handleDownloadClick} disabled={isGenerating} className="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold group h-9 px-4 sm:px-6">
-              {isGenerating ? (
-                <><Loader2 className="h-4 w-4 mr-2 animate-spin" /><span className="hidden sm:inline">Génération...</span></>
-              ) : (
-                <><Download className="h-4 w-4 mr-2 group-hover:animate-bounce" /><span className="hidden sm:inline">Télécharger PDF</span><span className="sm:hidden text-xs">PDF</span></>
-              )}
-            </Button>
+            {fontReady && (
+              <Button onClick={handleDownloadClick} disabled={isGenerating} className="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold group h-9 px-4 sm:px-6">
+                {isGenerating ? (
+                  <><Loader2 className="h-4 w-4 mr-2 animate-spin" /><span className="hidden sm:inline">Génération...</span></>
+                ) : (
+                  <><Download className="h-4 w-4 mr-2 group-hover:animate-bounce" /><span className="hidden sm:inline">Télécharger PDF</span><span className="sm:hidden text-xs">PDF</span></>
+                )}
+              </Button>
+            )}
           </div>
         </div>
       </header>

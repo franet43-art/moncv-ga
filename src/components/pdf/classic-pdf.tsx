@@ -1,11 +1,11 @@
 import React from 'react'
-import { Text, View } from '@react-pdf/renderer'
+import { Text, View, StyleSheet } from '@react-pdf/renderer'
 import { CVContent, CVSettings } from '@/types/cv'
 import { createStyles, spacing } from '@/lib/pdf/styles'
-import { PDFSection } from './shared/pdf-section'
 import { PDFExperience } from './shared/pdf-experience'
 import { PDFEducation } from './shared/pdf-education'
 import { PDFPhoto } from './shared/pdf-photo'
+import { sanitizeForPDF } from './pdf-document'
 
 interface ClassicPDFProps {
   content: CVContent
@@ -13,109 +13,170 @@ interface ClassicPDFProps {
 }
 
 export function ClassicPDF({ content, settings }: ClassicPDFProps) {
-  const styles = createStyles(settings.accentColor, settings.fontSize, settings.fontFamily)
+  const baseStyles = createStyles(settings.accentColor, settings.fontSize, settings.fontFamily)
   const { personalInfo, experiences, education, skills, languages, references } = content
+
+  const styles = StyleSheet.create({
+    ...baseStyles,
+    page: {
+      flexDirection: 'row',
+      fontFamily: 'Inter',
+      backgroundColor: '#FFFFFF',
+    },
+    sidebar: {
+      width: '35%',
+      minHeight: '100%',
+      paddingTop: 24,
+      paddingHorizontal: 16,
+      backgroundColor: '#F9FAFB',
+      alignItems: 'center',
+    },
+    main: {
+      width: '65%',
+      paddingTop: 24,
+      paddingHorizontal: 20,
+    },
+    avatarWrapper: {
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      overflow: 'hidden',
+      marginBottom: 12,
+    },
+    avatar: {
+      width: 80,
+      height: 80,
+      borderRadius: 40,
+      objectFit: 'cover',
+    },
+    sectionTitle: {
+      ...baseStyles.sectionTitle,
+      fontWeight: 700,
+      borderBottomWidth: 1,
+      borderBottomColor: settings.accentColor,
+      color: settings.accentColor,
+      marginTop: 15,
+      marginBottom: 10,
+    },
+    entryTitle: {
+      ...baseStyles.entryTitle,
+      fontWeight: 700,
+    },
+    body: {
+      ...baseStyles.body,
+      fontWeight: 400,
+    },
+    bold: {
+      fontWeight: 700,
+    }
+  });
 
   return (
     <View style={styles.page} wrap>
-      {/* Header */}
-      <View style={[styles.flexRowBetween, { marginBottom: 20 }]}>
-        <View style={{ flex: 1, width: '100%' }}>
-          <Text style={[styles.name, { fontSize: 28, fontWeight: 700 }]}>{personalInfo.fullName || ''}</Text>
-          {personalInfo.jobTitle && (
-            <Text style={[styles.jobTitle, { fontSize: 14, color: settings.accentColor, fontStyle: 'italic' }]}>{personalInfo.jobTitle || ''}</Text>
-          )}
-          <View>
-            {personalInfo.email && <Text style={[styles.body, { marginBottom: 4 }]}>{personalInfo.email}</Text>}
-            {personalInfo.phone && <Text style={[styles.body, { marginBottom: 4 }]}>{personalInfo.phone}</Text>}
-            {personalInfo.address && <Text style={[styles.body, { marginBottom: 4 }]}>{personalInfo.address}</Text>}
-            {personalInfo.linkedin && <Text style={[styles.body, { marginBottom: 4 }]}>{personalInfo.linkedin}</Text>}
-          </View>
-        </View>
+      {/* Sidebar */}
+      <View style={styles.sidebar}>
         {settings.photoUrl && (
-          <PDFPhoto src={settings.photoUrl} style={[styles.photo, { width: 80, height: 80, borderRadius: 40 }]} />
+          <View style={styles.avatarWrapper}>
+            <PDFPhoto src={settings.photoUrl} style={styles.avatar} />
+          </View>
+        )}
+        
+        <View style={{ width: '100%', marginBottom: 20, alignItems: 'center' }}>
+          <Text style={[styles.name, { fontSize: 20, textAlign: 'center', fontWeight: 700 }]}>
+            {sanitizeForPDF(personalInfo.fullName)}
+          </Text>
+          {personalInfo.jobTitle && (
+            <Text style={[styles.jobTitle, { fontSize: 12, textAlign: 'center', fontWeight: 600 }]}>
+              {sanitizeForPDF(personalInfo.jobTitle)}
+            </Text>
+          )}
+        </View>
+
+        <View style={{ width: '100%', marginBottom: 20 }}>
+          {personalInfo.email && <Text style={[styles.body, { marginBottom: 4, fontSize: 8 }]}>{sanitizeForPDF(personalInfo.email)}</Text>}
+          {personalInfo.phone && <Text style={[styles.body, { marginBottom: 4, fontSize: 8 }]}>{sanitizeForPDF(personalInfo.phone)}</Text>}
+          {personalInfo.address && <Text style={[styles.body, { marginBottom: 4, fontSize: 8 }]}>{sanitizeForPDF(personalInfo.address)}</Text>}
+          {personalInfo.linkedin && <Text style={[styles.body, { marginBottom: 4, fontSize: 8 }]}>{sanitizeForPDF(personalInfo.linkedin)}</Text>}
+        </View>
+
+        {skills.length > 0 && (
+          <View style={{ width: '100%', marginBottom: 15 }}>
+            <Text style={[styles.sectionTitle, { fontSize: 10, borderBottomWidth: 0, marginTop: 0 }]}>Compétences</Text>
+            {skills.map(skill => (
+              <Text key={skill.id} style={[styles.body, { marginBottom: 3, fontSize: 8 }]}>
+                • {sanitizeForPDF(skill.name)}
+              </Text>
+            ))}
+          </View>
+        )}
+
+        {languages.length > 0 && (
+          <View style={{ width: '100%' }}>
+            <Text style={[styles.sectionTitle, { fontSize: 10, borderBottomWidth: 0, marginTop: 0 }]}>Langues</Text>
+            {languages.map(lang => (
+              <Text key={lang.id} style={[styles.body, { marginBottom: 3, fontSize: 8 }]}>
+                • {sanitizeForPDF(lang.name)}
+              </Text>
+            ))}
+          </View>
         )}
       </View>
 
-      {/* Summary */}
-      {personalInfo.summary && (
-        <View style={{ marginBottom: 16 }} wrap={false}>
-          <Text style={styles.body}>{personalInfo.summary || ''}</Text>
-        </View>
-      )}
-
-      {/* Experience */}
-      {experiences.length > 0 && (
-        <View wrap>
-          <Text style={[styles.sectionTitle, { color: settings.accentColor, borderBottomColor: settings.accentColor }]}>Expérience Professionnelle</Text>
-          {(experiences || []).map((exp) => (
-            <View key={exp.id} style={{ marginBottom: 8 }}>
-              <PDFExperience experience={exp} styles={styles} />
-            </View>
-          ))}
-        </View>
-      )}
-
-      {/* Education */}
-      {education.length > 0 && (
-        <View wrap>
-          <Text style={[styles.sectionTitle, { color: settings.accentColor, borderBottomColor: settings.accentColor }]}>Formation</Text>
-          {(education || []).map((edu) => (
-            <View key={edu.id} style={{ marginBottom: 8 }}>
-              <PDFEducation education={edu} styles={styles} />
-            </View>
-          ))}
-        </View>
-      )}
-
-      {/* Skills */}
-      {skills.length > 0 && (
-        <View wrap={false}>
-          <Text style={[styles.sectionTitle, { color: settings.accentColor, borderBottomColor: settings.accentColor }]}>Compétences</Text>
-          <View style={[styles.flexRow, { flexWrap: 'wrap' }]}>
-            {(skills || []).map((skill) => (
-              <Text key={skill.id} style={[styles.body, { marginRight: 10, marginBottom: 5 }]}>
-                • {skill.name || ''} {skill.level ? `(${skill.level})` : ''}
-              </Text>
-            ))}
+      {/* Main Content */}
+      <View style={styles.main}>
+        {personalInfo.summary && (
+          <View style={{ width: '100%', marginBottom: 16 }}>
+            <Text style={styles.body}>{sanitizeForPDF(personalInfo.summary)}</Text>
           </View>
-        </View>
-      )}
+        )}
 
-      {/* Languages */}
-      {languages.length > 0 && (
-        <View wrap={false}>
-          <Text style={[styles.sectionTitle, { color: settings.accentColor, borderBottomColor: settings.accentColor }]}>Langues</Text>
-          <View style={[styles.flexRow, { flexWrap: 'wrap' }]}>
-            {(languages || []).map((lang) => (
-              <Text key={lang.id} style={[styles.body, { marginRight: 10, marginBottom: 5 }]}>
-                • {lang.name || ''} {lang.level ? `(${lang.level})` : ''}
-              </Text>
-            ))}
-          </View>
-        </View>
-      )}
-
-      {/* References */}
-      {references.length > 0 && (
-        <View wrap>
-          <Text style={[styles.sectionTitle, { color: settings.accentColor, borderBottomColor: settings.accentColor }]}>Références</Text>
-          <View>
-            {(references || []).map((ref) => (
-              <View key={ref.id} wrap={false} style={{ marginBottom: 12 }}>
-                <Text style={[styles.body, { fontWeight: 'bold' }]}>{ref.name || ''}</Text>
-                {(ref.position || ref.company) && (
-                  <Text style={styles.body}>
-                    {ref.position || ''} {ref.position && ref.company && 'chez '} {ref.company || ''}
-                  </Text>
+        {experiences.length > 0 && (
+          <View style={{ width: '100%' }}>
+            <Text style={styles.sectionTitle}>Expérience</Text>
+            {experiences.map(exp => (
+              <View key={exp.id} style={{ marginBottom: 10 }}>
+                <Text style={[styles.body, { fontWeight: 700 }]}>{sanitizeForPDF(exp.position)}</Text>
+                <Text style={[styles.body, { fontWeight: 600 }]}>{sanitizeForPDF(exp.company)}</Text>
+                {exp.description && (
+                  <View style={{ width: '100%', marginTop: 2 }}>
+                    <Text style={styles.body}>{sanitizeForPDF(exp.description)}</Text>
+                  </View>
                 )}
-                {ref.email && <Text style={styles.body}>{ref.email}</Text>}
-                {ref.phone && <Text style={styles.body}>{ref.phone}</Text>}
               </View>
             ))}
           </View>
-        </View>
-      )}
+        )}
+
+        {education.length > 0 && (
+          <View style={{ width: '100%' }}>
+            <Text style={styles.sectionTitle}>Formation</Text>
+            {education.map(edu => (
+              <View key={edu.id} style={{ marginBottom: 10 }}>
+                <Text style={[styles.body, { fontWeight: 700 }]}>{sanitizeForPDF(edu.degree)}</Text>
+                <Text style={[styles.body, { fontWeight: 600 }]}>{sanitizeForPDF(edu.school)}</Text>
+                {edu.description && (
+                  <View style={{ width: '100%', marginTop: 2 }}>
+                    <Text style={styles.body}>{sanitizeForPDF(edu.description)}</Text>
+                  </View>
+                )}
+              </View>
+            ))}
+          </View>
+        )}
+
+        {references.length > 0 && (
+          <View style={{ width: '100%' }}>
+            <Text style={styles.sectionTitle}>Références</Text>
+            {references.map(ref => (
+              <View key={ref.id} style={{ marginBottom: 8 }}>
+                <Text style={[styles.body, { fontWeight: 700 }]}>{sanitizeForPDF(ref.name)}</Text>
+                {ref.position && <Text style={styles.body}>{sanitizeForPDF(ref.position)}</Text>}
+                {ref.company && <Text style={styles.body}>{sanitizeForPDF(ref.company)}</Text>}
+              </View>
+            ))}
+          </View>
+        )}
+      </View>
     </View>
   )
 }
