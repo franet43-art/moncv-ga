@@ -1,24 +1,5 @@
 import React from 'react'
-import { Text, View, Font } from '@react-pdf/renderer'
-
-Font.register({
-  family: 'Inter',
-  fonts: [
-    {
-      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2',
-      fontWeight: 400,
-    },
-    {
-      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2',
-      fontWeight: 700,
-    },
-    {
-      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2',
-      fontWeight: 400,
-      fontStyle: 'italic'
-    }
-  ],
-})
+import { Text, View } from '@react-pdf/renderer'
 import { CVContent, CVSettings } from '@/types/cv'
 import { createStyles } from '@/lib/pdf/styles'
 import { PDFExperience } from './shared/pdf-experience'
@@ -63,7 +44,9 @@ export function MinimalPDF({ content, settings }: MinimalPDFProps) {
             <Text style={styles.minimalSectionTitle}>Expériences</Text>
             <View style={{ borderLeftWidth: 1, borderLeftColor: '#E5E7EB', paddingLeft: 15, marginLeft: 5 }}>
               {(experiences || []).map((exp) => (
-                <PDFExperience key={exp.id} experience={exp} styles={styles} />
+                <View key={exp.id} style={{ marginBottom: 8 }}>
+                  <PDFExperience experience={exp} styles={styles} />
+                </View>
               ))}
             </View>
           </View>
@@ -75,7 +58,9 @@ export function MinimalPDF({ content, settings }: MinimalPDFProps) {
             <Text style={styles.minimalSectionTitle}>Formation</Text>
             <View style={{ borderLeftWidth: 1, borderLeftColor: '#E5E7EB', paddingLeft: 15, marginLeft: 5 }}>
               {(education || []).map((edu) => (
-                <PDFEducation key={edu.id} education={edu} styles={styles} />
+                <View key={edu.id} style={{ marginBottom: 8 }}>
+                  <PDFEducation education={edu} styles={styles} />
+                </View>
               ))}
             </View>
           </View>

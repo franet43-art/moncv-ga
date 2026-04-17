@@ -1,24 +1,5 @@
 import React from 'react'
-import { Text, View, Font } from '@react-pdf/renderer'
-
-Font.register({
-  family: 'Inter',
-  fonts: [
-    {
-      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2',
-      fontWeight: 400,
-    },
-    {
-      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2',
-      fontWeight: 700,
-    },
-    {
-      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2',
-      fontWeight: 400,
-      fontStyle: 'italic'
-    }
-  ],
-})
+import { Text, View } from '@react-pdf/renderer'
 import { CVContent, CVSettings } from '@/types/cv'
 import { createStyles } from '@/lib/pdf/styles'
 import { PDFExperience } from './shared/pdf-experience'
@@ -123,7 +104,9 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
               Expériences
             </Text>
             {(experiences || []).map((exp) => (
-              <PDFExperience key={exp.id} experience={exp} styles={styles} />
+              <View key={exp.id} style={{ marginBottom: 12 }}>
+                <PDFExperience experience={exp} styles={styles} />
+              </View>
             ))}
           </View>
         )}
@@ -138,7 +121,9 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
               Formation
             </Text>
             {(education || []).map((edu) => (
-              <PDFEducation key={edu.id} education={edu} styles={styles} />
+              <View key={edu.id} style={{ marginBottom: 12 }}>
+                <PDFEducation education={edu} styles={styles} />
+              </View>
             ))}
           </View>
         )}

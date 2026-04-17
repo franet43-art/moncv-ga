@@ -1,24 +1,5 @@
 import React from 'react'
-import { Text, View, Font } from '@react-pdf/renderer'
-
-Font.register({
-  family: 'Inter',
-  fonts: [
-    {
-      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2',
-      fontWeight: 400,
-    },
-    {
-      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2',
-      fontWeight: 700,
-    },
-    {
-      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2',
-      fontWeight: 400,
-      fontStyle: 'italic'
-    }
-  ],
-})
+import { Text, View } from '@react-pdf/renderer'
 import { CVContent, CVSettings } from '@/types/cv'
 import { createStyles, spacing } from '@/lib/pdf/styles'
 import { PDFSection } from './shared/pdf-section'
@@ -39,7 +20,7 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
     <View style={styles.page} wrap>
       {/* Header */}
       <View style={[styles.flexRowBetween, { marginBottom: 20 }]}>
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, width: '100%' }}>
           <Text style={[styles.name, { fontSize: 28, fontWeight: 700 }]}>{personalInfo.fullName || ''}</Text>
           {personalInfo.jobTitle && (
             <Text style={[styles.jobTitle, { fontSize: 14, color: settings.accentColor, fontStyle: 'italic' }]}>{personalInfo.jobTitle || ''}</Text>
@@ -52,13 +33,13 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
           </View>
         </View>
         {settings.photoUrl && (
-          <PDFPhoto src={settings.photoUrl} style={styles.photo} />
+          <PDFPhoto src={settings.photoUrl} style={[styles.photo, { width: 80, height: 80, borderRadius: 40 }]} />
         )}
       </View>
 
       {/* Summary */}
       {personalInfo.summary && (
-        <View style={{ marginBottom: 15 }} wrap={false}>
+        <View style={{ marginBottom: 16 }} wrap={false}>
           <Text style={styles.body}>{personalInfo.summary || ''}</Text>
         </View>
       )}

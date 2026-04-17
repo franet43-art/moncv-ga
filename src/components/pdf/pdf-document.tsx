@@ -5,25 +5,27 @@ import { ClassicPDF } from './classic-pdf'
 import { ModernPDF } from './modern-pdf'
 import { MinimalPDF } from './minimal-pdf'
 
-// Register Inter font
+// Register Inter font — TTF only (WOFF2 crashes fontkit with RangeError)
 Font.register({
   family: 'Inter',
   fonts: [
     {
-      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2',
+      src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hjQ.ttf',
       fontWeight: 400,
     },
     {
-      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2',
+      src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuI6fAZ9hjQ.ttf',
+      fontWeight: 600,
+    },
+    {
+      src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYAZ9hjQ.ttf',
       fontWeight: 700,
     },
-    {
-      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2',
-      fontWeight: 400,
-      fontStyle: 'italic'
-    }
-  ]
+  ],
 })
+
+// Disable word hyphenation to prevent "Re-nault" style breaks
+Font.registerHyphenationCallback((word) => [word])
 
 interface CVPDFDocumentProps {
   content: CVContent
