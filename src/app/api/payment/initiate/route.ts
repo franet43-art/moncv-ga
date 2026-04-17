@@ -81,14 +81,22 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Erreur lors de l\'initiation du paiement' }, { status: 500 })
     }
 
-    if (chariowRes.step === 'payment') {
-      return NextResponse.json({ checkout_url: chariowRes.payment?.checkout_url })
+    const resData = chariowRes.data || chariowRes
+
+    if (resData.step === 'payment') {
+      return NextResponse.json({ checkout_url: resData.payment?.checkout_url })
     }
 
-    if (chariowRes.step === 'already_purchased') {
+    if (resData.step === 'completed') {
+      // Free product or instant completion
       return NextResponse.json({ already_paid: true })
     }
 
+    if (resData.step === 'already_purchased') {
+      return NextResponse.json({ already_paid: true })
+    }
+
+    console.error('Unexpected Chariow step:', resData.step, chariowRes)
     return NextResponse.json({ error: 'Statut de paiement inattendu' }, { status: 500 })
 
   } catch (error) {

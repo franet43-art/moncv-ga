@@ -14,6 +14,18 @@ export async function POST(req: Request) {
       if (cvId && saleId) {
         const supabaseAdmin = createAdminClient()
 
+        // Idempotence check: skip if this sale was already processed
+        const { data: existingPayment } = await supabaseAdmin
+          .from('payments')
+          .select('id')
+          .eq('provider_ref', saleId)
+          .maybeSingle()
+
+        if (existingPayment) {
+          // Already processed — return 200 silently
+          return NextResponse.json({ received: true, duplicate: true }, { status: 200 })
+        }
+
         // Extract user_id from CV
         const { data: cv } = await supabaseAdmin
           .from('cvs')
@@ -44,13 +56,11 @@ export async function POST(req: Request) {
       }
     }
 
-    // Always return 200 immediately
+    // Always return 200 immediately — Chariow expects acknowledgement
     return NextResponse.json({ received: true }, { status: 200 })
   } catch (error) {
     console.error('Webhook processing error:', error)
-    // Even on error, we should return 200 so Chariow doesn't keep retrying excessively if it's our bug,
-    // though standard practice can be 500 to retry. The prompt asks to return 200 OK immediately for the success path,
-    // we'll format a 500 here just in case of unhandled JSON mapping.
-    return NextResponse.json({ error: 'Webhook Error' }, { status: 500 })
+    // Even on error, return 200 to prevent Chariow from retrying indefinitely
+    return NextResponse.json({ received: true, error: 'internal' }, { status: 200 })
   }
 }
