@@ -5,21 +5,9 @@ import { ClassicPDF } from './classic-pdf'
 import { ModernPDF } from './modern-pdf'
 import { MinimalPDF } from './minimal-pdf'
 
-const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+// Using native PDF fonts (Helvetica) to prevent loading issues on Vercel
+Font.registerHyphenationCallback((word) => [word]);
 
-try {
-  Font.register({
-    family: 'Inter',
-    fonts: [
-      { src: `${baseUrl}/fonts/Inter-Regular.ttf`, fontWeight: 400 },
-      { src: `${baseUrl}/fonts/Inter-SemiBold.ttf`, fontWeight: 600 },
-      { src: `${baseUrl}/fonts/Inter-Bold.ttf`, fontWeight: 700 },
-    ],
-  });
-  Font.registerHyphenationCallback((word) => [word]);
-} catch (e) {
-  console.warn('[PDF] Erreur Font.register:', e);
-}
 
 export const sanitizeForPDF = (text?: string | null): string =>
   (text ?? '')

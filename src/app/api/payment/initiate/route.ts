@@ -3,7 +3,7 @@ import { createServerSupabaseClient } from '@/lib/supabase/server'
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json()
+    const body = await req.json();
     const { 
       cvId, 
       customerEmail, 
@@ -11,17 +11,20 @@ export async function POST(req: Request) {
       customerLastName, 
       customerPhone, 
       customerCountryCode 
-    } = body
+    } = body;
+
+    console.log('[PAYMENT_INITIATE] Démarrage pour cvId:', cvId);
 
     if (!cvId || !customerEmail || !customerFirstName) {
-       return NextResponse.json({ error: 'Données manquantes' }, { status: 400 })
+       return NextResponse.json({ error: 'Données manquantes' }, { status: 400 });
     }
 
-    const supabase = await createServerSupabaseClient()
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    const supabase = await createServerSupabaseClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
+      console.error('[PAYMENT_INITIATE_AUTH_ERROR]', authError);
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
     // Verify CV ownership
@@ -29,21 +32,22 @@ export async function POST(req: Request) {
       .from('cvs')
       .select('user_id, is_paid')
       .eq('id', cvId)
-      .single()
+      .single();
 
     if (cvError || !cv) {
-      return NextResponse.json({ error: 'CV non trouvé' }, { status: 404 })
+      console.error('[PAYMENT_INITIATE_CV_ERROR]', cvError);
+      return NextResponse.json({ error: 'CV non trouvé' }, { status: 404 });
     }
 
     if (cv.user_id !== user.id) {
-      return NextResponse.json({ error: 'Accès refusé' }, { status: 403 })
+      return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
     }
 
     if (cv.is_paid) {
-      return NextResponse.json({ already_paid: true })
+      return NextResponse.json({ already_paid: true });
     }
 
-    const NEXT_PUBLIC_APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://moncv.ga'
+    const NEXT_PUBLIC_APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://moncv.ga';
 
     // Call Chariow API
     const chariowPayload = {
@@ -59,12 +63,12 @@ export async function POST(req: Request) {
       custom_metadata: {
         cv_id: cvId
       }
-    }
+    };
 
-    // Clean up empty phone data if not provided (depends on Chariow API requirement, assuming strings are fine)
     if (!customerPhone) delete (chariowPayload.phone as any).number;
     if (!customerCountryCode) delete (chariowPayload.phone as any).country_code;
 
+    console.log('[PAYMENT_INITIATE] Appel API Chariow...');
     const chariowApiReq = await fetch('https://api.chariow.com/v1/checkout', {
       method: 'POST',
       headers: {
@@ -72,46 +76,55 @@ export async function POST(req: Request) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(chariowPayload)
-    })
+    });
 
-    const chariowRes = await chariowApiReq.json()
+    const chariowRes = await chariowApiReq.json().catch(() => ({}));
 
     if (!chariowApiReq.ok) {
-      console.error('Chariow error:', chariowRes)
-      return NextResponse.json({ error: 'Erreur lors de l\'initiation du paiement' }, { status: 500 })
+      console.error('[PAYMENT_INITIATE_CHARIOW_ERROR]', {
+        status: chariowApiReq.status,
+        response: chariowRes
+      });
+      return NextResponse.json({ 
+        error: "Erreur lors de l'initiation du paiement", 
+        details: chariowRes?.message || 'Erreur API Chariow'
+      }, { status: 500 });
     }
 
-    const resData = chariowRes.data || chariowRes
+    const resData = chariowRes?.data || chariowRes;
 
-    if (resData.step === 'payment') {
-      return NextResponse.json({ checkout_url: resData.payment?.checkout_url })
+    if (resData?.step === 'payment') {
+      return NextResponse.json({ checkout_url: resData.payment?.checkout_url });
     }
 
-    if (resData.step === 'completed') {
-      // Free product or instant completion — mark as paid in DB so polling works
-      const { error: updateError } = await supabase
-        .from('cvs')
-        .update({ is_paid: true })
-        .eq('id', cvId)
-        .eq('user_id', user.id) // extra safety guard
+    if (resData?.step === 'completed' || resData?.step === 'already_purchased') {
+      // Mark as paid if completed
+      if (resData.step === 'completed') {
+        const { error: updateError } = await supabase
+          .from('cvs')
+          .update({ is_paid: true })
+          .eq('id', cvId)
+          .eq('user_id', user.id);
 
-      if (updateError) {
-        console.error('Failed to mark CV as paid:', updateError)
-        // Non-blocking: still return success to frontend
+        if (updateError) {
+          console.error('[PAYMENT_INITIATE_UPDATE_ERROR]', updateError);
+        }
       }
 
-      return NextResponse.json({ already_paid: true })
+      return NextResponse.json({ already_paid: true });
     }
 
-    if (resData.step === 'already_purchased') {
-      return NextResponse.json({ already_paid: true })
-    }
+    console.error('[PAYMENT_INITIATE_UNEXPECTED_STEP]', { step: resData?.step, response: chariowRes });
+    return NextResponse.json({ error: 'Statut de paiement inattendu' }, { status: 500 });
 
-    console.error('Unexpected Chariow step:', resData.step, chariowRes)
-    return NextResponse.json({ error: 'Statut de paiement inattendu' }, { status: 500 })
-
-  } catch (error) {
-    console.error('Payment initiate error:', error)
-    return NextResponse.json({ error: 'Erreur serveur interne' }, { status: 500 })
+  } catch (error: any) {
+    console.error('[PAYMENT_INITIATE_FATAL_ERROR]', {
+      message: error.message,
+      stack: error.stack
+    });
+    return NextResponse.json({ 
+      error: 'Erreur serveur interne', 
+      details: error.message 
+    }, { status: 500 });
   }
 }

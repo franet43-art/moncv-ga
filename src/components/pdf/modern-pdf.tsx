@@ -20,7 +20,7 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
     ...baseStyles,
     page: {
       flexDirection: 'row',
-      fontFamily: 'Inter',
+      fontFamily: 'Helvetica',
       height: '100%',
     },
     sidebar: {

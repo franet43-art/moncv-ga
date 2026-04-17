@@ -20,7 +20,7 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
     ...baseStyles,
     page: {
       flexDirection: 'row',
-      fontFamily: 'Inter',
+      fontFamily: 'Helvetica',
       backgroundColor: '#FFFFFF',
     },
     sidebar: {

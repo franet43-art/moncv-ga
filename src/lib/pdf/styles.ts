@@ -14,12 +14,13 @@ export const createStyles = (accentColor: string, fontSize: keyof typeof fontSiz
   const sizes = fontSizeMap[fontSize]
 
   // Font family mapping to match registered font names or fallback to Helvetica
+  // Using native fonts (Helvetica) is safest for server-side/Vercel environments
   const getFontFamily = (name: string) => {
     switch (name) {
-      case 'inter': return 'Inter'
-      case 'roboto': return 'Roboto'
-      case 'merriweather': return 'Merriweather'
-      case 'playfair': return 'Playfair'
+      case 'inter': return 'Helvetica'
+      case 'roboto': return 'Helvetica'
+      case 'merriweather': return 'Helvetica'
+      case 'playfair': return 'Helvetica'
       default: return 'Helvetica'
     }
   }
