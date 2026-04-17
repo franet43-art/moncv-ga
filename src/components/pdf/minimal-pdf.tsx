@@ -1,5 +1,24 @@
 import React from 'react'
-import { Text, View } from '@react-pdf/renderer'
+import { Text, View, Font } from '@react-pdf/renderer'
+
+Font.register({
+  family: 'Inter',
+  fonts: [
+    {
+      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2',
+      fontWeight: 400,
+    },
+    {
+      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2',
+      fontWeight: 700,
+    },
+    {
+      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2',
+      fontWeight: 400,
+      fontStyle: 'italic'
+    }
+  ],
+})
 import { CVContent, CVSettings } from '@/types/cv'
 import { createStyles } from '@/lib/pdf/styles'
 import { PDFExperience } from './shared/pdf-experience'
@@ -18,7 +37,7 @@ export function MinimalPDF({ content, settings }: MinimalPDFProps) {
     <View style={styles.page} wrap>
       {/* Header */}
       <View style={{ alignItems: 'center', marginBottom: 30 }} wrap={false}>
-        <Text style={styles.minimalName}>{personalInfo.fullName || ''}</Text>
+        <Text style={[styles.minimalName, { fontSize: 32, textAlign: 'center' }]}>{personalInfo.fullName || ''}</Text>
         {personalInfo.jobTitle && <Text style={[styles.jobTitle, { color: '#4B5563', marginBottom: 15 }]}>{personalInfo.jobTitle || ''}</Text>}
 
         <View style={[styles.flexRow, { gap: 15, flexWrap: 'wrap', justifyContent: 'center' }]}>

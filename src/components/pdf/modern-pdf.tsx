@@ -1,5 +1,24 @@
 import React from 'react'
-import { Text, View } from '@react-pdf/renderer'
+import { Text, View, Font } from '@react-pdf/renderer'
+
+Font.register({
+  family: 'Inter',
+  fonts: [
+    {
+      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2',
+      fontWeight: 400,
+    },
+    {
+      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2',
+      fontWeight: 700,
+    },
+    {
+      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2',
+      fontWeight: 400,
+      fontStyle: 'italic'
+    }
+  ],
+})
 import { CVContent, CVSettings } from '@/types/cv'
 import { createStyles } from '@/lib/pdf/styles'
 import { PDFExperience } from './shared/pdf-experience'
@@ -24,9 +43,9 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
             <PDFPhoto 
               src={settings.photoUrl} 
               style={[styles.photo, { 
-                width: 90, 
-                height: 90, 
-                borderRadius: 45, 
+                width: 80, 
+                height: 80, 
+                borderRadius: 40, 
                 borderWidth: 3, 
                 borderColor: 'rgba(255,255,255,0.3)' 
               }]} 

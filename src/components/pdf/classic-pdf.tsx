@@ -1,5 +1,24 @@
 import React from 'react'
-import { Text, View } from '@react-pdf/renderer'
+import { Text, View, Font } from '@react-pdf/renderer'
+
+Font.register({
+  family: 'Inter',
+  fonts: [
+    {
+      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2',
+      fontWeight: 400,
+    },
+    {
+      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2',
+      fontWeight: 700,
+    },
+    {
+      src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2',
+      fontWeight: 400,
+      fontStyle: 'italic'
+    }
+  ],
+})
 import { CVContent, CVSettings } from '@/types/cv'
 import { createStyles, spacing } from '@/lib/pdf/styles'
 import { PDFSection } from './shared/pdf-section'
@@ -21,9 +40,9 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
       {/* Header */}
       <View style={[styles.flexRowBetween, { marginBottom: 20 }]}>
         <View style={{ flex: 1 }}>
-          <Text style={styles.name}>{personalInfo.fullName || ''}</Text>
+          <Text style={[styles.name, { fontSize: 28, fontWeight: 700 }]}>{personalInfo.fullName || ''}</Text>
           {personalInfo.jobTitle && (
-            <Text style={styles.jobTitle}>{personalInfo.jobTitle || ''}</Text>
+            <Text style={[styles.jobTitle, { fontSize: 14, color: settings.accentColor, fontStyle: 'italic' }]}>{personalInfo.jobTitle || ''}</Text>
           )}
           <View style={styles.gap1}>
             {personalInfo.email && <Text style={styles.body}>{personalInfo.email}</Text>}
@@ -47,9 +66,11 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
       {/* Experience */}
       {experiences.length > 0 && (
         <View wrap>
-          <Text style={styles.sectionTitle}>Expérience Professionnelle</Text>
+          <Text style={[styles.sectionTitle, { color: settings.accentColor, borderBottomColor: settings.accentColor }]}>Expérience Professionnelle</Text>
           {(experiences || []).map((exp) => (
-            <PDFExperience key={exp.id} experience={exp} styles={styles} />
+            <View key={exp.id} style={{ marginBottom: 8 }}>
+              <PDFExperience experience={exp} styles={styles} />
+            </View>
           ))}
         </View>
       )}
@@ -57,9 +78,11 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
       {/* Education */}
       {education.length > 0 && (
         <View wrap>
-          <Text style={styles.sectionTitle}>Formation</Text>
+          <Text style={[styles.sectionTitle, { color: settings.accentColor, borderBottomColor: settings.accentColor }]}>Formation</Text>
           {(education || []).map((edu) => (
-            <PDFEducation key={edu.id} education={edu} styles={styles} />
+            <View key={edu.id} style={{ marginBottom: 8 }}>
+              <PDFEducation education={edu} styles={styles} />
+            </View>
           ))}
         </View>
       )}
@@ -67,7 +90,7 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
       {/* Skills */}
       {skills.length > 0 && (
         <View wrap={false}>
-          <Text style={styles.sectionTitle}>Compétences</Text>
+          <Text style={[styles.sectionTitle, { color: settings.accentColor, borderBottomColor: settings.accentColor }]}>Compétences</Text>
           <View style={[styles.flexRow, { flexWrap: 'wrap', gap: 10 }]}>
             {(skills || []).map((skill) => (
               <Text key={skill.id} style={styles.body}>
@@ -81,7 +104,7 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
       {/* Languages */}
       {languages.length > 0 && (
         <View wrap={false}>
-          <Text style={styles.sectionTitle}>Langues</Text>
+          <Text style={[styles.sectionTitle, { color: settings.accentColor, borderBottomColor: settings.accentColor }]}>Langues</Text>
           <View style={[styles.flexRow, { flexWrap: 'wrap', gap: 10 }]}>
             {(languages || []).map((lang) => (
               <Text key={lang.id} style={styles.body}>
@@ -95,7 +118,7 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
       {/* References */}
       {references.length > 0 && (
         <View wrap>
-          <Text style={styles.sectionTitle}>Références</Text>
+          <Text style={[styles.sectionTitle, { color: settings.accentColor, borderBottomColor: settings.accentColor }]}>Références</Text>
           <View style={{ gap: spacing.md }}>
             {(references || []).map((ref) => (
               <View key={ref.id} wrap={false}>
