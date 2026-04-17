@@ -93,7 +93,7 @@ export function MinimalPDF({ content, settings }: MinimalPDFProps) {
             <Text style={styles.minimalSectionTitle}>Références</Text>
             <View style={[styles.flexRow, { flexWrap: 'wrap', gap: 20 }]}>
               {references.map((ref) => (
-                <View key={ref.id} wrap={false} style={{ width: '45%', marginBottom: 10 }}>
+                <View key={ref.id} wrap={false} style={{ width: '45%', marginBottom: 12 }}>
                   <Text style={[styles.body, { fontWeight: 'bold' }]}>{ref.name}</Text>
                   {(ref.position || ref.company) && (
                     <Text style={styles.body}>{ref.position} {ref.company && `- ${ref.company}`}</Text>

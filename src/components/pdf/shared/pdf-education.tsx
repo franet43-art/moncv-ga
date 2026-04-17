@@ -10,16 +10,16 @@ interface PDFEducationProps {
 
 export function PDFEducation({ education, styles }: PDFEducationProps) {
   return (
-    <View wrap={false} style={{ marginBottom: 10 }}>
+    <View wrap={false} style={styles.entryBlock}>
       <View style={styles.flexRowBetween}>
-        <Text style={[styles.body, { fontWeight: 'bold' }]}>{education.degree}</Text>
-        <Text style={styles.muted}>
+        <Text style={styles.entryTitle}>{education.degree}</Text>
+        <Text style={styles.entryDate}>
           {formatDate(education.startDate)} - {formatDate(education.endDate, education.isCurrent)}
         </Text>
       </View>
-      <Text style={[styles.body, { fontStyle: 'italic' }]}>{education.institution}</Text>
+      <Text style={styles.entrySubtitle}>{education.institution}</Text>
       {education.field ? (
-        <Text style={[styles.body, { marginTop: 2 }]}>{education.field}</Text>
+        <Text style={styles.entryDescription}>{education.field}</Text>
       ) : null}
     </View>
   )

@@ -10,16 +10,16 @@ interface PDFExperienceProps {
 
 export function PDFExperience({ experience, styles }: PDFExperienceProps) {
   return (
-    <View wrap={false} style={{ marginBottom: 10 }}>
+    <View wrap={false} style={styles.entryBlock}>
       <View style={styles.flexRowBetween}>
-        <Text style={[styles.body, { fontWeight: 'bold' }]}>{experience.position}</Text>
-        <Text style={styles.muted}>
+        <Text style={styles.entryTitle}>{experience.position}</Text>
+        <Text style={styles.entryDate}>
           {formatDate(experience.startDate)} - {formatDate(experience.endDate, experience.isCurrent)}
         </Text>
       </View>
-      <Text style={[styles.body, { fontStyle: 'italic', marginBottom: 4 }]}>{experience.company}</Text>
+      <Text style={styles.entrySubtitle}>{experience.company}</Text>
       {experience.description ? (
-        <Text style={styles.body}>{experience.description}</Text>
+        <Text style={styles.entryDescription}>{experience.description}</Text>
       ) : null}
     </View>
   )

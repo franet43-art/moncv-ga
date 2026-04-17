@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, View } from '@react-pdf/renderer'
 import { CVContent, CVSettings } from '@/types/cv'
-import { createStyles } from '@/lib/pdf/styles'
+import { createStyles, spacing } from '@/lib/pdf/styles'
 import { PDFSection } from './shared/pdf-section'
 import { PDFExperience } from './shared/pdf-experience'
 import { PDFEducation } from './shared/pdf-education'
@@ -96,18 +96,20 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
       {references.length > 0 && (
         <View wrap>
           <Text style={styles.sectionTitle}>Références</Text>
-          {references.map((ref) => (
-            <View key={ref.id} wrap={false} style={{ marginBottom: 5 }}>
-              <Text style={[styles.body, { fontWeight: 'bold' }]}>{ref.name}</Text>
-              {(ref.position || ref.company) && (
-                <Text style={styles.body}>
-                  {ref.position} {ref.position && ref.company && 'chez '} {ref.company}
-                </Text>
-              )}
-              {ref.email && <Text style={styles.body}>{ref.email}</Text>}
-              {ref.phone && <Text style={styles.body}>{ref.phone}</Text>}
-            </View>
-          ))}
+          <View style={{ gap: spacing.md }}>
+            {references.map((ref) => (
+              <View key={ref.id} wrap={false}>
+                <Text style={[styles.body, { fontWeight: 'bold' }]}>{ref.name}</Text>
+                {(ref.position || ref.company) && (
+                  <Text style={styles.body}>
+                    {ref.position} {ref.position && ref.company && 'chez '} {ref.company}
+                  </Text>
+                )}
+                {ref.email && <Text style={styles.body}>{ref.email}</Text>}
+                {ref.phone && <Text style={styles.body}>{ref.phone}</Text>}
+              </View>
+            ))}
+          </View>
         </View>
       )}
     </View>

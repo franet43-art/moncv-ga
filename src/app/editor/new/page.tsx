@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { pdf } from '@react-pdf/renderer'
 import { CVPDFDocument } from '@/components/pdf/pdf-document'
 import { toast } from 'sonner'
@@ -18,8 +18,12 @@ import {
   Lightbulb,
   Globe2,
   Users,
-  Palette
+  Palette,
+  Save
 } from "lucide-react"
+
+import { useAuth } from "@/hooks/use-auth"
+import { saveCV } from "@/lib/api/cv-service"
 
 import { useCVStore } from "@/store/cv-store"
 import { Button } from "@/components/ui/button"
@@ -45,22 +49,36 @@ import { LanguagesForm } from "@/components/editor/languages-form"
 import { ReferencesForm } from "@/components/editor/references-form"
 import { DesignPanel } from "@/components/editor/design-panel"
 import { CVPreview } from "@/components/editor/cv-preview"
+import { PaymentModal } from "@/components/payment/payment-modal"
 import { cn } from "@/lib/utils"
 
-export default function NewEditorPage() {
+export default function NewEditorPage({ initialCvId }: { initialCvId?: string }) {
   const router = useRouter()
   const { currentCV, isHydrated } = useCVStore()
+  const { user } = useAuth()
   const [activeTab, setActiveTab] = useState("personal")
   const [isImportModalOpen, setIsImportModalOpen] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
+  
+  const [cvId, setCvId] = useState<string | null>(initialCvId || null)
+  const [isSaving, setIsSaving] = useState(false)
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
+  const { resetCV } = useCVStore()
+
+  // Reset store if it's a new CV
+  useEffect(() => {
+    if (!initialCvId) {
+      resetCV()
+    }
+  }, [initialCvId, resetCV])
 
   // Calculate completion progress
 
-  const handleDownloadPDF = async () => {
+  const generatePDF = async (isPaid: boolean) => {
     setIsGenerating(true)
     try {
       const blob = await pdf(
-        <CVPDFDocument content={currentCV.content} settings={currentCV.settings} />
+        <CVPDFDocument content={currentCV.content} settings={currentCV.settings} isPaid={isPaid} />
       ).toBlob()
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
@@ -68,11 +86,63 @@ export default function NewEditorPage() {
       link.download = `${currentCV.content.personalInfo.fullName || 'MonCV'}.pdf`
       link.click()
       URL.revokeObjectURL(url)
-      toast.success('PDF téléchargé avec succès !')
+      
+      if (!isPaid) {
+        toast.success('PDF téléchargé.', {
+          description: "Version brouillon avec filigrane.",
+          duration: 5000,
+        })
+      } else {
+        toast.success('PDF téléchargé avec succès !')
+      }
     } catch (error) {
       toast.error('Erreur lors de la génération du PDF')
     } finally {
       setIsGenerating(false)
+    }
+  }
+
+  const handleDownloadClick = async () => {
+    if (!user) {
+      toast.info("Connectez-vous pour télécharger votre CV", {
+        action: {
+          label: "Se connecter",
+          onClick: () => router.push("/login?next=/editor/new"),
+        },
+      })
+      return
+    }
+
+    const isPaid = currentCV.isPaid || false
+    if (isPaid) {
+      generatePDF(true)
+    } else {
+      setIsPaymentModalOpen(true)
+    }
+  }
+
+  const handleSaveCV = async () => {
+    if (!user) {
+      toast.info("Connectez-vous pour sauvegarder votre CV", {
+        action: {
+          label: "Se connecter",
+          onClick: () => router.push("/login?next=/editor/new"),
+        },
+      })
+      return
+    }
+
+    setIsSaving(true)
+    try {
+      const savedDoc = await saveCV(currentCV, cvId)
+      if (!cvId) {
+        setCvId(savedDoc.id)
+      }
+      toast.success("CV sauvegardé !")
+    } catch (error) {
+      toast.error("Erreur lors de la sauvegarde du CV")
+    } finally {
+      setIsSaving(false)
     }
   }
 
@@ -198,7 +268,15 @@ export default function NewEditorPage() {
               </SheetContent>
             </Sheet>
 
-            <Button onClick={handleDownloadPDF} disabled={isGenerating} className="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold group h-9 px-4 sm:px-6">
+            <Button onClick={handleSaveCV} disabled={isSaving} variant="outline" className="hidden sm:flex border-primary/20 hover:bg-primary/5 text-primary font-semibold h-9 px-4">
+              {isSaving ? (
+                <><Loader2 className="h-4 w-4 mr-2 animate-spin" /><span>Enregistrement...</span></>
+              ) : (
+                <><Save className="h-4 w-4 mr-2" /><span>Sauvegarder</span></>
+              )}
+            </Button>
+
+            <Button onClick={handleDownloadClick} disabled={isGenerating} className="bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold group h-9 px-4 sm:px-6">
               {isGenerating ? (
                 <><Loader2 className="h-4 w-4 mr-2 animate-spin" /><span className="hidden sm:inline">Génération...</span></>
               ) : (
@@ -209,6 +287,12 @@ export default function NewEditorPage() {
         </div>
       </header>
 
+      <PaymentModal 
+        isOpen={isPaymentModalOpen} 
+        onClose={() => setIsPaymentModalOpen(false)} 
+        cvId={cvId} 
+        onAlreadyPaid={() => generatePDF(true)} 
+      />
       <ImportCVModal open={isImportModalOpen} onOpenChange={setIsImportModalOpen} />
       {/* Main Content Area */}
       <main className="flex-1 max-w-[1600px] mx-auto w-full flex overflow-hidden">

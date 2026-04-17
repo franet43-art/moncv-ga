@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/sheet"
 import { ThemeToggle } from "./theme-toggle"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
+import { UserMenu } from "@/components/auth/user-menu"
 
 export function Header() {
   const [isOpen, setIsOpen] = React.useState(false)
@@ -51,14 +52,13 @@ export function Header() {
             </Link>
           ))}
           <ThemeToggle />
-          <Button asChild>
-            <Link href="/editor/new">Create My CV</Link>
-          </Button>
+          <UserMenu />
         </nav>
 
         {/* Mobile Nav */}
         <div className="flex md:hidden items-center space-x-2">
           <ThemeToggle />
+          <UserMenu />
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
@@ -82,13 +82,6 @@ export function Header() {
                     {link.name}
                   </Link>
                 ))}
-                <div className="pt-4 border-t">
-                  <Button asChild className="w-full">
-                    <Link href="/editor/new" onClick={() => setIsOpen(false)}>
-                      Create My CV
-                    </Link>
-                  </Button>
-                </div>
               </div>
             </SheetContent>
           </Sheet>

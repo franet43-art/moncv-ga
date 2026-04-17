@@ -20,25 +20,52 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
       {/* Sidebar */}
       <View style={styles.modernSidebar} wrap={false}>
         {settings.photoUrl && (
-          <View style={{ alignItems: 'center', marginBottom: 20 }}>
-            <PDFPhoto src={settings.photoUrl} style={[styles.photo, { width: 100, height: 100, borderRadius: 50, borderWidth: 3, borderColor: 'white' }]} />
+          <View style={{ alignItems: 'center', marginBottom: 24 }}>
+            <PDFPhoto 
+              src={settings.photoUrl} 
+              style={[styles.photo, { 
+                width: 90, 
+                height: 90, 
+                borderRadius: 45, 
+                borderWidth: 3, 
+                borderColor: 'rgba(255,255,255,0.3)' 
+              }]} 
+            />
           </View>
         )}
 
-        <View style={styles.gap2}>
-          {personalInfo.email && <Text style={[styles.body, { color: 'white' }]}>{personalInfo.email}</Text>}
-          {personalInfo.phone && <Text style={[styles.body, { color: 'white' }]}>{personalInfo.phone}</Text>}
-          {personalInfo.address && <Text style={[styles.body, { color: 'white' }]}>{personalInfo.address}</Text>}
-          {personalInfo.linkedin && <Text style={[styles.body, { color: 'white', fontSize: styles.body.fontSize - 1 }]}>{personalInfo.linkedin}</Text>}
+        <View style={{ marginBottom: 24, alignItems: 'center' }}>
+          <Text style={[styles.name, { color: 'white', textAlign: 'center', marginBottom: 4 }]}>
+            {personalInfo.fullName}
+          </Text>
+          {personalInfo.jobTitle && (
+            <Text style={{ 
+              fontSize: styles.jobTitle.fontSize, 
+              color: 'rgba(255,255,255,0.85)', 
+              textTransform: 'uppercase', 
+              letterSpacing: 1.5,
+              textAlign: 'center',
+              fontWeight: 'bold'
+            }}>
+              {personalInfo.jobTitle}
+            </Text>
+          )}
+        </View>
+
+        <View style={{ gap: 8, marginBottom: 24 }}>
+          {personalInfo.email && <Text style={[styles.body, { color: 'rgba(255,255,255,0.9)' }]}>{personalInfo.email}</Text>}
+          {personalInfo.phone && <Text style={[styles.body, { color: 'rgba(255,255,255,0.9)' }]}>{personalInfo.phone}</Text>}
+          {personalInfo.address && <Text style={[styles.body, { color: 'rgba(255,255,255,0.9)' }]}>{personalInfo.address}</Text>}
+          {personalInfo.linkedin && <Text style={[styles.body, { color: 'rgba(255,255,255,0.9)', fontSize: styles.body.fontSize - 1 }]}>{personalInfo.linkedin}</Text>}
         </View>
 
         {skills.length > 0 && (
-          <View>
+          <View style={{ marginBottom: 20 }}>
             <Text style={styles.modernSectionTitle}>Compétences</Text>
-            <View style={styles.gap1}>
+            <View style={{ gap: 4 }}>
               {skills.map(skill => (
-                <Text key={skill.id} style={[styles.body, { color: 'white' }]}>
-                  {skill.name} {skill.level && `- ${skill.level}`}
+                <Text key={skill.id} style={[styles.body, { color: 'rgba(255,255,255,0.9)' }]}>
+                  • {skill.name} {skill.level && `(${skill.level})`}
                 </Text>
               ))}
             </View>
@@ -48,10 +75,10 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
         {languages.length > 0 && (
           <View>
             <Text style={styles.modernSectionTitle}>Langues</Text>
-            <View style={styles.gap1}>
+            <View style={{ gap: 4 }}>
               {languages.map(lang => (
-                <Text key={lang.id} style={[styles.body, { color: 'white' }]}>
-                  {lang.name} - {lang.level}
+                <Text key={lang.id} style={[styles.body, { color: 'rgba(255,255,255,0.9)' }]}>
+                  • {lang.name} ({lang.level})
                 </Text>
               ))}
             </View>
@@ -61,20 +88,21 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
 
       {/* Main Content */}
       <View style={styles.modernMain} wrap>
-        <View style={{ marginBottom: 20 }}>
-          <Text style={[styles.name, { fontSize: styles.name.fontSize + 4 }]}>{personalInfo.fullName}</Text>
-          {personalInfo.jobTitle && <Text style={[styles.jobTitle, { fontSize: styles.jobTitle.fontSize + 2 }]}>{personalInfo.jobTitle}</Text>}
-        </View>
-
         {personalInfo.summary && (
-          <View style={{ marginBottom: 20 }} wrap={false}>
+          <View style={{ marginBottom: 24 }} wrap={false}>
             <Text style={styles.body}>{personalInfo.summary}</Text>
           </View>
         )}
 
         {experiences.length > 0 && (
           <View wrap>
-            <Text style={[styles.sectionTitle, { color: '#111827', borderBottomColor: '#E5E7EB' }]}>Expériences</Text>
+            <Text style={[styles.sectionTitle, { 
+              marginTop: 0, 
+              borderBottomWidth: 2, 
+              borderBottomColor: settings.accentColor 
+            }]}>
+              Expériences
+            </Text>
             {experiences.map((exp) => (
               <PDFExperience key={exp.id} experience={exp} styles={styles} />
             ))}
@@ -83,7 +111,13 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
 
         {education.length > 0 && (
           <View wrap>
-            <Text style={[styles.sectionTitle, { color: '#111827', borderBottomColor: '#E5E7EB' }]}>Formation</Text>
+            <Text style={[styles.sectionTitle, { 
+              marginTop: 24, 
+              borderBottomWidth: 2, 
+              borderBottomColor: settings.accentColor 
+            }]}>
+              Formation
+            </Text>
             {education.map((edu) => (
               <PDFEducation key={edu.id} education={edu} styles={styles} />
             ))}
@@ -92,17 +126,25 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
 
         {references.length > 0 && (
           <View wrap>
-            <Text style={[styles.sectionTitle, { color: '#111827', borderBottomColor: '#E5E7EB' }]}>Références</Text>
-            {references.map((ref) => (
-              <View key={ref.id} wrap={false} style={{ marginBottom: 5 }}>
-                <Text style={[styles.body, { fontWeight: 'bold' }]}>{ref.name}</Text>
-                {(ref.position || ref.company) && (
-                  <Text style={styles.body}>{ref.position} - {ref.company}</Text>
-                )}
-                {ref.email && <Text style={styles.body}>{ref.email}</Text>}
-                {ref.phone && <Text style={styles.body}>{ref.phone}</Text>}
-              </View>
-            ))}
+            <Text style={[styles.sectionTitle, { 
+              marginTop: 24, 
+              borderBottomWidth: 2, 
+              borderBottomColor: settings.accentColor 
+            }]}>
+              Références
+            </Text>
+            <View style={{ gap: 12 }}>
+              {references.map((ref) => (
+                <View key={ref.id} wrap={false}>
+                  <Text style={[styles.body, { fontWeight: 'bold' }]}>{ref.name}</Text>
+                  {(ref.position || ref.company) && (
+                    <Text style={styles.body}>{ref.position} - {ref.company}</Text>
+                  )}
+                  {ref.email && <Text style={styles.body}>{ref.email}</Text>}
+                  {ref.phone && <Text style={styles.body}>{ref.phone}</Text>}
+                </View>
+              ))}
+            </View>
           </View>
         )}
       </View>

@@ -503,6 +503,28 @@ function MinimalTemplate({ content, settings }: { content: CVContent, settings: 
 }
 
 
+// --- Watermark Overlay ---
+
+function WatermarkOverlay() {
+  return (
+    <div 
+      className="absolute inset-0 z-50 pointer-events-none select-none overflow-hidden opacity-[0.07] dark:opacity-[0.05] print:hidden"
+      style={{ userSelect: 'none', WebkitUserSelect: 'none' }}
+    >
+      <div className="absolute inset-[-50%] flex flex-wrap justify-center items-center content-center rotate-[-35deg]">
+        {Array.from({ length: 100 }).map((_, i) => (
+          <span 
+            key={i} 
+            className="text-xl font-bold tracking-[0.2em] whitespace-nowrap p-12"
+          >
+            MonCV.ga
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 // --- Main Entry point ---
 
 export function CVPreview() {
@@ -527,14 +549,26 @@ export function CVPreview() {
   return (
     <div 
       id="cv-preview"
-      className="bg-white text-zinc-900 w-full min-h-[297mm] h-fit shadow-2xl p-12 overflow-hidden mx-auto transition-all duration-300" 
+      className="relative bg-white text-zinc-900 w-full min-h-[297mm] h-fit shadow-2xl p-12 overflow-hidden mx-auto transition-all duration-300 group cv-preview-container" 
       style={wrapperStyle}
+      onContextMenu={(e) => e.preventDefault()}
     >
-      <div className="w-[210mm] max-w-full mx-auto">
+      {/* Watermark Overlay */}
+      {!currentCV.isPaid && <WatermarkOverlay />}
+      
+      <div className="w-[210mm] max-w-full mx-auto relative z-10">
         {settings.templateId === "classic" && <ClassicTemplate content={content} settings={settings} />}
         {settings.templateId === "modern" && <ModernTemplate content={content} settings={settings} />}
         {settings.templateId === "minimal" && <MinimalTemplate content={content} settings={settings} />}
       </div>
+
+      <style jsx global>{`
+        @media print {
+          .cv-preview-container {
+            display: none !important;
+          }
+        }
+      `}</style>
     </div>
   )
 }

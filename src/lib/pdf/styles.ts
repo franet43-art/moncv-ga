@@ -1,10 +1,14 @@
 import { StyleSheet } from '@react-pdf/renderer'
 
+export const spacing = {
+  xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32,
+} as const
+
 export const fontSizeMap = {
-  small:  { name: 9,  title: 11, section: 10, body: 8  },
-  medium: { name: 11, title: 13, section: 11, body: 9  },
-  large:  { name: 13, title: 15, section: 13, body: 10 },
-}
+  small:  { name: 20, title: 11, section: 11, body: 8.5,  detail: 7.5  },
+  medium: { name: 24, title: 13, section: 12, body: 9.5,  detail: 8.5  },
+  large:  { name: 28, title: 15, section: 14, body: 10.5, detail: 9.5  },
+} as const
 
 export const createStyles = (accentColor: string, fontSize: keyof typeof fontSizeMap, fontFamily: string) => {
   const sizes = fontSizeMap[fontSize]
@@ -29,7 +33,7 @@ export const createStyles = (accentColor: string, fontSize: keyof typeof fontSiz
     },
     // Typographic elements
     name: {
-      fontSize: sizes.name + 8,
+      fontSize: sizes.name,
       fontWeight: 'bold',
       color: '#111827',
       marginBottom: 5,
@@ -50,6 +54,7 @@ export const createStyles = (accentColor: string, fontSize: keyof typeof fontSiz
       marginBottom: 10,
       marginTop: 15,
       textTransform: 'uppercase',
+      letterSpacing: 2,
     },
     body: {
       fontSize: sizes.body,
@@ -96,13 +101,14 @@ export const createStyles = (accentColor: string, fontSize: keyof typeof fontSiz
     modernSidebar: {
       width: '35%',
       backgroundColor: accentColor,
-      padding: 20,
+      padding: 24,
+      paddingTop: 32,
       color: 'white',
     },
     modernMain: {
       width: '65%',
-      padding: 20,
-      paddingTop: 30,
+      padding: 24,
+      paddingTop: 32,
     },
     modernSectionTitle: {
       fontSize: sizes.section,
@@ -114,6 +120,7 @@ export const createStyles = (accentColor: string, fontSize: keyof typeof fontSiz
       marginBottom: 10,
       marginTop: 15,
       textTransform: 'uppercase',
+      letterSpacing: 2,
     },
     minimalSectionTitle: {
       fontSize: sizes.section,
@@ -122,15 +129,21 @@ export const createStyles = (accentColor: string, fontSize: keyof typeof fontSiz
       marginBottom: 8,
       marginTop: 15,
       textTransform: 'uppercase',
-      letterSpacing: 1,
+      letterSpacing: 2,
     },
     minimalName: {
-      fontSize: sizes.name + 6,
+      fontSize: sizes.name,
       fontWeight: 'bold',
       color: accentColor,
       marginBottom: 5,
       letterSpacing: 2,
       textTransform: 'uppercase',
-    }
+    },
+    // Entry blocks
+    entryBlock: { marginBottom: spacing.md },
+    entryTitle: { fontSize: (sizes as any).body + 1, fontWeight: 700, color: '#1a1a1a' },
+    entrySubtitle: { fontSize: (sizes as any).body, color: '#4a4a4a', marginBottom: spacing.xs },
+    entryDate: { fontSize: (sizes as any).detail, color: '#6b7280', marginBottom: spacing.xs },
+    entryDescription: { fontSize: (sizes as any).body, color: '#374151', lineHeight: 1.5 },
   })
 }
