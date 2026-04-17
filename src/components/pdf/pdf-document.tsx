@@ -1,9 +1,19 @@
 import React from 'react'
-import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
+import { Document, Page, StyleSheet, Text, View, Font } from '@react-pdf/renderer'
 import { CVContent, CVSettings } from '@/types/cv'
 import { ClassicPDF } from './classic-pdf'
 import { ModernPDF } from './modern-pdf'
 import { MinimalPDF } from './minimal-pdf'
+
+// Register Inter font
+Font.register({
+  family: 'Inter',
+  fonts: [
+    { src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hjQ.ttf', fontWeight: 400 },
+    { src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuI6fAZ9hjQ.ttf', fontWeight: 600 },
+    { src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYAZ9hjQ.ttf', fontWeight: 700 }
+  ]
+})
 
 interface CVPDFDocumentProps {
   content: CVContent

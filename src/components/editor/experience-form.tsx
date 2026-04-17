@@ -7,6 +7,9 @@ import { Plus, Trash2, Sparkles, Building2 } from "lucide-react"
 
 import { experienceSchema, type Experience } from "@/types/cv"
 import { useCVStore } from "@/store/cv-store"
+import { enhanceExperience } from "@/lib/api/enhance"
+import { toast } from "sonner"
+import { Loader2 } from "lucide-react"
 
 import {
   Form, FormControl, FormField, FormItem, FormLabel, FormMessage,
@@ -26,6 +29,7 @@ function ExperienceItemForm({
   onRemove: () => void;
 }) {
   const { updateExperience } = useCVStore()
+  const [isEnhancing, setIsEnhancing] = useState(false)
   
   const form = useForm<Experience>({
     resolver: zodResolver(experienceSchema) as any,
@@ -129,8 +133,37 @@ function ExperienceItemForm({
                 <FormItem className="md:col-span-2">
                   <div className="flex items-center justify-between">
                     <FormLabel>Description des tâches</FormLabel>
-                    <Button type="button" variant="ghost" size="sm" className="h-8 text-xs font-semibold text-primary">
-                      <Sparkles className="h-3 w-3 mr-1" /> Enhance with AI
+                    <Button 
+                      type="button" 
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-8 text-xs font-semibold text-primary"
+                      disabled={isEnhancing}
+                      onClick={() => {
+                        const currentDesc = form.getValues("description") || ""
+                        const position = form.getValues("position") || ""
+                        const company = form.getValues("company") || ""
+
+                        if (!currentDesc && !position) {
+                          toast.error("Veuillez saisir un poste ou un début de description.")
+                          return
+                        }
+
+                        setIsEnhancing(true)
+                        enhanceExperience(currentDesc, position, company)
+                          .then((enhancedText) => {
+                            form.setValue("description", enhancedText)
+                            updateExperience(experience.id, { description: enhancedText })
+                            toast.success("Description améliorée avec succès !")
+                          })
+                          .catch((err) => {
+                            toast.error(err.message || "Erreur lors de l'amélioration de la description.")
+                          })
+                          .finally(() => setIsEnhancing(false))
+                      }}
+                    >
+                      {isEnhancing ? <Loader2 className="h-3 w-3 mr-1 animate-spin" /> : <Sparkles className="h-3 w-3 mr-1" />}
+                      {isEnhancing ? "Amélioration..." : "Enhance with AI"}
                     </Button>
                   </div>
                   <FormControl>

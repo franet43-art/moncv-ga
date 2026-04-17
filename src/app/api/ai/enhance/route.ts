@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   try {
-    const { currentSummary, jobTitle, fullName } = await req.json();
+    const { currentSummary, jobTitle, fullName, type = 'summary', company } = await req.json();
 
     const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
@@ -13,13 +13,24 @@ export async function POST(req: Request) {
       );
     }
 
-    const systemPrompt = `Tu es un expert en rédaction de CV. Ton objectif est d'améliorer ou de générer un résumé professionnel en français (profil/summary) pour un candidat.
+    const isExp = type === 'experience';
+
+    const systemPrompt = isExp 
+      ? `Tu es un expert en rédaction de CV. Ton objectif est d'améliorer ou de générer une description des tâches (experience) en français pour un candidat.
+La description doit être structurée avec des puces (tirets), utiliser des verbes d'action forts, être percutante et mettre en valeur les réalisations concrètes du candidat.
+Tu vas recevoir la description actuelle, le poste et l'entreprise. Si la description est très basique, enrichis-la avec des tâches typiques pour ce poste.
+Ne réponds QU'AVEC le texte de la description améliorée, sans guillemets, sans markdown (sauf les tirets - pour les listes), et sans phrase de politesse.`
+      : `Tu es un expert en rédaction de CV. Ton objectif est d'améliorer ou de générer un résumé professionnel en français (profil/summary) pour un candidat.
 Le résumé doit faire entre 2 et 4 phrases, avoir un ton très professionnel, percutant et mettre en valeur le profil.
 Tu vas recevoir le résumé actuel du candidat, son poste cible et son nom complet.
 Si le résumé actuel est vide, génère-en un à partir du poste cible.
 Ne réponds QU'AVEC le texte du résumé amélioré, sans guillemets, sans markdown, et sans aucune autre phrase de contexte.`;
 
-    const userMessage = `Nom complet : ${fullName || 'Non spécifié'}
+    const userMessage = isExp
+      ? `Poste : ${jobTitle || 'Non spécifié'}
+Entreprise : ${company || 'Non spécifié'}
+Description actuelle : ${currentSummary || 'Vide'}`
+      : `Nom complet : ${fullName || 'Non spécifié'}
 Poste ciblé : ${jobTitle || 'Non spécifié'}
 Résumé actuel : ${currentSummary || 'Vide'}`;
 
