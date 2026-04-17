@@ -5,27 +5,22 @@ import { ClassicPDF } from './classic-pdf'
 import { ModernPDF } from './modern-pdf'
 import { MinimalPDF } from './minimal-pdf'
 
-// Register Inter font — TTF only (WOFF2 crashes fontkit with RangeError)
-Font.register({
-  family: 'Inter',
-  fonts: [
-    {
-      src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hjQ.ttf',
-      fontWeight: 400,
-    },
-    {
-      src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuI6fAZ9hjQ.ttf',
-      fontWeight: 600,
-    },
-    {
-      src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYAZ9hjQ.ttf',
-      fontWeight: 700,
-    },
-  ],
-})
-
-// Disable word hyphenation to prevent "Re-nault" style breaks
-Font.registerHyphenationCallback((word) => [word])
+// Register Inter font — Local TTFs to prevent fontkit RangeError with WOFF2
+try {
+  Font.register({
+    family: 'Inter',
+    fonts: [
+      { src: '/fonts/Inter-Regular.ttf', fontWeight: 400 },
+      { src: '/fonts/Inter-SemiBold.ttf', fontWeight: 600 },
+      { src: '/fonts/Inter-Bold.ttf', fontWeight: 700 }
+    ]
+  });
+  
+  // Disable word hyphenation to prevent names like "Re-nault"
+  Font.registerHyphenationCallback((word) => [word]);
+} catch (e) {
+  console.warn("Font already registered or registration failed", e);
+}
 
 interface CVPDFDocumentProps {
   content: CVContent
