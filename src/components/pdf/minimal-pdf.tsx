@@ -1,118 +1,329 @@
 import React from 'react'
-import { Text, View } from '@react-pdf/renderer'
+import { View, Text } from '@react-pdf/renderer'
+import { PDFPhoto } from './shared/pdf-photo'
+import { sanitizeForPDF } from './pdf-document'
 import { CVContent, CVSettings } from '@/types/cv'
-import { createStyles } from '@/lib/pdf/styles'
-import { PDFExperience } from './shared/pdf-experience'
-import { PDFEducation } from './shared/pdf-education'
 
-interface MinimalPDFProps {
-  content: CVContent
-  settings: CVSettings
+function fmtDate(start: string, end: string, current: boolean): string {
+  return `${sanitizeForPDF(start)} — ${current ? 'Présent' : sanitizeForPDF(end)}`
 }
 
-export function MinimalPDF({ content, settings }: MinimalPDFProps) {
-  const styles = createStyles(settings.accentColor, settings.fontSize, settings.fontFamily)
+export function MinimalPDF({ content, settings }: { content: CVContent; settings: CVSettings }) {
   const { personalInfo, experiences, education, skills, languages, references } = content
+  const accent = settings.accentColor
+
+  const sectionTitle = (title: string) => (
+    <Text style={{
+      fontFamily: 'Helvetica',
+      fontSize: 8,
+      fontWeight: 'normal',
+      textTransform: 'uppercase',
+      letterSpacing: 2,
+      color: '#D4D4D8',
+      borderBottomWidth: 1,
+      borderBottomColor: '#E4E4E7',
+      paddingBottom: 8,
+      marginBottom: 12,
+    }}>
+      {title}
+    </Text>
+  )
+
+  const contacts: string[] = []
+  if (personalInfo.email) contacts.push(sanitizeForPDF(personalInfo.email))
+  if (personalInfo.phone) contacts.push(sanitizeForPDF(personalInfo.phone))
+  if (personalInfo.address) contacts.push(sanitizeForPDF(personalInfo.address))
 
   return (
-    <View style={styles.page} wrap>
-      {/* Header */}
-      <View style={{ alignItems: 'center', marginBottom: 30 }} wrap={false}>
-        <Text style={[styles.minimalName, { fontSize: 32, textAlign: 'center' }]}>{personalInfo.fullName || ''}</Text>
-        {personalInfo.jobTitle && <Text style={[styles.jobTitle, { color: '#4B5563', marginBottom: 15 }]}>{personalInfo.jobTitle || ''}</Text>}
+    <View style={{ paddingHorizontal: 48, paddingVertical: 44 }}>
+      {/* ── HEADER ── */}
+      <View style={{ alignItems: 'center', marginBottom: 44 }}>
+        {/* Photo */}
+        {settings.photoUrl && (
+          <View style={{ marginBottom: 16 }}>
+            <PDFPhoto src={settings.photoUrl} style={{ width: 64, height: 64 }} />
+          </View>
+        )}
 
-        <View style={[styles.flexRow, { flexWrap: 'wrap', justifyContent: 'center' }]}>
-          {personalInfo.email && <Text style={[styles.body, { marginRight: 15 }]}>{personalInfo.email}</Text>}
-          {personalInfo.phone && <Text style={[styles.body, { marginRight: 15 }]}>{personalInfo.phone}</Text>}
-          {personalInfo.address && <Text style={[styles.body, { marginRight: 15 }]}>{personalInfo.address}</Text>}
-          {personalInfo.linkedin && <Text style={styles.body}>{personalInfo.linkedin}</Text>}
+        {/* Nom */}
+        <Text style={{
+          fontFamily: 'Helvetica',
+          fontSize: 32,
+          fontWeight: 'normal',
+          letterSpacing: -0.5,
+          color: accent,
+          marginBottom: 8,
+          textAlign: 'center',
+        }}>
+          {sanitizeForPDF(personalInfo.fullName)}
+        </Text>
+
+        {/* Poste */}
+        <Text style={{
+          fontFamily: 'Helvetica',
+          fontSize: 12,
+          fontWeight: 'normal',
+          letterSpacing: 2,
+          textTransform: 'uppercase',
+          color: '#A1A1AA',
+          marginBottom: 16,
+          textAlign: 'center',
+        }}>
+          {sanitizeForPDF(personalInfo.jobTitle)}
+        </Text>
+
+        {/* Ligne fine */}
+        <View style={{
+          height: 1,
+          width: 80,
+          backgroundColor: '#E4E4E7',
+          marginBottom: 16,
+        }} />
+
+        {/* Contact */}
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+          {contacts.map((item, i) => (
+            <Text key={i} style={{
+              fontFamily: 'Helvetica',
+              fontSize: 8,
+              fontWeight: 'normal',
+              textTransform: 'uppercase',
+              color: '#71717A',
+              marginRight: i < contacts.length - 1 ? 24 : 0,
+            }}>
+              {item}
+            </Text>
+          ))}
         </View>
-
       </View>
 
-      {/* Summary */}
+      {/* ── SUMMARY ── */}
       {personalInfo.summary && (
-        <View style={{ marginBottom: 25, paddingHorizontal: 20 }} wrap={false}>
-          <Text style={[styles.body, { textAlign: 'center', fontStyle: 'italic' }]}>{personalInfo.summary || ''}</Text>
+        <View style={{ marginBottom: 40 }}>
+          <Text style={{
+            fontFamily: 'Helvetica',
+            fontSize: 10,
+            fontWeight: 'normal',
+            fontStyle: 'italic',
+            color: '#52525B',
+            textAlign: 'center',
+            lineHeight: 1.6,
+          }}>
+            "{sanitizeForPDF(personalInfo.summary)}"
+          </Text>
         </View>
       )}
 
-      {/* Main content with side margins */}
-      <View style={{ paddingHorizontal: 10 }}>
-        {/* Experience */}
-        {experiences.length > 0 && (
-          <View wrap style={{ marginBottom: 15 }}>
-            <Text style={styles.minimalSectionTitle}>Expériences</Text>
-            <View style={{ borderLeftWidth: 1, borderLeftColor: '#E5E7EB', paddingLeft: 15, marginLeft: 5 }}>
-              {(experiences || []).map((exp) => (
-                <View key={exp.id} style={{ marginBottom: 8 }}>
-                  <PDFExperience experience={exp} styles={styles} />
-                </View>
-              ))}
-            </View>
-          </View>
-        )}
+      {/* ── EXPÉRIENCES — grille [dates droite | contenu gauche] ── */}
+      {experiences.length > 0 && (
+        <View style={{ marginBottom: 40 }}>
+          {sectionTitle('EXPÉRIENCE')}
+          {experiences.map((exp, i) => (
+            <View key={exp.id} style={{
+              flexDirection: 'row',
+              marginBottom: i < experiences.length - 1 ? 20 : 0,
+            }}>
+              {/* Dates — colonne droite */}
+              <View style={{ width: '33%', paddingRight: 16 }}>
+                <Text style={{
+                  fontFamily: 'Helvetica',
+                  fontSize: 8,
+                  fontWeight: 'bold',
+                  color: '#A1A1AA',
+                  textAlign: 'right',
+                }}>
+                  {fmtDate(exp.startDate, exp.endDate || '', exp.isCurrent)}
+                </Text>
+              </View>
 
-        {/* Education */}
-        {education.length > 0 && (
-          <View wrap style={{ marginBottom: 15 }}>
-            <Text style={styles.minimalSectionTitle}>Formation</Text>
-            <View style={{ borderLeftWidth: 1, borderLeftColor: '#E5E7EB', paddingLeft: 15, marginLeft: 5 }}>
-              {(education || []).map((edu) => (
-                <View key={edu.id} style={{ marginBottom: 8 }}>
-                  <PDFEducation education={edu} styles={styles} />
-                </View>
-              ))}
-            </View>
-          </View>
-        )}
-
-        {/* Skills & Languages Row */}
-        <View style={[styles.flexRow, { alignItems: 'flex-start', marginBottom: 15 }]} wrap={false}>
-          {skills.length > 0 && (
-            <View style={{ flex: 1, paddingRight: 15 }}>
-
-              <Text style={styles.minimalSectionTitle}>Compétences</Text>
-              <View style={styles.gap1}>
-                {(skills || []).map(skill => (
-                  <Text key={skill.id} style={styles.body}>• {skill.name || ''} {skill.level && <Text style={{ color: '#6B7280' }}>({skill.level})</Text>}</Text>
-                ))}
+              {/* Contenu — colonne gauche */}
+              <View style={{ width: '67%' }}>
+                <Text style={{
+                  fontFamily: 'Helvetica',
+                  fontSize: 12,
+                  fontWeight: 'bold',
+                  color: '#18181B',
+                  marginBottom: 2,
+                }}>
+                  {sanitizeForPDF(exp.position)}
+                </Text>
+                <Text style={{
+                  fontFamily: 'Helvetica',
+                  fontSize: 9,
+                  fontWeight: 'normal',
+                  color: '#A1A1AA',
+                  marginBottom: 4,
+                }}>
+                  {sanitizeForPDF(exp.company)}
+                </Text>
+                {exp.description && (
+                  <Text style={{
+                    fontFamily: 'Helvetica',
+                    fontSize: 9,
+                    fontWeight: 'normal',
+                    color: '#3F3F46',
+                    lineHeight: 1.4,
+                  }}>
+                    {sanitizeForPDF(exp.description)}
+                  </Text>
+                )}
               </View>
             </View>
-          )}
-
-          {languages.length > 0 && (
-            <View style={{ flex: 1 }}>
-              <Text style={styles.minimalSectionTitle}>Langues</Text>
-              <View style={styles.gap1}>
-                {(languages || []).map(lang => (
-                  <Text key={lang.id} style={styles.body}>• {lang.name || ''} {lang.level && <Text style={{ color: '#6B7280' }}>({lang.level})</Text>}</Text>
-                ))}
-              </View>
-            </View>
-          )}
+          ))}
         </View>
+      )}
 
-        {/* References */}
-        {references.length > 0 && (
-          <View wrap style={{ marginBottom: 15 }}>
-            <Text style={styles.minimalSectionTitle}>Références</Text>
-            <View style={[styles.flexRow, { flexWrap: 'wrap', marginBottom: 15 }]}>
-              {(references || []).map((ref) => (
-                <View key={ref.id} wrap={false} style={{ width: '45%', marginBottom: 12, marginRight: '5%' }}>
-
-                  <Text style={[styles.body, { fontWeight: 'bold' }]}>{ref.name || ''}</Text>
-                  {(ref.position || ref.company) && (
-                    <Text style={styles.body}>{ref.position || ''} {ref.company && `- ${ref.company}`}</Text>
-                  )}
-                  {ref.email && <Text style={styles.body}>{ref.email}</Text>}
-                  {ref.phone && <Text style={styles.body}>{ref.phone}</Text>}
-                </View>
-              ))}
-            </View>
+      {/* ── FORMATION — 2 colonnes ── */}
+      {education.length > 0 && (
+        <View style={{ marginBottom: 40 }}>
+          {sectionTitle('FORMATION')}
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+            {education.map((edu) => (
+              <View key={edu.id} style={{
+                width: '50%',
+                paddingRight: 24,
+                marginBottom: 16,
+              }}>
+                <Text style={{
+                  fontFamily: 'Helvetica',
+                  fontSize: 8,
+                  fontWeight: 'bold',
+                  color: '#A1A1AA',
+                  marginBottom: 2,
+                }}>
+                  {fmtDate(edu.startDate, edu.endDate || '', edu.isCurrent)}
+                </Text>
+                <Text style={{
+                  fontFamily: 'Helvetica',
+                  fontSize: 10,
+                  fontWeight: 'bold',
+                  color: '#18181B',
+                  marginBottom: 2,
+                }}>
+                  {sanitizeForPDF(edu.degree)}
+                </Text>
+                <Text style={{
+                  fontFamily: 'Helvetica',
+                  fontSize: 8,
+                  fontWeight: 'normal',
+                  color: '#71717A',
+                }}>
+                  {sanitizeForPDF(edu.institution)}
+                </Text>
+              </View>
+            ))}
           </View>
-        )}
-      </View>
+        </View>
+      )}
+
+      {/* ── COMPÉTENCES + LANGUES — 2 colonnes ── */}
+      {(skills.length > 0 || languages.length > 0) && (
+        <View style={{ flexDirection: 'row', marginBottom: 40 }}>
+          <View style={{ width: '50%', paddingRight: 24 }}>
+            {skills.length > 0 && (
+              <View>
+                {sectionTitle('COMPÉTENCES')}
+                {skills.map((s, i) => (
+                  <Text key={s.id} style={{
+                    fontFamily: 'Helvetica',
+                    fontSize: 9,
+                    fontWeight: 'normal',
+                    color: '#52525B',
+                    marginBottom: i < skills.length - 1 ? 4 : 0,
+                  }}>
+                    {sanitizeForPDF(s.name)}
+                  </Text>
+                ))}
+              </View>
+            )}
+          </View>
+          <View style={{ width: '50%', paddingLeft: 24 }}>
+            {languages.length > 0 && (
+              <View>
+                {sectionTitle('LANGUES')}
+                {languages.map((l, i) => (
+                  <View key={l.id} style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginBottom: i < languages.length - 1 ? 4 : 0,
+                  }}>
+                    <Text style={{
+                      fontFamily: 'Helvetica',
+                      fontSize: 9,
+                      fontWeight: 'normal',
+                      color: '#52525B',
+                    }}>
+                      {sanitizeForPDF(l.name)}
+                    </Text>
+                    <Text style={{
+                      fontFamily: 'Helvetica',
+                      fontSize: 9,
+                      fontWeight: 'normal',
+                      color: '#71717A',
+                    }}>
+                      {sanitizeForPDF(l.level)}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
+        </View>
+      )}
+
+      {/* ── RÉFÉRENCES — 2 colonnes ── */}
+      {references.length > 0 && (
+        <View>
+          {sectionTitle('RÉFÉRENCES')}
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+            {references.map((ref) => (
+              <View key={ref.id} style={{
+                width: '50%',
+                paddingRight: 24,
+                marginBottom: 14,
+              }}>
+                <Text style={{
+                  fontFamily: 'Helvetica',
+                  fontSize: 10,
+                  fontWeight: 'bold',
+                  color: '#18181B',
+                  marginBottom: 2,
+                }}>
+                  {sanitizeForPDF(ref.name)}
+                </Text>
+                <Text style={{
+                  fontFamily: 'Helvetica',
+                  fontSize: 9,
+                  fontWeight: 'normal',
+                  color: '#52525B',
+                }}>
+                  {sanitizeForPDF(ref.position)}
+                </Text>
+                {ref.company && (
+                  <Text style={{
+                    fontFamily: 'Helvetica',
+                    fontSize: 9,
+                    fontWeight: 'normal',
+                    color: '#52525B',
+                  }}>
+                    {sanitizeForPDF(ref.company)}
+                  </Text>
+                )}
+                {ref.email && (
+                  <Text style={{
+                    fontFamily: 'Helvetica',
+                    fontSize: 8,
+                    fontWeight: 'normal',
+                    color: '#71717A',
+                  }}>
+                    {sanitizeForPDF(ref.email)}
+                  </Text>
+                )}
+              </View>
+            ))}
+          </View>
+        </View>
+      )}
     </View>
   )
 }
