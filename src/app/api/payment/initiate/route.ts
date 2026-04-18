@@ -50,23 +50,22 @@ export async function POST(req: Request) {
     const NEXT_PUBLIC_APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://moncv.ga';
 
     // Call Chariow API
-    const chariowPayload = {
+    const chariowPayload: any = {
       product_id: process.env.CHARIOW_PRODUCT_ID,
       email: customerEmail,
       first_name: customerFirstName,
       last_name: customerLastName,
-      phone: {
-        number: customerPhone || "",
-        country_code: customerCountryCode || ""
-      },
       redirect_url: `${NEXT_PUBLIC_APP_URL}/payment/return?cv_id=${cvId}&sale_id={sale_id}`,
       custom_metadata: {
         cv_id: cvId
       }
     };
 
-    if (!customerPhone) delete (chariowPayload.phone as any).number;
-    if (!customerCountryCode) delete (chariowPayload.phone as any).country_code;
+    if (customerPhone || customerCountryCode) {
+      chariowPayload.phone = {};
+      if (customerPhone) chariowPayload.phone.number = customerPhone;
+      if (customerCountryCode) chariowPayload.phone.country_code = customerCountryCode;
+    }
 
     console.log('[PAYMENT_INITIATE] Appel API Chariow...');
     const chariowApiReq = await fetch('https://api.chariow.com/v1/checkout', {
@@ -80,6 +79,10 @@ export async function POST(req: Request) {
 
     const chariowRes = await chariowApiReq.json().catch(() => ({}));
 
+    // LOG OBLIGATOIRE - voir la vraie réponse Chariow
+    console.log('[PAYMENT_INITIATE] Chariow status:', chariowApiReq.status);
+    console.log('[PAYMENT_INITIATE] Chariow response:', JSON.stringify(chariowRes));
+
     if (!chariowApiReq.ok) {
       console.error('[PAYMENT_INITIATE_CHARIOW_ERROR]', {
         status: chariowApiReq.status,
@@ -91,15 +94,25 @@ export async function POST(req: Request) {
       }, { status: 500 });
     }
 
+    // Chercher checkout_url dans TOUTES les structures possibles
     const resData = chariowRes?.data || chariowRes;
+    const checkoutUrl = 
+      resData?.payment?.checkout_url ||   // structure actuelle attendue
+      resData?.checkout_url ||             // structure directe
+      resData?.url ||                      // variante possible
+      chariowRes?.checkout_url;           // racine directe
 
-    if (resData?.step === 'payment') {
-      return NextResponse.json({ checkout_url: resData.payment?.checkout_url });
+    const step = resData?.step;
+
+    console.log('[PAYMENT_INITIATE] step:', step, '| checkout_url trouvée:', !!checkoutUrl);
+
+    if (checkoutUrl) {
+      return NextResponse.json({ checkout_url: checkoutUrl });
     }
 
-    if (resData?.step === 'completed' || resData?.step === 'already_purchased') {
+    if (step === 'completed' || step === 'already_purchased' || resData?.already_paid) {
       // Mark as paid if completed
-      if (resData.step === 'completed') {
+      if (step === 'completed' || resData?.step === 'completed') {
         const { error: updateError } = await supabase
           .from('cvs')
           .update({ is_paid: true })
@@ -114,8 +127,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ already_paid: true });
     }
 
-    console.error('[PAYMENT_INITIATE_UNEXPECTED_STEP]', { step: resData?.step, response: chariowRes });
-    return NextResponse.json({ error: 'Statut de paiement inattendu' }, { status: 500 });
+    // Aucune structure connue — retourner toute la réponse pour debug
+    console.error('[PAYMENT_INITIATE_UNKNOWN_STRUCTURE]', JSON.stringify(chariowRes));
+    return NextResponse.json({ 
+      error: 'Structure de réponse Chariow inconnue', 
+      debug: chariowRes  // temporaire pour identifier la vraie structure
+    }, { status: 500 });
 
   } catch (error: any) {
     console.error('[PAYMENT_INITIATE_FATAL_ERROR]', {
