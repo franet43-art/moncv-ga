@@ -55,14 +55,15 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
       marginTop: 24,
       borderBottomWidth: 2,
       borderBottomColor: settings.accentColor,
-      fontWeight: 700,
+      fontWeight: 'bold',
     },
     modernSectionTitle: {
       ...baseStyles.modernSectionTitle,
       color: 'white',
       borderBottomColor: 'rgba(255,255,255,0.3)',
-      fontWeight: 700,
+      fontWeight: 'bold',
     }
+
   });
 
   return (
@@ -79,7 +80,7 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
         )}
 
         <View style={{ width: '100%', marginBottom: 24, alignItems: 'center' }}>
-          <Text style={[baseStyles.name, { color: 'white', textAlign: 'center', marginBottom: 4, fontWeight: 700 }]}>
+          <Text style={[baseStyles.name, { color: 'white', textAlign: 'center', marginBottom: 4, fontWeight: 'bold' }]}>
             {sanitizeForPDF(personalInfo.fullName)}
           </Text>
           {personalInfo.jobTitle && (
@@ -89,12 +90,13 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
               textTransform: 'uppercase', 
               letterSpacing: 1.5,
               textAlign: 'center',
-              fontWeight: 700
+              fontWeight: 'bold'
             }}>
               {sanitizeForPDF(personalInfo.jobTitle)}
             </Text>
           )}
         </View>
+
 
         <View style={{ width: '100%', marginBottom: 24 }}>
           {personalInfo.email && <Text style={[baseStyles.body, { color: 'rgba(255,255,255,0.9)', marginBottom: 4 }]}>{sanitizeForPDF(personalInfo.email)}</Text>}
@@ -141,8 +143,13 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
             </Text>
             {experiences.map((exp) => (
               <View key={exp.id} style={{ marginBottom: 12 }}>
-                <Text style={[baseStyles.body, { fontWeight: 700 }]}>{sanitizeForPDF(exp.position)}</Text>
-                <Text style={[baseStyles.body, { fontWeight: 600 }]}>{sanitizeForPDF(exp.company)}</Text>
+                <Text style={[baseStyles.body, { fontWeight: 'bold' }]}>{sanitizeForPDF(exp.position)}</Text>
+                <Text style={[baseStyles.body, { fontWeight: 'bold' }]}>{sanitizeForPDF(exp.company)}</Text>
+                {(exp.startDate || exp.endDate) && (
+                  <Text style={[baseStyles.body, { fontWeight: 'normal', fontSize: 8, marginBottom: 2 }]}>
+                    {sanitizeForPDF(exp.startDate)} — {exp.isCurrent ? 'Présent' : sanitizeForPDF(exp.endDate)}
+                  </Text>
+                )}
                 {exp.description && (
                   <View style={{ width: '100%', marginTop: 2 }}>
                     <Text style={baseStyles.body}>{sanitizeForPDF(exp.description)}</Text>
@@ -150,6 +157,7 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
                 )}
               </View>
             ))}
+
           </View>
         )}
 
@@ -160,10 +168,16 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
             </Text>
             {education.map((edu) => (
               <View key={edu.id} style={{ marginBottom: 12 }}>
-                <Text style={[baseStyles.body, { fontWeight: 700 }]}>{sanitizeForPDF(edu.degree)}</Text>
-                <Text style={[baseStyles.body, { fontWeight: 600 }]}>{sanitizeForPDF(edu.institution)}</Text>
+                <Text style={[baseStyles.body, { fontWeight: 'bold' }]}>{sanitizeForPDF(edu.degree)}</Text>
+                <Text style={[baseStyles.body, { fontWeight: 'bold' }]}>{sanitizeForPDF(edu.institution)}</Text>
+                {(edu.startDate || edu.endDate) && (
+                  <Text style={[baseStyles.body, { fontWeight: 'normal', fontSize: 8, marginBottom: 2 }]}>
+                    {sanitizeForPDF(edu.startDate)} — {sanitizeForPDF(edu.endDate)}
+                  </Text>
+                )}
               </View>
             ))}
+
           </View>
         )}
 
@@ -174,7 +188,8 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
             </Text>
             {references.map((ref) => (
               <View key={ref.id} wrap={false} style={{ marginBottom: 12 }}>
-                <Text style={[baseStyles.body, { fontWeight: 700 }]}>{sanitizeForPDF(ref.name)}</Text>
+                <Text style={[baseStyles.body, { fontWeight: 'bold' }]}>{sanitizeForPDF(ref.name)}</Text>
+
                 {ref.position && <Text style={baseStyles.body}>{sanitizeForPDF(ref.position)}</Text>}
                 {ref.company && <Text style={baseStyles.body}>{sanitizeForPDF(ref.company)}</Text>}
               </View>

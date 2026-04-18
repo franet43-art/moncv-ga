@@ -50,22 +50,23 @@ export async function POST(req: Request) {
     const NEXT_PUBLIC_APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://moncv.ga';
 
     // Call Chariow API
-    const chariowPayload: any = {
+    const phonePayload = (customerPhone && customerPhone.trim()) ? {
+      phone: {
+        number: parseInt(customerPhone.replace(/\D/g, ''), 10),
+        country_code: customerCountryCode || "241"
+      }
+    } : {};
+
+    const chariowPayload = {
       product_id: process.env.CHARIOW_PRODUCT_ID,
       email: customerEmail,
       first_name: customerFirstName,
-      last_name: customerLastName,
+      last_name: customerLastName || "",
+      ...phonePayload,
       redirect_url: `${NEXT_PUBLIC_APP_URL}/payment/return?cv_id=${cvId}&sale_id={sale_id}`,
-      custom_metadata: {
-        cv_id: cvId
-      }
+      custom_metadata: { cv_id: cvId }
     };
 
-    if (customerPhone || customerCountryCode) {
-      chariowPayload.phone = {};
-      if (customerPhone) chariowPayload.phone.number = customerPhone;
-      if (customerCountryCode) chariowPayload.phone.country_code = customerCountryCode;
-    }
 
     console.log('[PAYMENT_INITIATE] Appel API Chariow...');
     const chariowApiReq = await fetch('https://api.chariow.com/v1/checkout', {
@@ -111,21 +112,13 @@ export async function POST(req: Request) {
     }
 
     if (step === 'completed' || step === 'already_purchased' || resData?.already_paid) {
-      // Mark as paid if completed
-      if (step === 'completed' || resData?.step === 'completed') {
-        const { error: updateError } = await supabase
-          .from('cvs')
-          .update({ is_paid: true })
-          .eq('id', cvId)
-          .eq('user_id', user.id);
-
-        if (updateError) {
-          console.error('[PAYMENT_INITIATE_UPDATE_ERROR]', updateError);
-        }
-      }
-
+      // Marquer comme payé dans Supabase dans les deux cas
+      await supabase.from('cvs').update({ is_paid: true })
+        .eq('id', cvId).eq('user_id', user.id);
+        
       return NextResponse.json({ already_paid: true });
     }
+
 
     // Aucune structure connue — retourner toute la réponse pour debug
     console.error('[PAYMENT_INITIATE_UNKNOWN_STRUCTURE]', JSON.stringify(chariowRes));

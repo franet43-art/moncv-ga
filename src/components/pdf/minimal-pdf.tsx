@@ -21,12 +21,13 @@ export function MinimalPDF({ content, settings }: MinimalPDFProps) {
         <Text style={[styles.minimalName, { fontSize: 32, textAlign: 'center' }]}>{personalInfo.fullName || ''}</Text>
         {personalInfo.jobTitle && <Text style={[styles.jobTitle, { color: '#4B5563', marginBottom: 15 }]}>{personalInfo.jobTitle || ''}</Text>}
 
-        <View style={[styles.flexRow, { gap: 15, flexWrap: 'wrap', justifyContent: 'center' }]}>
-          {personalInfo.email && <Text style={styles.body}>{personalInfo.email}</Text>}
-          {personalInfo.phone && <Text style={styles.body}>{personalInfo.phone}</Text>}
-          {personalInfo.address && <Text style={styles.body}>{personalInfo.address}</Text>}
+        <View style={[styles.flexRow, { flexWrap: 'wrap', justifyContent: 'center' }]}>
+          {personalInfo.email && <Text style={[styles.body, { marginRight: 15 }]}>{personalInfo.email}</Text>}
+          {personalInfo.phone && <Text style={[styles.body, { marginRight: 15 }]}>{personalInfo.phone}</Text>}
+          {personalInfo.address && <Text style={[styles.body, { marginRight: 15 }]}>{personalInfo.address}</Text>}
           {personalInfo.linkedin && <Text style={styles.body}>{personalInfo.linkedin}</Text>}
         </View>
+
       </View>
 
       {/* Summary */}
@@ -67,9 +68,10 @@ export function MinimalPDF({ content, settings }: MinimalPDFProps) {
         )}
 
         {/* Skills & Languages Row */}
-        <View style={[styles.flexRow, { alignItems: 'flex-start', gap: 30, marginBottom: 15 }]} wrap={false}>
+        <View style={[styles.flexRow, { alignItems: 'flex-start', marginBottom: 15 }]} wrap={false}>
           {skills.length > 0 && (
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, paddingRight: 15 }}>
+
               <Text style={styles.minimalSectionTitle}>Compétences</Text>
               <View style={styles.gap1}>
                 {(skills || []).map(skill => (
@@ -95,9 +97,10 @@ export function MinimalPDF({ content, settings }: MinimalPDFProps) {
         {references.length > 0 && (
           <View wrap style={{ marginBottom: 15 }}>
             <Text style={styles.minimalSectionTitle}>Références</Text>
-            <View style={[styles.flexRow, { flexWrap: 'wrap', gap: 20 }]}>
+            <View style={[styles.flexRow, { flexWrap: 'wrap', marginBottom: 15 }]}>
               {(references || []).map((ref) => (
-                <View key={ref.id} wrap={false} style={{ width: '45%', marginBottom: 12 }}>
+                <View key={ref.id} wrap={false} style={{ width: '45%', marginBottom: 12, marginRight: '5%' }}>
+
                   <Text style={[styles.body, { fontWeight: 'bold' }]}>{ref.name || ''}</Text>
                   {(ref.position || ref.company) && (
                     <Text style={styles.body}>{ref.position || ''} {ref.company && `- ${ref.company}`}</Text>

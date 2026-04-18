@@ -51,7 +51,7 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
     },
     sectionTitle: {
       ...baseStyles.sectionTitle,
-      fontWeight: 700,
+      fontWeight: 'bold',
       borderBottomWidth: 1,
       borderBottomColor: settings.accentColor,
       color: settings.accentColor,
@@ -60,15 +60,16 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
     },
     entryTitle: {
       ...baseStyles.entryTitle,
-      fontWeight: 700,
+      fontWeight: 'bold',
     },
     body: {
       ...baseStyles.body,
-      fontWeight: 400,
+      fontWeight: 'normal',
     },
     bold: {
-      fontWeight: 700,
+      fontWeight: 'bold',
     }
+
   });
 
   return (
@@ -82,14 +83,15 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
         )}
         
         <View style={{ width: '100%', marginBottom: 20, alignItems: 'center' }}>
-          <Text style={[styles.name, { fontSize: 20, textAlign: 'center', fontWeight: 700 }]}>
+          <Text style={[styles.name, { fontSize: 20, textAlign: 'center', fontWeight: 'bold' }]}>
             {sanitizeForPDF(personalInfo.fullName)}
           </Text>
           {personalInfo.jobTitle && (
-            <Text style={[styles.jobTitle, { fontSize: 12, textAlign: 'center', fontWeight: 600 }]}>
+            <Text style={[styles.jobTitle, { fontSize: 12, textAlign: 'center', fontWeight: 'bold' }]}>
               {sanitizeForPDF(personalInfo.jobTitle)}
             </Text>
           )}
+
         </View>
 
         <View style={{ width: '100%', marginBottom: 20 }}>
@@ -135,14 +137,20 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
             <Text style={styles.sectionTitle}>Expérience</Text>
             {experiences.map(exp => (
               <View key={exp.id} style={{ marginBottom: 10 }}>
-                <Text style={[styles.body, { fontWeight: 700 }]}>{sanitizeForPDF(exp.position)}</Text>
-                <Text style={[styles.body, { fontWeight: 600 }]}>{sanitizeForPDF(exp.company)}</Text>
+                <Text style={[styles.body, { fontWeight: 'bold' }]}>{sanitizeForPDF(exp.position)}</Text>
+                <Text style={[styles.body, { fontWeight: 'bold' }]}>{sanitizeForPDF(exp.company)}</Text>
+                {(exp.startDate || exp.endDate) && (
+                  <Text style={[styles.body, { fontWeight: 'normal', fontSize: 8, marginBottom: 2 }]}>
+                    {sanitizeForPDF(exp.startDate)} — {exp.isCurrent ? 'Présent' : sanitizeForPDF(exp.endDate)}
+                  </Text>
+                )}
                 {exp.description && (
                   <View style={{ width: '100%', marginTop: 2 }}>
                     <Text style={styles.body}>{sanitizeForPDF(exp.description)}</Text>
                   </View>
                 )}
               </View>
+
             ))}
           </View>
         )}
@@ -152,9 +160,15 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
             <Text style={styles.sectionTitle}>Formation</Text>
             {education.map(edu => (
               <View key={edu.id} style={{ marginBottom: 10 }}>
-                <Text style={[styles.body, { fontWeight: 700 }]}>{sanitizeForPDF(edu.degree)}</Text>
-                <Text style={[styles.body, { fontWeight: 600 }]}>{sanitizeForPDF(edu.institution)}</Text>
+                <Text style={[styles.body, { fontWeight: 'bold' }]}>{sanitizeForPDF(edu.degree)}</Text>
+                <Text style={[styles.body, { fontWeight: 'bold' }]}>{sanitizeForPDF(edu.institution)}</Text>
+                {(edu.startDate || edu.endDate) && (
+                  <Text style={[styles.body, { fontWeight: 'normal', fontSize: 8, marginBottom: 2 }]}>
+                    {sanitizeForPDF(edu.startDate)} — {sanitizeForPDF(edu.endDate)}
+                  </Text>
+                )}
               </View>
+
             ))}
           </View>
         )}
@@ -164,7 +178,8 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
             <Text style={styles.sectionTitle}>Références</Text>
             {references.map(ref => (
               <View key={ref.id} style={{ marginBottom: 8 }}>
-                <Text style={[styles.body, { fontWeight: 700 }]}>{sanitizeForPDF(ref.name)}</Text>
+                <Text style={[styles.body, { fontWeight: 'bold' }]}>{sanitizeForPDF(ref.name)}</Text>
+
                 {ref.position && <Text style={styles.body}>{sanitizeForPDF(ref.position)}</Text>}
                 {ref.company && <Text style={styles.body}>{sanitizeForPDF(ref.company)}</Text>}
               </View>
