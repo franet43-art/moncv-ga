@@ -1,8 +1,6 @@
 "use client"
 
 import { useState, useMemo, useEffect, Suspense } from "react"
-import { pdf } from '@react-pdf/renderer'
-import { CVPDFDocument } from '@/components/pdf/pdf-document'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
 import { useRouter, useSearchParams } from "next/navigation"
@@ -80,16 +78,29 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
   const generatePDF = async (isPaid: boolean) => {
     setIsGenerating(true)
     try {
+      // Import dynamique au moment du clic uniquement
+      const [{ pdf }, { CVPDFDocument }] = await Promise.all([
+        import('@react-pdf/renderer'),
+        import('@/components/pdf/pdf-document')
+      ])
+
       const blob = await pdf(
-        <CVPDFDocument content={currentCV.content} settings={currentCV.settings} isPaid={isPaid} />
+        <CVPDFDocument 
+          content={currentCV.content} 
+          settings={currentCV.settings} 
+          isPaid={isPaid} 
+        />
       ).toBlob()
+
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url
       link.download = `${currentCV.content.personalInfo.fullName || 'MonCV'}.pdf`
+      document.body.appendChild(link)
       link.click()
+      document.body.removeChild(link)
       URL.revokeObjectURL(url)
-      
+
       if (!isPaid) {
         toast.success('PDF téléchargé.', {
           description: "Version brouillon avec filigrane.",
