@@ -1,273 +1,332 @@
-import React from 'react'
-import { View, Text } from '@react-pdf/renderer'
-import { PDFPhoto } from './shared/pdf-photo'
-import { sanitizeForPDF } from './pdf-document'
-import { CVContent, CVSettings } from '@/types/cv'
+import React from 'react';
+import { View, Text, StyleSheet } from '@react-pdf/renderer';
+import { CVContent, CVSettings } from '@/types/cv';
+import { PDFPhoto } from './shared/pdf-photo';
+import { sanitizeForPDF } from './pdf-document';
 
-function fmtDate(start: string, end: string, current: boolean): string {
-  return `${sanitizeForPDF(start)} — ${current ? 'Présent' : sanitizeForPDF(end)}`
-}
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'column',
+    padding: 40,
+    fontFamily: 'Helvetica',
+    fontSize: 11,
+    lineHeight: 1.4,
+    color: '#1F2937',
+  },
+  header: {
+    textAlign: 'center',
+    position: 'relative',
+    paddingBottom: 24,
+    borderBottomWidth: 2,
+    marginBottom: 32,
+  },
+  photoContainer: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    width: 96,
+    height: 96,
+    borderRadius: 48,
+    borderWidth: 2,
+    borderColor: '#F3F4F6',
+    overflow: 'hidden',
+  },
+  headerWithPhoto: {
+    paddingRight: 112,
+    textAlign: 'left',
+  },
+  name: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    marginBottom: 8,
+    color: '#18181B',
+  },
+  title: {
+    fontSize: 14,
+    fontWeight: 'normal',
+    fontStyle: 'italic',
+    marginBottom: 16,
+  },
+  contactRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 8,
+  },
+  contactItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 24,
+    marginBottom: 8,
+  },
+  contactText: {
+    fontSize: 9,
+    color: '#52525B',
+  },
+  section: {
+    marginBottom: 28,
+  },
+  sectionTitle: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    letterSpacing: 1.5,
+    marginBottom: 16,
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#D1D5DB',
+  },
+  sectionContent: {
+    fontSize: 9,
+    lineHeight: 1.6,
+    textAlign: 'justify',
+  },
+  experienceContainer: {
+    position: 'relative',
+    paddingLeft: 16,
+    borderLeftWidth: 2,
+    borderLeftColor: '#F3F4F6',
+    marginBottom: 20,
+  },
+  experienceHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+  },
+  experiencePosition: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    flex: 1,
+    color: '#18181B',
+  },
+  experienceDates: {
+    fontSize: 8,
+    color: '#71717A',
+    fontStyle: 'italic',
+  },
+  experienceCompany: {
+    fontSize: 9,
+    fontWeight: 'normal',
+    color: '#52525B',
+    marginBottom: 6,
+  },
+  experienceDescription: {
+    fontSize: 9,
+    lineHeight: 1.5,
+    color: '#3F3F46',
+  },
+  educationItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+  },
+  educationLeft: {
+    flex: 1,
+  },
+  educationDegree: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    marginBottom: 2,
+    color: '#18181B',
+  },
+  educationDetails: {
+    fontSize: 9,
+    color: '#52525B',
+  },
+  educationDates: {
+    fontSize: 8,
+    color: '#71717A',
+  },
+  twoColumns: {
+    flexDirection: 'row',
+    marginBottom: 8,
+  },
+  column: {
+    width: '50%',
+  },
+  skillItem: {
+    flexDirection: 'row',
+    marginBottom: 6,
+  },
+  skillName: {
+    fontSize: 9,
+    flex: 1,
+    color: '#3F3F46',
+  },
+  skillLevel: {
+    fontSize: 8,
+    color: '#71717A',
+  },
+  languageItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  languageName: {
+    fontSize: 9,
+    color: '#3F3F46',
+  },
+  languageLevel: {
+    fontSize: 8,
+    color: '#71717A',
+  },
+  referencesGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  referenceItem: {
+    width: '50%',
+    paddingRight: 16,
+    marginBottom: 16,
+  },
+  referenceName: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    marginBottom: 2,
+    color: '#18181B',
+  },
+  referencePosition: {
+    fontSize: 9,
+    color: '#52525B',
+    marginBottom: 2,
+  },
+  referenceCompany: {
+    fontSize: 9,
+    color: '#52525B',
+    marginBottom: 4,
+  },
+  referenceContact: {
+    fontSize: 8,
+    color: '#71717A',
+  },
+});
 
-export function ClassicPDF({ content, settings }: { content: CVContent; settings: CVSettings }) {
-  const { personalInfo, experiences, education, skills, languages, references } = content
-  const accent = settings.accentColor
-  const hasPhoto = !!settings.photoUrl
-  const align = hasPhoto ? 'left' : 'center'
-
-  const sectionTitle = (title: string) => (
-    <Text style={{
-      fontFamily: 'Helvetica',
-      fontSize: 10,
-      fontWeight: 'bold',
-      textTransform: 'uppercase',
-      letterSpacing: 1,
-      color: accent,
-      marginBottom: 8,
-      textAlign: align,
-    }}>
-      {title}
-    </Text>
-  )
-
-  const contacts: string[] = []
-  if (personalInfo.email) contacts.push(sanitizeForPDF(personalInfo.email))
-  if (personalInfo.phone) contacts.push(sanitizeForPDF(personalInfo.phone))
-  if (personalInfo.address) contacts.push(sanitizeForPDF(personalInfo.address))
-  if (personalInfo.linkedin) contacts.push('LinkedIn')
+export const ClassicPDF = ({ content, settings }: { content: CVContent; settings: CVSettings }) => {
+  const { personalInfo, experiences, education, skills, languages, references } = content;
+  const { accentColor, photoUrl } = settings;
+  const hasPhoto = !!photoUrl;
 
   return (
-    <View style={{ paddingHorizontal: 40, paddingVertical: 36 }}>
-      {/* ── HEADER ── */}
-      <View style={{
-        paddingBottom: 24,
-        borderBottomWidth: 2,
-        borderBottomColor: accent,
-        marginBottom: 28,
-        position: 'relative',
-      }}>
+    <View style={styles.container}>
+      {/* HEADER */}
+      <View style={[
+        styles.header,
+        hasPhoto ? styles.headerWithPhoto : {},
+        { borderBottomColor: accentColor }
+      ]}>
         {hasPhoto && (
-          <View style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            width: 72,
-            height: 72,
-            borderWidth: 2,
-            borderColor: '#F4F4F5',
-            borderRadius: 999,
-            overflow: 'hidden',
-          }}>
-            <PDFPhoto src={settings.photoUrl!} style={{ width: 72, height: 72 }} />
+          <View style={styles.photoContainer}>
+            <PDFPhoto src={photoUrl} style={{ width: '100%', height: '100%' }} />
           </View>
         )}
-
-        <View style={hasPhoto ? { paddingRight: 84 } : { alignItems: 'center' }}>
-          <Text style={{
-            fontFamily: 'Helvetica',
-            fontSize: 28,
-            fontWeight: 'bold',
-            textTransform: 'uppercase',
-            letterSpacing: -0.5,
-            color: '#09090B',
-            marginBottom: 8,
-            textAlign: align,
-          }}>
-            {sanitizeForPDF(personalInfo.fullName)}
-          </Text>
-
-          <Text style={{
-            fontFamily: 'Helvetica',
-            fontSize: 14,
-            fontWeight: 'normal',
-            fontStyle: 'italic',
-            color: accent,
-            marginBottom: 16,
-            textAlign: align,
-          }}>
+        <Text style={styles.name}>{sanitizeForPDF(personalInfo.fullName)}</Text>
+        {personalInfo.jobTitle && (
+          <Text style={[styles.title, { color: accentColor }]}>
             {sanitizeForPDF(personalInfo.jobTitle)}
           </Text>
-
-          <View style={{
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            justifyContent: hasPhoto ? 'flex-start' : 'center',
-          }}>
-            {contacts.map((item, i) => (
-              <Text key={i} style={{
-                fontFamily: 'Helvetica',
-                fontSize: 9,
-                fontWeight: 'normal',
-                color: '#52525B',
-                marginRight: i < contacts.length - 1 ? 24 : 0,
-                marginBottom: 4,
-              }}>
-                {item}
-              </Text>
-            ))}
-          </View>
+        )}
+        <View style={styles.contactRow}>
+          {personalInfo.email && (
+            <View style={styles.contactItem}>
+              <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.email)}</Text>
+            </View>
+          )}
+          {personalInfo.phone && (
+            <View style={styles.contactItem}>
+              <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.phone)}</Text>
+            </View>
+          )}
+          {personalInfo.address && (
+            <View style={styles.contactItem}>
+              <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.address)}</Text>
+            </View>
+          )}
+          {personalInfo.linkedin && (
+            <View style={styles.contactItem}>
+              <Text style={styles.contactText}>LinkedIn</Text>
+            </View>
+          )}
         </View>
       </View>
 
-      {/* ── PROFIL ── */}
+      {/* PROFIL */}
       {personalInfo.summary && (
-        <View style={{ marginBottom: 28 }}>
-          {sectionTitle('PROFIL PROFESSIONNEL')}
-          <Text style={{
-            fontFamily: 'Helvetica',
-            fontSize: 10,
-            fontWeight: 'normal',
-            color: '#3F3F46',
-            lineHeight: 1.5,
-            textAlign: align,
-          }}>
-            {sanitizeForPDF(personalInfo.summary)}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: accentColor, borderBottomColor: accentColor }]}>
+            PROFIL PROFESSIONNEL
           </Text>
+          <Text style={styles.sectionContent}>{sanitizeForPDF(personalInfo.summary)}</Text>
         </View>
       )}
 
-      {/* ── EXPÉRIENCES ── */}
-      {experiences.length > 0 && (
-        <View style={{ marginBottom: 28 }}>
-          {sectionTitle('EXPÉRIENCE PROFESSIONNELLE')}
-          {experiences.map((exp, i) => (
-            <View key={exp.id} style={{
-              paddingLeft: 16,
-              borderLeftWidth: 2,
-              borderLeftColor: '#F4F4F5',
-              marginBottom: i < experiences.length - 1 ? 16 : 0,
-            }}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <Text style={{
-                  fontFamily: 'Helvetica',
-                  fontSize: 11,
-                  fontWeight: 'bold',
-                  color: '#18181B',
-                }}>
-                  {sanitizeForPDF(exp.position)}
-                </Text>
-                <Text style={{
-                  fontFamily: 'Helvetica',
-                  fontSize: 8,
-                  fontWeight: 'normal',
-                  color: '#71717A',
-                }}>
-                  {fmtDate(exp.startDate, exp.endDate || '', exp.isCurrent)}
+      {/* EXPÉRIENCES */}
+      {experiences && experiences.length > 0 && (
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: accentColor, borderBottomColor: accentColor }]}>
+            EXPÉRIENCE PROFESSIONNELLE
+          </Text>
+          {experiences.map((exp, index) => (
+            <View key={index} style={styles.experienceContainer}>
+              <View style={styles.experienceHeader}>
+                <Text style={styles.experiencePosition}>{sanitizeForPDF(exp.position)}</Text>
+                <Text style={styles.experienceDates}>
+                  {sanitizeForPDF(exp.startDate)} — {exp.isCurrent ? 'Présent' : sanitizeForPDF(exp.endDate)}
                 </Text>
               </View>
-              <Text style={{
-                fontFamily: 'Helvetica',
-                fontSize: 9,
-                fontWeight: 'normal',
-                color: '#52525B',
-                marginBottom: 4,
-              }}>
-                {sanitizeForPDF(exp.company)}
-              </Text>
+              <Text style={styles.experienceCompany}>{sanitizeForPDF(exp.company)}</Text>
               {exp.description && (
-                <Text style={{
-                  fontFamily: 'Helvetica',
-                  fontSize: 9,
-                  fontWeight: 'normal',
-                  color: '#3F3F46',
-                  lineHeight: 1.4,
-                }}>
-                  {sanitizeForPDF(exp.description)}
-                </Text>
+                <Text style={styles.experienceDescription}>{sanitizeForPDF(exp.description)}</Text>
               )}
             </View>
           ))}
         </View>
       )}
 
-      {/* ── FORMATION ── */}
-      {education.length > 0 && (
-        <View style={{ marginBottom: 28 }}>
-          {sectionTitle('FORMATION')}
-          {education.map((edu, i) => (
-            <View key={edu.id} style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-              marginBottom: i < education.length - 1 ? 12 : 0,
-            }}>
-              <View style={{ flex: 1, marginRight: 12 }}>
-                <Text style={{
-                  fontFamily: 'Helvetica',
-                  fontSize: 11,
-                  fontWeight: 'bold',
-                  color: '#18181B',
-                }}>
-                  {sanitizeForPDF(edu.degree)}
-                </Text>
-                <Text style={{
-                  fontFamily: 'Helvetica',
-                  fontSize: 9,
-                  fontWeight: 'normal',
-                  color: '#52525B',
-                }}>
+      {/* FORMATION */}
+      {education && education.length > 0 && (
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: accentColor, borderBottomColor: accentColor }]}>
+            FORMATION
+          </Text>
+          {education.map((edu, index) => (
+            <View key={index} style={styles.educationItem}>
+              <View style={styles.educationLeft}>
+                <Text style={styles.educationDegree}>{sanitizeForPDF(edu.degree)}</Text>
+                <Text style={styles.educationDetails}>
                   {sanitizeForPDF(edu.institution)}{edu.field ? ` • ${sanitizeForPDF(edu.field)}` : ''}
                 </Text>
               </View>
-              <Text style={{
-                fontFamily: 'Helvetica',
-                fontSize: 9,
-                fontWeight: 'normal',
-                color: '#71717A',
-              }}>
-                {fmtDate(edu.startDate, edu.endDate || '', edu.isCurrent)}
+              <Text style={styles.educationDates}>
+                {sanitizeForPDF(edu.startDate)} — {edu.isCurrent ? 'Présent' : sanitizeForPDF(edu.endDate)}
               </Text>
             </View>
           ))}
         </View>
       )}
 
-      {/* ── COMPÉTENCES + LANGUES — 2 colonnes ── */}
-      {(skills.length > 0 || languages.length > 0) && (
-        <View style={{ flexDirection: 'row', marginBottom: 28 }}>
-          <View style={{ width: '50%', paddingRight: 16 }}>
-            {skills.length > 0 && (
-              <View>
-                {sectionTitle('COMPÉTENCES')}
-                {skills.map((s, i) => (
-                  <Text key={s.id} style={{
-                    fontFamily: 'Helvetica',
-                    fontSize: 9,
-                    fontWeight: 'normal',
-                    color: '#3F3F46',
-                    marginBottom: i < skills.length - 1 ? 4 : 0,
-                  }}>
-                    {sanitizeForPDF(s.name)}{s.level ? ` (${sanitizeForPDF(s.level)})` : ''}
-                  </Text>
+      {/* COMPÉTENCES + LANGUES */}
+      {((skills && skills.length > 0) || (languages && languages.length > 0)) && (
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: accentColor, borderBottomColor: accentColor }]}>
+            COMPÉTENCES & LANGUES
+          </Text>
+          <View style={styles.twoColumns}>
+            {skills && skills.length > 0 && (
+              <View style={styles.column}>
+                {skills.map((skill, index) => (
+                  <View key={index} style={styles.skillItem}>
+                    <Text style={styles.skillName}>{sanitizeForPDF(skill.name)}</Text>
+                    {skill.level && <Text style={styles.skillLevel}>({sanitizeForPDF(skill.level)})</Text>}
+                  </View>
                 ))}
               </View>
             )}
-          </View>
-          <View style={{ width: '50%', paddingLeft: 16 }}>
-            {languages.length > 0 && (
-              <View>
-                {sectionTitle('LANGUES')}
-                {languages.map((l, i) => (
-                  <View key={l.id} style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginBottom: i < languages.length - 1 ? 4 : 0,
-                  }}>
-                    <Text style={{
-                      fontFamily: 'Helvetica',
-                      fontSize: 9,
-                      fontWeight: 'normal',
-                      color: '#3F3F46',
-                    }}>
-                      {sanitizeForPDF(l.name)}
-                    </Text>
-                    <Text style={{
-                      fontFamily: 'Helvetica',
-                      fontSize: 9,
-                      fontWeight: 'normal',
-                      color: '#71717A',
-                    }}>
-                      {sanitizeForPDF(l.level)}
-                    </Text>
+            {languages && languages.length > 0 && (
+              <View style={styles.column}>
+                {languages.map((lang, index) => (
+                  <View key={index} style={styles.languageItem}>
+                    <Text style={styles.languageName}>{sanitizeForPDF(lang.name)}</Text>
+                    <Text style={styles.languageLevel}>{sanitizeForPDF(lang.level)}</Text>
                   </View>
                 ))}
               </View>
@@ -276,57 +335,25 @@ export function ClassicPDF({ content, settings }: { content: CVContent; settings
         </View>
       )}
 
-      {/* ── RÉFÉRENCES — 2 colonnes ── */}
-      {references.length > 0 && (
-        <View>
-          {sectionTitle('RÉFÉRENCES')}
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-            {references.map((ref) => (
-              <View key={ref.id} style={{
-                width: '50%',
-                paddingRight: 16,
-                marginBottom: 12,
-              }}>
-                <Text style={{
-                  fontFamily: 'Helvetica',
-                  fontSize: 10,
-                  fontWeight: 'bold',
-                  color: '#18181B',
-                  marginBottom: 2,
-                }}>
-                  {sanitizeForPDF(ref.name)}
-                </Text>
-                <Text style={{
-                  fontFamily: 'Helvetica',
-                  fontSize: 9,
-                  fontWeight: 'normal',
-                  color: '#52525B',
-                }}>
-                  {sanitizeForPDF(ref.position)}
-                </Text>
-                <Text style={{
-                  fontFamily: 'Helvetica',
-                  fontSize: 9,
-                  fontWeight: 'normal',
-                  color: '#52525B',
-                }}>
-                  {sanitizeForPDF(ref.company)}
-                </Text>
-                {ref.email && (
-                  <Text style={{
-                    fontFamily: 'Helvetica',
-                    fontSize: 8,
-                    fontWeight: 'normal',
-                    color: '#71717A',
-                  }}>
-                    {sanitizeForPDF(ref.email)}
-                  </Text>
-                )}
+      {/* RÉFÉRENCES */}
+      {references && references.length > 0 && (
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: accentColor, borderBottomColor: accentColor }]}>
+            RÉFÉRENCES
+          </Text>
+          <View style={styles.referencesGrid}>
+            {references.map((ref, index) => (
+              <View key={index} style={styles.referenceItem}>
+                <Text style={styles.referenceName}>{sanitizeForPDF(ref.name)}</Text>
+                {ref.position && <Text style={styles.referencePosition}>{sanitizeForPDF(ref.position)}</Text>}
+                {ref.company && <Text style={styles.referenceCompany}>{sanitizeForPDF(ref.company)}</Text>}
+                {ref.email && <Text style={styles.referenceContact}>{sanitizeForPDF(ref.email)}</Text>}
+                {ref.phone && <Text style={styles.referenceContact}>{sanitizeForPDF(ref.phone)}</Text>}
               </View>
             ))}
           </View>
         </View>
       )}
     </View>
-  )
-}
+  );
+};
