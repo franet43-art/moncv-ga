@@ -223,26 +223,34 @@ export const ClassicPDF = ({ content, settings }: { content: CVContent; settings
         <View style={styles.contactRow}>
           {personalInfo.email && (
             <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 14, marginBottom: 4 }}>
-              <MailIcon size={9} color={settings.accentColor} />
-              <Text style={{ fontSize: 9, marginLeft: 3 }}>{sanitizeForPDF(personalInfo.email)}</Text>
+              <MailIcon size={12} color={settings.accentColor} />
+              <View style={{ flex: 1, marginLeft: 3 }}>
+                <Text style={{ fontSize: 9 }}>{sanitizeForPDF(personalInfo.email)}</Text>
+              </View>
             </View>
           )}
           {personalInfo.phone && (
             <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 14, marginBottom: 4 }}>
-              <PhoneIcon size={9} color={settings.accentColor} />
-              <Text style={{ fontSize: 9, marginLeft: 3 }}>{sanitizeForPDF(personalInfo.phone)}</Text>
+              <PhoneIcon size={12} color={settings.accentColor} />
+              <View style={{ flex: 1, marginLeft: 3 }}>
+                <Text style={{ fontSize: 9 }}>{sanitizeForPDF(personalInfo.phone)}</Text>
+              </View>
             </View>
           )}
           {personalInfo.address && (
             <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 14, marginBottom: 4 }}>
-              <MapPinIcon size={9} color={settings.accentColor} />
-              <Text style={{ fontSize: 9, marginLeft: 3 }}>{sanitizeForPDF(personalInfo.address)}</Text>
+              <MapPinIcon size={12} color={settings.accentColor} />
+              <View style={{ flex: 1, marginLeft: 3 }}>
+                <Text style={{ fontSize: 9 }}>{sanitizeForPDF(personalInfo.address)}</Text>
+              </View>
             </View>
           )}
           {personalInfo.linkedin && (
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
-              <Globe2Icon size={9} color={settings.accentColor} />
-              <Text style={{ fontSize: 9, marginLeft: 3 }}>{sanitizeForPDF(personalInfo.linkedin)}</Text>
+              <Globe2Icon size={12} color={settings.accentColor} />
+              <View style={{ flex: 1, marginLeft: 3 }}>
+                <Text style={{ fontSize: 9 }}>{sanitizeForPDF(personalInfo.linkedin)}</Text>
+              </View>
             </View>
           )}
         </View>
@@ -270,17 +278,21 @@ export const ClassicPDF = ({ content, settings }: { content: CVContent; settings
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 3 }}>
                   <Text style={{ fontWeight: 'bold', fontSize: 11 }}>{sanitizeForPDF(exp.position)}</Text>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <CalendarIcon size={8} color="#71717A" />
-                    <Text style={{ fontSize: 8, color: '#71717A', marginLeft: 3 }}>
-                      {sanitizeForPDF(exp.startDate)} — {exp.isCurrent ? 'Present' : sanitizeForPDF(exp.endDate)}
-                    </Text>
+                    <CalendarIcon size={10} color="#71717A" />
+                    <View style={{ flex: 1, marginLeft: 3 }}>
+                      <Text style={{ fontSize: 8, color: '#71717A' }}>
+                        {sanitizeForPDF(exp.startDate)} — {exp.isCurrent ? 'Present' : sanitizeForPDF(exp.endDate)}
+                      </Text>
+                    </View>
                   </View>
                 </View>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
-                  <Building2Icon size={9} color="#52525B" />
-                  <Text style={{ fontSize: 10, fontWeight: 'bold', color: '#52525B', marginLeft: 3 }}>
-                    {sanitizeForPDF(exp.company)}
-                  </Text>
+                  <Building2Icon size={10} color="#52525B" />
+                  <View style={{ flex: 1, marginLeft: 3 }}>
+                    <Text style={{ fontSize: 10, fontWeight: 'bold', color: '#52525B' }}>
+                      {sanitizeForPDF(exp.company)}
+                    </Text>
+                  </View>
                 </View>
                 {exp.description && (
                   <Text style={styles.experienceDescription}>{sanitizeForPDF(exp.description)}</Text>
@@ -300,8 +312,10 @@ export const ClassicPDF = ({ content, settings }: { content: CVContent; settings
             <View key={index} style={styles.educationItem}>
               <View style={styles.educationLeft}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 3 }}>
-                  <GraduationCapIcon size={9} color={settings.accentColor} />
-                  <Text style={{ fontWeight: 'bold', fontSize: 10, marginLeft: 3 }}>{sanitizeForPDF(edu.degree)}</Text>
+                  <GraduationCapIcon size={10} color={settings.accentColor} />
+                  <View style={{ flex: 1, marginLeft: 3 }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 10 }}>{sanitizeForPDF(edu.degree)}</Text>
+                  </View>
                 </View>
                 <Text style={styles.educationDetails}>
                   {sanitizeForPDF(edu.institution)}{edu.field ? ` • ${sanitizeForPDF(edu.field)}` : ''}
@@ -325,8 +339,10 @@ export const ClassicPDF = ({ content, settings }: { content: CVContent; settings
               <View style={styles.column}>
                 {skills.map((skill, index) => (
                   <View key={index} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
-                    <LaptopIcon size={8} color="#71717A" />
-                    <Text style={{ fontSize: 9, marginLeft: 3 }}>{sanitizeForPDF(skill.name)}</Text>
+                    <LaptopIcon size={10} color="#71717A" />
+                    <View style={{ flex: 1, marginLeft: 3 }}>
+                      <Text style={{ fontSize: 9 }}>{sanitizeForPDF(skill.name)}</Text>
+                    </View>
                   </View>
                 ))}
               </View>
@@ -336,8 +352,10 @@ export const ClassicPDF = ({ content, settings }: { content: CVContent; settings
                 {languages.map((lang, index) => (
                   <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      <LanguagesIcon size={8} color="#71717A" />
-                      <Text style={{ fontSize: 9, marginLeft: 3 }}>{sanitizeForPDF(lang.name)}</Text>
+                      <LanguagesIcon size={10} color="#71717A" />
+                      <View style={{ flex: 1, marginLeft: 3 }}>
+                        <Text style={{ fontSize: 9 }}>{sanitizeForPDF(lang.name)}</Text>
+                      </View>
                     </View>
                     <Text style={{ fontSize: 9, color: '#71717A' }}>{sanitizeForPDF(lang.level)}</Text>
                   </View>
@@ -357,8 +375,10 @@ export const ClassicPDF = ({ content, settings }: { content: CVContent; settings
             {references.map((ref, index) => (
               <View key={index} style={styles.referenceItem}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 3 }}>
-                  <UserCheckIcon size={9} color={settings.accentColor} />
-                  <Text style={{ fontWeight: 'bold', fontSize: 10, marginLeft: 3 }}>{sanitizeForPDF(ref.name)}</Text>
+                  <UserCheckIcon size={10} color={settings.accentColor} />
+                  <View style={{ flex: 1, marginLeft: 3 }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 10 }}>{sanitizeForPDF(ref.name)}</Text>
+                  </View>
                 </View>
                 {ref.position && <Text style={styles.referencePosition}>{sanitizeForPDF(ref.position)}</Text>}
                 {ref.company && <Text style={styles.referenceCompany}>{sanitizeForPDF(ref.company)}</Text>}

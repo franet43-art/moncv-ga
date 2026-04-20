@@ -58,10 +58,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   skillPill: {
-    backgroundColor: 'rgba(0,0,0,0.15)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
-    borderRadius: 4,
+    backgroundColor: 'rgba(0,0,0,0.2)',
     paddingHorizontal: 8,
     paddingVertical: 4,
     marginRight: 6,
@@ -243,26 +240,34 @@ export const ModernPDF = ({ content, settings }: { content: CVContent; settings:
             <View style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.2)', marginBottom: 10 }} />
             {personalInfo.email && (
               <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 7 }}>
-                <MailIcon size={9} color="#FFFFFF" />
-                <Text style={{ fontSize: 9, color: '#FFFFFF', marginLeft: 5 }}>{sanitizeForPDF(personalInfo.email)}</Text>
+                <MailIcon size={11} color="#FFFFFF" />
+                <View style={{ flex: 1, marginLeft: 5 }}>
+                  <Text style={{ fontSize: 9, color: '#FFFFFF' }}>{sanitizeForPDF(personalInfo.email)}</Text>
+                </View>
               </View>
             )}
             {personalInfo.phone && (
               <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 7 }}>
-                <PhoneIcon size={9} color="#FFFFFF" />
-                <Text style={{ fontSize: 9, color: '#FFFFFF', marginLeft: 5 }}>{sanitizeForPDF(personalInfo.phone)}</Text>
+                <PhoneIcon size={11} color="#FFFFFF" />
+                <View style={{ flex: 1, marginLeft: 5 }}>
+                  <Text style={{ fontSize: 9, color: '#FFFFFF' }}>{sanitizeForPDF(personalInfo.phone)}</Text>
+                </View>
               </View>
             )}
             {personalInfo.address && (
               <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 7 }}>
-                <MapPinIcon size={9} color="#FFFFFF" />
-                <Text style={{ fontSize: 9, color: '#FFFFFF', marginLeft: 5 }}>{sanitizeForPDF(personalInfo.address)}</Text>
+                <MapPinIcon size={11} color="#FFFFFF" />
+                <View style={{ flex: 1, marginLeft: 5 }}>
+                  <Text style={{ fontSize: 9, color: '#FFFFFF' }}>{sanitizeForPDF(personalInfo.address)}</Text>
+                </View>
               </View>
             )}
             {personalInfo.linkedin && (
               <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 7 }}>
-                <Globe2Icon size={9} color="#FFFFFF" />
-                <Text style={{ fontSize: 9, color: '#FFFFFF', marginLeft: 5 }}>{sanitizeForPDF(personalInfo.linkedin)}</Text>
+                <Globe2Icon size={11} color="#FFFFFF" />
+                <View style={{ flex: 1, marginLeft: 5 }}>
+                  <Text style={{ fontSize: 9, color: '#FFFFFF' }}>{sanitizeForPDF(personalInfo.linkedin)}</Text>
+                </View>
               </View>
             )}
           </View>
@@ -292,10 +297,12 @@ export const ModernPDF = ({ content, settings }: { content: CVContent; settings:
               <View key={i} style={styles.languageItem}>
                 <View style={styles.languageHeader}>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <LanguagesIcon size={8} color="#FFFFFF" />
-                    <Text style={{ fontSize: 8, color: '#FFFFFF', fontWeight: 'bold', marginLeft: 3 }}>
-                      {sanitizeForPDF(lang.name)}
-                    </Text>
+                    <LanguagesIcon size={10} color="#FFFFFF" />
+                    <View style={{ flex: 1, marginLeft: 3 }}>
+                      <Text style={{ fontSize: 8, color: '#FFFFFF', fontWeight: 'bold' }}>
+                        {sanitizeForPDF(lang.name)}
+                      </Text>
+                    </View>
                   </View>
                   <Text style={styles.languageLevel}>{sanitizeForPDF(lang.level)}</Text>
                 </View>
