@@ -22,8 +22,6 @@ const styles = StyleSheet.create({
     width: 96,
     height: 96,
     borderRadius: 48,
-    borderWidth: 3,
-    borderColor: 'rgba(255,255,255,0.2)',
     overflow: 'hidden',
     marginBottom: 24,
   },
@@ -46,13 +44,9 @@ const styles = StyleSheet.create({
   sidebarSectionTitle: {
     fontSize: 8,
     fontWeight: 'bold',
-    textTransform: 'uppercase',
-    letterSpacing: 2,
     color: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.2)',
     paddingBottom: 6,
-    marginBottom: 12,
+    marginBottom: 4,
   },
   contactText: {
     fontSize: 9,
@@ -100,12 +94,10 @@ const styles = StyleSheet.create({
   languageBarBg: {
     height: 4,
     backgroundColor: 'rgba(255,255,255,0.15)',
-    borderRadius: 2,
   },
   languageBarFill: {
     height: 4,
     backgroundColor: '#FFFFFF',
-    borderRadius: 2,
   },
   mainContent: {
     width: '65%',
@@ -125,18 +117,12 @@ const styles = StyleSheet.create({
   mainSectionTitle: {
     fontSize: 10,
     fontWeight: 'bold',
-    textTransform: 'uppercase',
-    letterSpacing: 1.5,
     paddingBottom: 8,
-    borderBottomWidth: 1,
-    marginBottom: 16,
+    marginBottom: 8,
   },
   timelineItem: {
-    paddingLeft: 20,
-    borderLeftWidth: 1,
-    borderLeftColor: '#E4E4E7',
+    flexDirection: 'row',
     marginBottom: 20,
-    position: 'relative',
   },
   timelineDot: {
     position: 'absolute',
@@ -254,6 +240,7 @@ export const ModernPDF = ({ content, settings }: { content: CVContent; settings:
         {(personalInfo.email || personalInfo.phone || personalInfo.address) && (
           <View style={styles.sidebarSection}>
             <Text style={styles.sidebarSectionTitle}>CONTACT</Text>
+            <View style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.2)', marginBottom: 10 }} />
             {personalInfo.email && (
               <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 7 }}>
                 <MailIcon size={9} color="#FFFFFF" />
@@ -285,6 +272,7 @@ export const ModernPDF = ({ content, settings }: { content: CVContent; settings:
         {skills && skills.length > 0 && (
           <View style={styles.sidebarSection}>
             <Text style={styles.sidebarSectionTitle}>COMPÉTENCES</Text>
+            <View style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.2)', marginBottom: 10 }} />
             <View style={styles.skillsContainer}>
               {skills.map((skill, i) => (
                 <View key={i} style={styles.skillPill}>
@@ -299,6 +287,7 @@ export const ModernPDF = ({ content, settings }: { content: CVContent; settings:
         {languages && languages.length > 0 && (
           <View style={styles.sidebarSection}>
             <Text style={styles.sidebarSectionTitle}>LANGUES</Text>
+            <View style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.2)', marginBottom: 10 }} />
             {languages.map((lang, i) => (
               <View key={i} style={styles.languageItem}>
                 <View style={styles.languageHeader}>
@@ -328,22 +317,25 @@ export const ModernPDF = ({ content, settings }: { content: CVContent; settings:
         {/* Expériences */}
         {experiences && experiences.length > 0 && (
           <View style={styles.mainSection}>
-            <Text style={[styles.mainSectionTitle, { color: accentColor, borderBottomColor: accentColor }]}>
+            <Text style={[styles.mainSectionTitle, { color: accentColor }]}>
               EXPÉRIENCE PROFESSIONNELLE
             </Text>
+            <View style={{ height: 1, backgroundColor: accentColor, marginBottom: 14 }} />
             {experiences.map((exp, i) => (
-              <View key={i} style={styles.timelineItem}>
-                <View style={[styles.timelineDot, { backgroundColor: accentColor }]} />
-                <View style={styles.timelineHeader}>
-                  <Text style={styles.timelinePosition}>{sanitizeForPDF(exp.position)}</Text>
-                  <Text style={styles.timelineDates}>
-                    {sanitizeForPDF(exp.startDate)} — {exp.isCurrent ? 'Présent' : sanitizeForPDF(exp.endDate)}
-                  </Text>
+              <View key={i} style={{ flexDirection: 'row', marginBottom: 20 }}>
+                <View style={{ width: 2, backgroundColor: '#E4E4E7', marginRight: 12 }} />
+                <View style={{ flex: 1 }}>
+                  <View style={styles.timelineHeader}>
+                    <Text style={styles.timelinePosition}>{sanitizeForPDF(exp.position)}</Text>
+                    <Text style={styles.timelineDates}>
+                      {sanitizeForPDF(exp.startDate)} — {exp.isCurrent ? 'Présent' : sanitizeForPDF(exp.endDate)}
+                    </Text>
+                  </View>
+                  <Text style={styles.timelineCompany}>{sanitizeForPDF(exp.company)}</Text>
+                  {exp.description && (
+                    <Text style={styles.timelineDescription}>{sanitizeForPDF(exp.description)}</Text>
+                  )}
                 </View>
-                <Text style={styles.timelineCompany}>{sanitizeForPDF(exp.company)}</Text>
-                {exp.description && (
-                  <Text style={styles.timelineDescription}>{sanitizeForPDF(exp.description)}</Text>
-                )}
               </View>
             ))}
           </View>
@@ -352,9 +344,10 @@ export const ModernPDF = ({ content, settings }: { content: CVContent; settings:
         {/* Formation */}
         {education && education.length > 0 && (
           <View style={styles.mainSection}>
-            <Text style={[styles.mainSectionTitle, { color: accentColor, borderBottomColor: accentColor }]}>
+            <Text style={[styles.mainSectionTitle, { color: accentColor }]}>
               FORMATION
             </Text>
+            <View style={{ height: 1, backgroundColor: accentColor, marginBottom: 14 }} />
             {education.map((edu, i) => (
               <View key={i} style={styles.educationItem}>
                 <View style={styles.educationHeader}>
@@ -372,9 +365,10 @@ export const ModernPDF = ({ content, settings }: { content: CVContent; settings:
         {/* Références */}
         {references && references.length > 0 && (
           <View style={styles.mainSection}>
-            <Text style={[styles.mainSectionTitle, { color: accentColor, borderBottomColor: accentColor }]}>
+            <Text style={[styles.mainSectionTitle, { color: accentColor }]}>
               RÉFÉRENCES
             </Text>
+            <View style={{ height: 1, backgroundColor: accentColor, marginBottom: 14 }} />
             <View style={styles.referencesGrid}>
               {references.map((ref, i) => (
                 <View key={i} style={styles.referenceItem}>

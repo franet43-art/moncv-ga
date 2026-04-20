@@ -22,8 +22,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     position: 'relative',
     paddingBottom: 24,
-    borderBottomWidth: 2,
-    marginBottom: 32,
+    marginBottom: 8,
   },
   photoContainer: {
     position: 'absolute',
@@ -32,8 +31,6 @@ const styles = StyleSheet.create({
     width: 96,
     height: 96,
     borderRadius: 48,
-    borderWidth: 2,
-    borderColor: '#F3F4F6',
     overflow: 'hidden',
   },
   headerWithPhoto: {
@@ -74,12 +71,8 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 10,
     fontWeight: 'bold',
-    textTransform: 'uppercase',
-    letterSpacing: 1.5,
-    marginBottom: 16,
-    paddingBottom: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: '#D1D5DB',
+    marginBottom: 6,
+    paddingBottom: 6,
   },
   sectionContent: {
     fontSize: 9,
@@ -87,10 +80,7 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
   },
   experienceContainer: {
-    position: 'relative',
-    paddingLeft: 16,
-    borderLeftWidth: 2,
-    borderLeftColor: '#F3F4F6',
+    flexDirection: 'row',
     marginBottom: 20,
   },
   experienceHeader: {
@@ -257,13 +247,13 @@ export const ClassicPDF = ({ content, settings }: { content: CVContent; settings
           )}
         </View>
       </View>
+      <View style={{ height: 2, backgroundColor: accentColor, marginBottom: 24 }} />
 
       {/* PROFIL */}
       {personalInfo.summary && (
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: accentColor, borderBottomColor: accentColor }]}>
-            PROFIL PROFESSIONNEL
-          </Text>
+          <Text style={[styles.sectionTitle, { color: accentColor }]}>PROFIL PROFESSIONNEL</Text>
+          <View style={{ height: 1, backgroundColor: accentColor, marginBottom: 12 }} />
           <Text style={styles.sectionContent}>{sanitizeForPDF(personalInfo.summary)}</Text>
         </View>
       )}
@@ -271,29 +261,31 @@ export const ClassicPDF = ({ content, settings }: { content: CVContent; settings
       {/* EXPÉRIENCES */}
       {experiences && experiences.length > 0 && (
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: accentColor, borderBottomColor: accentColor }]}>
-            EXPÉRIENCE PROFESSIONNELLE
-          </Text>
+          <Text style={[styles.sectionTitle, { color: accentColor }]}>EXPÉRIENCE PROFESSIONNELLE</Text>
+          <View style={{ height: 1, backgroundColor: accentColor, marginBottom: 12 }} />
           {experiences.map((exp, index) => (
-            <View key={index} style={styles.experienceContainer}>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 3 }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 11 }}>{sanitizeForPDF(exp.position)}</Text>
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <CalendarIcon size={8} color="#71717A" />
-                  <Text style={{ fontSize: 8, color: '#71717A', marginLeft: 3 }}>
-                    {sanitizeForPDF(exp.startDate)} — {exp.isCurrent ? 'Present' : sanitizeForPDF(exp.endDate)}
+            <View key={index} style={{ flexDirection: 'row', marginBottom: 20 }}>
+              <View style={{ width: 2, backgroundColor: '#E4E4E7', marginRight: 12 }} />
+              <View style={{ flex: 1 }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 3 }}>
+                  <Text style={{ fontWeight: 'bold', fontSize: 11 }}>{sanitizeForPDF(exp.position)}</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <CalendarIcon size={8} color="#71717A" />
+                    <Text style={{ fontSize: 8, color: '#71717A', marginLeft: 3 }}>
+                      {sanitizeForPDF(exp.startDate)} — {exp.isCurrent ? 'Present' : sanitizeForPDF(exp.endDate)}
+                    </Text>
+                  </View>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
+                  <Building2Icon size={9} color="#52525B" />
+                  <Text style={{ fontSize: 10, fontWeight: 'bold', color: '#52525B', marginLeft: 3 }}>
+                    {sanitizeForPDF(exp.company)}
                   </Text>
                 </View>
+                {exp.description && (
+                  <Text style={styles.experienceDescription}>{sanitizeForPDF(exp.description)}</Text>
+                )}
               </View>
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
-                <Building2Icon size={9} color="#52525B" />
-                <Text style={{ fontSize: 10, fontWeight: 'bold', color: '#52525B', marginLeft: 3 }}>
-                  {sanitizeForPDF(exp.company)}
-                </Text>
-              </View>
-              {exp.description && (
-                <Text style={styles.experienceDescription}>{sanitizeForPDF(exp.description)}</Text>
-              )}
             </View>
           ))}
         </View>
@@ -302,9 +294,8 @@ export const ClassicPDF = ({ content, settings }: { content: CVContent; settings
       {/* FORMATION */}
       {education && education.length > 0 && (
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: accentColor, borderBottomColor: accentColor }]}>
-            FORMATION
-          </Text>
+          <Text style={[styles.sectionTitle, { color: accentColor }]}>FORMATION</Text>
+          <View style={{ height: 1, backgroundColor: accentColor, marginBottom: 12 }} />
           {education.map((edu, index) => (
             <View key={index} style={styles.educationItem}>
               <View style={styles.educationLeft}>
@@ -327,9 +318,8 @@ export const ClassicPDF = ({ content, settings }: { content: CVContent; settings
       {/* COMPÉTENCES + LANGUES */}
       {((skills && skills.length > 0) || (languages && languages.length > 0)) && (
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: accentColor, borderBottomColor: accentColor }]}>
-            COMPÉTENCES & LANGUES
-          </Text>
+          <Text style={[styles.sectionTitle, { color: accentColor }]}>COMPÉTENCES & LANGUES</Text>
+          <View style={{ height: 1, backgroundColor: accentColor, marginBottom: 12 }} />
           <View style={styles.twoColumns}>
             {skills && skills.length > 0 && (
               <View style={styles.column}>
@@ -361,9 +351,8 @@ export const ClassicPDF = ({ content, settings }: { content: CVContent; settings
       {/* RÉFÉRENCES */}
       {references && references.length > 0 && (
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: accentColor, borderBottomColor: accentColor }]}>
-            RÉFÉRENCES
-          </Text>
+          <Text style={[styles.sectionTitle, { color: accentColor }]}>RÉFÉRENCES</Text>
+          <View style={{ height: 1, backgroundColor: accentColor, marginBottom: 12 }} />
           <View style={styles.referencesGrid}>
             {references.map((ref, index) => (
               <View key={index} style={styles.referenceItem}>
