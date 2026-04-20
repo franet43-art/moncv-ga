@@ -78,20 +78,22 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
   const generatePDF = async (isPaid: boolean) => {
     setIsGenerating(true)
     try {
-      // Import dynamique au moment du clic uniquement
-      const [{ pdf }, { CVPDFDocument }] = await Promise.all([
-        import('@react-pdf/renderer'),
-        import('@/components/pdf/pdf-document')
-      ])
+      const response = await fetch('/api/pdf/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          content: currentCV.content,
+          settings: currentCV.settings,
+          isPaid,
+        }),
+      })
 
-      const blob = await pdf(
-        <CVPDFDocument 
-          content={currentCV.content} 
-          settings={currentCV.settings} 
-          isPaid={isPaid} 
-        />
-      ).toBlob()
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Erreur serveur PDF')
+      }
 
+      const blob = await response.blob()
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url
@@ -101,17 +103,10 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
       document.body.removeChild(link)
       URL.revokeObjectURL(url)
 
-      if (!isPaid) {
-        toast.success('PDF téléchargé.', {
-          description: "Version brouillon avec filigrane.",
-          duration: 5000,
-        })
-      } else {
-        toast.success('PDF téléchargé avec succès !')
-      }
-    } catch (error) {
-      console.error('Erreur React-PDF détaillée:', error)
-      toast.error('Erreur lors de la génération du PDF')
+      toast.success(isPaid ? 'PDF téléchargé avec succès !' : 'PDF brouillon téléchargé.')
+    } catch (error: any) {
+      console.error('Erreur PDF:', error)
+      toast.error(`Erreur: ${error.message}`)
     } finally {
       setIsGenerating(false)
     }
@@ -306,7 +301,12 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
         isOpen={isPaymentModalOpen} 
         onClose={() => setIsPaymentModalOpen(false)} 
         cvId={cvId} 
-        onAlreadyPaid={() => generatePDF(true)} 
+        onAlreadyPaid={() => {
+          useCVStore.setState((state) => ({
+            currentCV: { ...state.currentCV, isPaid: true }
+          }))
+          generatePDF(true)
+        }} 
       />
       <ImportCVModal open={isImportModalOpen} onOpenChange={setIsImportModalOpen} />
       {/* Main Content Area */}
