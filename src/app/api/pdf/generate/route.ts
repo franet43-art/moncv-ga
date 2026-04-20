@@ -1,31 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { renderToBuffer } from '@react-pdf/renderer'
 import React from 'react'
+import { renderToBuffer } from '@react-pdf/renderer'
 import { CVPDFDocument } from '@/components/pdf/pdf-document'
+import type { CVContent, CVSettings } from '@/types/cv'
 
 export const runtime = 'nodejs'
-export const maxDuration = 60
 
-export async function POST(req: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    const { content, settings, isPaid } = await req.json()
-
-    if (!content?.personalInfo) {
-      return NextResponse.json({ error: 'Données CV invalides' }, { status: 400 })
+    const { content, settings, isPaid } = (await request.json()) as {
+      content: CVContent
+      settings: CVSettings
+      isPaid: boolean
     }
 
     const buffer = await renderToBuffer(
-      React.createElement(CVPDFDocument, { content, settings, isPaid }) as any
+      React.createElement(CVPDFDocument, {
+        content,
+        settings,
+        isPaid,
+      }) as any
     )
 
-    return new NextResponse(buffer, {
+    const uint8Array = new Uint8Array(buffer)
+
+    return new NextResponse(uint8Array, {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="CV-${content.personalInfo?.fullName || 'MonCV'}.pdf"`,
+        'Content-Disposition': `attachment; filename="CV-${
+          content.personalInfo?.fullName ?? 'document'
+        }.pdf"`,
       },
     })
-  } catch (error: any) {
+  } catch (error) {
     console.error('[PDF_GENERATE_ERROR]', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json(
+      { error: 'PDF generation failed' },
+      { status: 500 }
+    )
   }
 }
