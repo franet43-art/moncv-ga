@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     }
 
     const buffer = await renderToBuffer(
-      React.createElement(CVPDFDocument, { content, settings, isPaid })
+      React.createElement(CVPDFDocument, { content, settings, isPaid }) as any
     )
 
     return new NextResponse(buffer, {
