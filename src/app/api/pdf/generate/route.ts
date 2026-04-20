@@ -36,7 +36,8 @@ export async function POST(req: NextRequest) {
     console.log('[PDF_RENDER_START] Appel renderToBuffer...')
 
     const buffer = await renderToBuffer(
-      React.createElement(CVPDFDocument, { content, settings, isPaid })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      React.createElement(CVPDFDocument, { content, settings, isPaid }) as any
     )
 
     console.log('[PDF_SUCCESS] buffer size:', buffer.length, 'bytes')
