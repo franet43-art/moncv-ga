@@ -1,8 +1,11 @@
-import React from 'react';
-import { View, Text, StyleSheet } from '@react-pdf/renderer';
-import { CVContent, CVSettings } from '@/types/cv';
-import { PDFPhoto } from './shared/pdf-photo';
-import { sanitizeForPDF } from './pdf-document';
+import React from 'react'
+import { View, Text, StyleSheet } from '@react-pdf/renderer'
+import { CVContent, CVSettings } from '@/types/cv'
+import { PDFPhoto } from './shared/pdf-photo'
+import { sanitizeForPDF } from './pdf-document'
+import {
+  MailIcon, PhoneIcon, MapPinIcon, Globe2Icon, LanguagesIcon
+} from './shared/pdf-icons'
 
 const styles = StyleSheet.create({
   container: {
@@ -251,9 +254,30 @@ export const ModernPDF = ({ content, settings }: { content: CVContent; settings:
         {(personalInfo.email || personalInfo.phone || personalInfo.address) && (
           <View style={styles.sidebarSection}>
             <Text style={styles.sidebarSectionTitle}>CONTACT</Text>
-            {personalInfo.email && <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.email)}</Text>}
-            {personalInfo.phone && <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.phone)}</Text>}
-            {personalInfo.address && <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.address)}</Text>}
+            {personalInfo.email && (
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 7 }}>
+                <MailIcon size={9} color="#FFFFFF" />
+                <Text style={{ fontSize: 9, color: '#FFFFFF', marginLeft: 5 }}>{sanitizeForPDF(personalInfo.email)}</Text>
+              </View>
+            )}
+            {personalInfo.phone && (
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 7 }}>
+                <PhoneIcon size={9} color="#FFFFFF" />
+                <Text style={{ fontSize: 9, color: '#FFFFFF', marginLeft: 5 }}>{sanitizeForPDF(personalInfo.phone)}</Text>
+              </View>
+            )}
+            {personalInfo.address && (
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 7 }}>
+                <MapPinIcon size={9} color="#FFFFFF" />
+                <Text style={{ fontSize: 9, color: '#FFFFFF', marginLeft: 5 }}>{sanitizeForPDF(personalInfo.address)}</Text>
+              </View>
+            )}
+            {personalInfo.linkedin && (
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 7 }}>
+                <Globe2Icon size={9} color="#FFFFFF" />
+                <Text style={{ fontSize: 9, color: '#FFFFFF', marginLeft: 5 }}>{sanitizeForPDF(personalInfo.linkedin)}</Text>
+              </View>
+            )}
           </View>
         )}
 
@@ -278,7 +302,12 @@ export const ModernPDF = ({ content, settings }: { content: CVContent; settings:
             {languages.map((lang, i) => (
               <View key={i} style={styles.languageItem}>
                 <View style={styles.languageHeader}>
-                  <Text style={styles.languageName}>{sanitizeForPDF(lang.name)}</Text>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <LanguagesIcon size={8} color="#FFFFFF" />
+                    <Text style={{ fontSize: 8, color: '#FFFFFF', fontWeight: 'bold', marginLeft: 3 }}>
+                      {sanitizeForPDF(lang.name)}
+                    </Text>
+                  </View>
                   <Text style={styles.languageLevel}>{sanitizeForPDF(lang.level)}</Text>
                 </View>
                 <View style={styles.languageBarBg}>

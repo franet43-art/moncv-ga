@@ -1,8 +1,13 @@
-import React from 'react';
-import { View, Text, StyleSheet } from '@react-pdf/renderer';
-import { CVContent, CVSettings } from '@/types/cv';
-import { PDFPhoto } from './shared/pdf-photo';
-import { sanitizeForPDF } from './pdf-document';
+import React from 'react'
+import { View, Text, StyleSheet } from '@react-pdf/renderer'
+import type { CVContent, CVSettings } from '@/types/cv'
+import { PDFPhoto } from './shared/pdf-photo'
+import { sanitizeForPDF } from './pdf-document'
+import {
+  MailIcon, PhoneIcon, MapPinIcon, Globe2Icon,
+  CalendarIcon, Building2Icon, GraduationCapIcon,
+  UserCheckIcon, LaptopIcon, LanguagesIcon
+} from './shared/pdf-icons'
 
 const styles = StyleSheet.create({
   container: {
@@ -227,23 +232,27 @@ export const ClassicPDF = ({ content, settings }: { content: CVContent; settings
         )}
         <View style={styles.contactRow}>
           {personalInfo.email && (
-            <View style={styles.contactItem}>
-              <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.email)}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 14, marginBottom: 4 }}>
+              <MailIcon size={9} color={settings.accentColor} />
+              <Text style={{ fontSize: 9, marginLeft: 3 }}>{sanitizeForPDF(personalInfo.email)}</Text>
             </View>
           )}
           {personalInfo.phone && (
-            <View style={styles.contactItem}>
-              <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.phone)}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 14, marginBottom: 4 }}>
+              <PhoneIcon size={9} color={settings.accentColor} />
+              <Text style={{ fontSize: 9, marginLeft: 3 }}>{sanitizeForPDF(personalInfo.phone)}</Text>
             </View>
           )}
           {personalInfo.address && (
-            <View style={styles.contactItem}>
-              <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.address)}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 14, marginBottom: 4 }}>
+              <MapPinIcon size={9} color={settings.accentColor} />
+              <Text style={{ fontSize: 9, marginLeft: 3 }}>{sanitizeForPDF(personalInfo.address)}</Text>
             </View>
           )}
           {personalInfo.linkedin && (
-            <View style={styles.contactItem}>
-              <Text style={styles.contactText}>LinkedIn</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+              <Globe2Icon size={9} color={settings.accentColor} />
+              <Text style={{ fontSize: 9, marginLeft: 3 }}>{sanitizeForPDF(personalInfo.linkedin)}</Text>
             </View>
           )}
         </View>
@@ -267,13 +276,21 @@ export const ClassicPDF = ({ content, settings }: { content: CVContent; settings
           </Text>
           {experiences.map((exp, index) => (
             <View key={index} style={styles.experienceContainer}>
-              <View style={styles.experienceHeader}>
-                <Text style={styles.experiencePosition}>{sanitizeForPDF(exp.position)}</Text>
-                <Text style={styles.experienceDates}>
-                  {sanitizeForPDF(exp.startDate)} — {exp.isCurrent ? 'Présent' : sanitizeForPDF(exp.endDate)}
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 3 }}>
+                <Text style={{ fontWeight: 'bold', fontSize: 11 }}>{sanitizeForPDF(exp.position)}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <CalendarIcon size={8} color="#71717A" />
+                  <Text style={{ fontSize: 8, color: '#71717A', marginLeft: 3 }}>
+                    {sanitizeForPDF(exp.startDate)} — {exp.isCurrent ? 'Present' : sanitizeForPDF(exp.endDate)}
+                  </Text>
+                </View>
+              </View>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 5 }}>
+                <Building2Icon size={9} color="#52525B" />
+                <Text style={{ fontSize: 10, fontWeight: 'bold', color: '#52525B', marginLeft: 3 }}>
+                  {sanitizeForPDF(exp.company)}
                 </Text>
               </View>
-              <Text style={styles.experienceCompany}>{sanitizeForPDF(exp.company)}</Text>
               {exp.description && (
                 <Text style={styles.experienceDescription}>{sanitizeForPDF(exp.description)}</Text>
               )}
@@ -291,7 +308,10 @@ export const ClassicPDF = ({ content, settings }: { content: CVContent; settings
           {education.map((edu, index) => (
             <View key={index} style={styles.educationItem}>
               <View style={styles.educationLeft}>
-                <Text style={styles.educationDegree}>{sanitizeForPDF(edu.degree)}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 3 }}>
+                  <GraduationCapIcon size={9} color={settings.accentColor} />
+                  <Text style={{ fontWeight: 'bold', fontSize: 10, marginLeft: 3 }}>{sanitizeForPDF(edu.degree)}</Text>
+                </View>
                 <Text style={styles.educationDetails}>
                   {sanitizeForPDF(edu.institution)}{edu.field ? ` • ${sanitizeForPDF(edu.field)}` : ''}
                 </Text>
@@ -314,9 +334,9 @@ export const ClassicPDF = ({ content, settings }: { content: CVContent; settings
             {skills && skills.length > 0 && (
               <View style={styles.column}>
                 {skills.map((skill, index) => (
-                  <View key={index} style={styles.skillItem}>
-                    <Text style={styles.skillName}>{sanitizeForPDF(skill.name)}</Text>
-                    {skill.level && <Text style={styles.skillLevel}>({sanitizeForPDF(skill.level)})</Text>}
+                  <View key={index} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+                    <LaptopIcon size={8} color="#71717A" />
+                    <Text style={{ fontSize: 9, marginLeft: 3 }}>{sanitizeForPDF(skill.name)}</Text>
                   </View>
                 ))}
               </View>
@@ -324,9 +344,12 @@ export const ClassicPDF = ({ content, settings }: { content: CVContent; settings
             {languages && languages.length > 0 && (
               <View style={styles.column}>
                 {languages.map((lang, index) => (
-                  <View key={index} style={styles.languageItem}>
-                    <Text style={styles.languageName}>{sanitizeForPDF(lang.name)}</Text>
-                    <Text style={styles.languageLevel}>{sanitizeForPDF(lang.level)}</Text>
+                  <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <LanguagesIcon size={8} color="#71717A" />
+                      <Text style={{ fontSize: 9, marginLeft: 3 }}>{sanitizeForPDF(lang.name)}</Text>
+                    </View>
+                    <Text style={{ fontSize: 9, color: '#71717A' }}>{sanitizeForPDF(lang.level)}</Text>
                   </View>
                 ))}
               </View>
@@ -344,7 +367,10 @@ export const ClassicPDF = ({ content, settings }: { content: CVContent; settings
           <View style={styles.referencesGrid}>
             {references.map((ref, index) => (
               <View key={index} style={styles.referenceItem}>
-                <Text style={styles.referenceName}>{sanitizeForPDF(ref.name)}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 3 }}>
+                  <UserCheckIcon size={9} color={settings.accentColor} />
+                  <Text style={{ fontWeight: 'bold', fontSize: 10, marginLeft: 3 }}>{sanitizeForPDF(ref.name)}</Text>
+                </View>
                 {ref.position && <Text style={styles.referencePosition}>{sanitizeForPDF(ref.position)}</Text>}
                 {ref.company && <Text style={styles.referenceCompany}>{sanitizeForPDF(ref.company)}</Text>}
                 {ref.email && <Text style={styles.referenceContact}>{sanitizeForPDF(ref.email)}</Text>}

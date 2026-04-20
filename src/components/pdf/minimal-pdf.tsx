@@ -1,8 +1,12 @@
-import React from 'react';
-import { View, Text, StyleSheet } from '@react-pdf/renderer';
-import { CVContent, CVSettings } from '@/types/cv';
-import { PDFPhoto } from './shared/pdf-photo';
-import { sanitizeForPDF } from './pdf-document';
+import React from 'react'
+import { View, Text, StyleSheet } from '@react-pdf/renderer'
+import { CVContent, CVSettings } from '@/types/cv'
+import { PDFPhoto } from './shared/pdf-photo'
+import { sanitizeForPDF } from './pdf-document'
+import {
+  MailIcon, PhoneIcon, MapPinIcon, Globe2Icon,
+  CalendarIcon, GraduationCapIcon, LaptopIcon, LanguagesIcon
+} from './shared/pdf-icons'
 
 const styles = StyleSheet.create({
   container: {
@@ -216,12 +220,31 @@ export const MinimalPDF = ({ content, settings }: { content: CVContent; settings
           <Text style={styles.jobTitle}>{sanitizeForPDF(personalInfo.jobTitle)}</Text>
         )}
         <View style={styles.separator} />
-        <View style={styles.contactRow}>
-          {contacts.map((item, i) => (
-            <Text key={i} style={[styles.contactItem, i === contacts.length - 1 ? { marginRight: 0 } : {}]}>
-              {item}
-            </Text>
-          ))}
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+          {personalInfo.email && (
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16, marginBottom: 3 }}>
+              <MailIcon size={8} color="#71717A" />
+              <Text style={{ fontSize: 8, color: '#71717A', marginLeft: 3 }}>{sanitizeForPDF(personalInfo.email)}</Text>
+            </View>
+          )}
+          {personalInfo.phone && (
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16, marginBottom: 3 }}>
+              <PhoneIcon size={8} color="#71717A" />
+              <Text style={{ fontSize: 8, color: '#71717A', marginLeft: 3 }}>{sanitizeForPDF(personalInfo.phone)}</Text>
+            </View>
+          )}
+          {personalInfo.address && (
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16, marginBottom: 3 }}>
+              <MapPinIcon size={8} color="#71717A" />
+              <Text style={{ fontSize: 8, color: '#71717A', marginLeft: 3 }}>{sanitizeForPDF(personalInfo.address)}</Text>
+            </View>
+          )}
+          {personalInfo.linkedin && (
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 3 }}>
+              <Globe2Icon size={8} color="#71717A" />
+              <Text style={{ fontSize: 8, color: '#71717A', marginLeft: 3 }}>{sanitizeForPDF(personalInfo.linkedin)}</Text>
+            </View>
+          )}
         </View>
       </View>
 
@@ -237,9 +260,12 @@ export const MinimalPDF = ({ content, settings }: { content: CVContent; settings
           {experiences.map((exp, i) => (
             <View key={i} style={styles.expRow}>
               <View style={styles.expDates}>
-                <Text style={styles.expDatesText}>
-                  {sanitizeForPDF(exp.startDate)} — {exp.isCurrent ? 'Présent' : sanitizeForPDF(exp.endDate)}
-                </Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+                  <CalendarIcon size={7} color="#A1A1AA" />
+                  <Text style={{ fontSize: 8, fontWeight: 'bold', color: '#A1A1AA', marginLeft: 2 }}>
+                    {sanitizeForPDF(exp.startDate)} — {exp.isCurrent ? 'Present' : sanitizeForPDF(exp.endDate)}
+                  </Text>
+                </View>
               </View>
               <View style={styles.expContent}>
                 <Text style={styles.expPosition}>{sanitizeForPDF(exp.position)}</Text>
@@ -278,7 +304,10 @@ export const MinimalPDF = ({ content, settings }: { content: CVContent; settings
             <View style={styles.col}>
               <Text style={styles.sectionTitle}>COMPÉTENCES</Text>
               {skills.map((s, i) => (
-                <Text key={i} style={styles.skillText}>{sanitizeForPDF(s.name)}</Text>
+                <View key={i} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+                  <LaptopIcon size={8} color="#71717A" />
+                  <Text style={{ fontSize: 9, color: '#52525B', marginLeft: 3 }}>{sanitizeForPDF(s.name)}</Text>
+                </View>
               ))}
             </View>
           )}
@@ -286,9 +315,12 @@ export const MinimalPDF = ({ content, settings }: { content: CVContent; settings
             <View style={styles.col}>
               <Text style={styles.sectionTitle}>LANGUES</Text>
               {languages.map((l, i) => (
-                <View key={i} style={styles.langRow}>
-                  <Text style={styles.langName}>{sanitizeForPDF(l.name)}</Text>
-                  <Text style={styles.langLevel}>{sanitizeForPDF(l.level)}</Text>
+                <View key={i} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <LanguagesIcon size={8} color="#71717A" />
+                    <Text style={{ fontSize: 9, color: '#52525B', marginLeft: 3 }}>{sanitizeForPDF(l.name)}</Text>
+                  </View>
+                  <Text style={{ fontSize: 9, color: '#71717A' }}>{sanitizeForPDF(l.level)}</Text>
                 </View>
               ))}
             </View>
