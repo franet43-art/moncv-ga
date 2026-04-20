@@ -3,393 +3,401 @@ import { View, Text, StyleSheet } from '@react-pdf/renderer'
 import { CVContent, CVSettings } from '@/types/cv'
 import { PDFPhoto } from './shared/pdf-photo'
 import { sanitizeForPDF } from './pdf-document'
-import {
-  MailIcon, PhoneIcon, MapPinIcon, Globe2Icon, LanguagesIcon
-} from './shared/pdf-icons'
+
+interface ModernPDFProps {
+  content: CVContent
+  settings: CVSettings
+}
+
+// skill.level est un enum string — mapping vers pourcentage
+const SKILL_LEVEL_PCT: Record<string, number> = {
+  debutant: 20,
+  intermediaire: 40,
+  avance: 70,
+  expert: 100,
+}
 
 const styles = StyleSheet.create({
-  container: {
+  pageLayout: {
     flexDirection: 'row',
-    minHeight: 1050,
     fontFamily: 'Helvetica',
   },
   sidebar: {
     width: '35%',
-    padding: 32,
-    flexDirection: 'column',
+    paddingTop: 36,
+    paddingBottom: 36,
+    paddingLeft: 22,
+    paddingRight: 22,
+    alignItems: 'center',
   },
-  photoWrapper: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
+  main: {
+    width: '65%',
+    paddingTop: 36,
+    paddingBottom: 36,
+    paddingLeft: 28,
+    paddingRight: 28,
+  },
+  photoCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
     overflow: 'hidden',
-    marginBottom: 24,
+    marginBottom: 16,
   },
   sidebarName: {
-    fontSize: 20,
+    fontSize: 15,
     fontWeight: 'bold',
-    textTransform: 'uppercase',
     color: '#FFFFFF',
-    marginBottom: 6,
+    textAlign: 'center',
+    marginBottom: 4,
   },
   sidebarJobTitle: {
-    fontSize: 11,
-    fontStyle: 'italic',
-    color: 'rgba(255,255,255,0.8)',
-    marginBottom: 28,
-  },
-  sidebarSection: {
-    marginBottom: 28,
-  },
-  sidebarSectionTitle: {
-    fontSize: 8,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    paddingBottom: 6,
-    marginBottom: 4,
-  },
-  contactText: {
-    fontSize: 9,
-    color: '#FFFFFF',
-    marginBottom: 6,
-  },
-  skillsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  skillPill: {
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    marginRight: 6,
-    marginBottom: 6,
-  },
-  skillPillText: {
-    fontSize: 7,
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-    color: '#FFFFFF',
-  },
-  languageItem: {
-    marginBottom: 10,
-  },
-  languageHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 4,
-  },
-  languageName: {
-    fontSize: 8,
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
-    color: '#FFFFFF',
-  },
-  languageLevel: {
-    fontSize: 8,
-    color: 'rgba(255,255,255,0.8)',
-  },
-  languageBarBg: {
-    height: 4,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-  },
-  languageBarFill: {
-    height: 4,
-    backgroundColor: '#FFFFFF',
-  },
-  mainContent: {
-    width: '65%',
-    paddingHorizontal: 32,
-    paddingVertical: 36,
-    flexDirection: 'column',
-  },
-  summary: {
     fontSize: 10,
-    lineHeight: 1.6,
-    color: '#3F3F46',
-    marginBottom: 32,
-  },
-  mainSection: {
-    marginBottom: 28,
-  },
-  mainSectionTitle: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    paddingBottom: 8,
-    marginBottom: 8,
-  },
-  timelineItem: {
-    flexDirection: 'row',
+    color: '#E5E7EB',
+    textAlign: 'center',
     marginBottom: 20,
   },
-  timelineDot: {
-    position: 'absolute',
-    left: -5,
-    top: 4,
-    width: 9,
-    height: 9,
-    borderRadius: 5,
-    borderWidth: 2,
-    borderColor: '#FFFFFF',
+  sidebarDivider: {
+    width: '60%',
+    height: 1,
+    backgroundColor: '#FFFFFF',
+    marginBottom: 18,
+    opacity: 0.3,
   },
-  timelineHeader: {
+  sidebarSection: {
+    width: '100%',
+    marginBottom: 18,
+  },
+  sidebarSectionTitle: {
+    fontSize: 9,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    textTransform: 'uppercase',
+    letterSpacing: 1.5,
+    marginBottom: 8,
+    paddingBottom: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: '#FFFFFF',
+  },
+  contactItem: {
+    marginBottom: 5,
+  },
+  contactText: {
+    fontSize: 8,
+    color: '#E5E7EB',
+  },
+  skillItem: {
+    marginBottom: 8,
+  },
+  skillName: {
+    fontSize: 8,
+    color: '#E5E7EB',
+    marginBottom: 3,
+  },
+  // rgba() évite le problème d'opacity cascade sur les enfants
+  skillBarBg: {
+    height: 4,
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    borderRadius: 2,
+    overflow: 'hidden',
+  },
+  skillBarFill: {
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: '#FFFFFF',
+  },
+  langItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+  },
+  langName: {
+    fontSize: 8,
+    color: '#E5E7EB',
+  },
+  langLevel: {
+    fontSize: 8,
+    color: '#D1D5DB',
+  },
+  mainSection: {
+    marginBottom: 22,
+  },
+  mainSectionTitle: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#18181B',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    marginBottom: 10,
+    paddingBottom: 4,
+    borderBottomWidth: 2,
+  },
+  summaryText: {
+    fontSize: 10,
+    color: '#3F3F46',
+    lineHeight: 1.6,
+  },
+  experienceItem: {
+    marginBottom: 14,
+  },
+  expHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 4,
+    marginBottom: 3,
   },
-  timelinePosition: {
+  expPosition: {
     fontSize: 11,
     fontWeight: 'bold',
     color: '#18181B',
     flex: 1,
+    paddingRight: 8,
   },
-  timelineDates: {
-    fontSize: 8,
-    color: '#71717A',
-  },
-  timelineCompany: {
+  expDate: {
     fontSize: 9,
-    fontWeight: 'bold',
+    color: '#71717A',
+    flexShrink: 0,
+  },
+  expCompany: {
+    fontSize: 10,
     color: '#52525B',
     marginBottom: 4,
   },
-  timelineDescription: {
+  expDescription: {
     fontSize: 9,
-    lineHeight: 1.5,
     color: '#3F3F46',
+    lineHeight: 1.5,
   },
   educationItem: {
-    marginBottom: 14,
+    marginBottom: 12,
   },
-  educationHeader: {
+  eduHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     marginBottom: 2,
   },
-  educationDegree: {
+  eduDegree: {
     fontSize: 11,
     fontWeight: 'bold',
     color: '#18181B',
+    flex: 1,
+    paddingRight: 8,
   },
-  educationDates: {
-    fontSize: 8,
-    color: '#71717A',
-  },
-  educationInstitution: {
+  eduDate: {
     fontSize: 9,
+    color: '#71717A',
+    flexShrink: 0,
+  },
+  eduInstitution: {
+    fontSize: 10,
     color: '#52525B',
   },
-  referencesGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+  refItem: {
+    marginBottom: 10,
   },
-  referenceItem: {
-    width: '50%',
-    paddingRight: 16,
-    marginBottom: 14,
-  },
-  referenceName: {
+  refName: {
     fontSize: 10,
     fontWeight: 'bold',
     color: '#18181B',
     marginBottom: 2,
   },
-  referenceDetails: {
+  refDetail: {
     fontSize: 9,
     color: '#52525B',
+    marginBottom: 1,
   },
-  referenceEmail: {
-    fontSize: 8,
-    color: '#71717A',
-  },
-});
+})
 
-function langWidth(level: string): string {
-  switch (level) {
-    case 'natif': case 'bilingue': return '100%';
-    case 'courant': return '80%';
-    case 'intermediaire': return '60%';
-    case 'debutant': return '40%';
-    default: return '50%';
-  }
-}
+export function ModernPDF({ content, settings }: ModernPDFProps) {
+  const {
+    personalInfo,
+    experiences = [],
+    education = [],
+    skills = [],
+    languages = [],
+    references = [],
+  } = content
 
-export const ModernPDF = ({ content, settings }: { content: CVContent; settings: CVSettings }) => {
-  const { personalInfo, experiences, education, skills, languages, references } = content;
-  const { accentColor, photoUrl } = settings;
+  const accentColor = settings.accentColor || '#1E293B'
+  const photoUrl = settings.photoUrl
+  const hasPhoto = !!(photoUrl && String(photoUrl).trim())
 
   return (
-    <View style={styles.container}>
-      {/* SIDEBAR */}
+    <View style={styles.pageLayout}>
+      {/* ===== SIDEBAR COLORÉE ===== */}
       <View style={[styles.sidebar, { backgroundColor: accentColor }]}>
-        {photoUrl && (
-          <View style={styles.photoWrapper}>
-            <PDFPhoto src={photoUrl} style={{ width: 96, height: 96 }} />
+        {hasPhoto && (
+          <View style={styles.photoCircle}>
+            <PDFPhoto src={photoUrl!} style={{ width: 80, height: 80 }} />
           </View>
         )}
-        <Text style={styles.sidebarName}>{sanitizeForPDF(personalInfo.fullName)}</Text>
+
+        {personalInfo.fullName && (
+          <Text style={styles.sidebarName}>{sanitizeForPDF(personalInfo.fullName)}</Text>
+        )}
         {personalInfo.jobTitle && (
           <Text style={styles.sidebarJobTitle}>{sanitizeForPDF(personalInfo.jobTitle)}</Text>
         )}
 
+        <View style={styles.sidebarDivider} />
+
         {/* Contact */}
-        {(personalInfo.email || personalInfo.phone || personalInfo.address) && (
+        {(personalInfo.email || personalInfo.phone || personalInfo.address || personalInfo.linkedin) && (
           <View style={styles.sidebarSection}>
-            <Text style={styles.sidebarSectionTitle}>CONTACT</Text>
-            <View style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.2)', marginBottom: 10 }} />
+            <Text style={styles.sidebarSectionTitle}>Contact</Text>
             {personalInfo.email && (
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 7 }}>
-                <MailIcon size={11} color="#FFFFFF" />
-                <View style={{ flex: 1, marginLeft: 5 }}>
-                  <Text style={{ fontSize: 9, color: '#FFFFFF' }}>{sanitizeForPDF(personalInfo.email)}</Text>
-                </View>
+              <View style={styles.contactItem}>
+                <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.email)}</Text>
               </View>
             )}
             {personalInfo.phone && (
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 7 }}>
-                <PhoneIcon size={11} color="#FFFFFF" />
-                <View style={{ flex: 1, marginLeft: 5 }}>
-                  <Text style={{ fontSize: 9, color: '#FFFFFF' }}>{sanitizeForPDF(personalInfo.phone)}</Text>
-                </View>
+              <View style={styles.contactItem}>
+                <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.phone)}</Text>
               </View>
             )}
             {personalInfo.address && (
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 7 }}>
-                <MapPinIcon size={11} color="#FFFFFF" />
-                <View style={{ flex: 1, marginLeft: 5 }}>
-                  <Text style={{ fontSize: 9, color: '#FFFFFF' }}>{sanitizeForPDF(personalInfo.address)}</Text>
-                </View>
+              <View style={styles.contactItem}>
+                <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.address)}</Text>
               </View>
             )}
             {personalInfo.linkedin && (
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 7 }}>
-                <Globe2Icon size={11} color="#FFFFFF" />
-                <View style={{ flex: 1, marginLeft: 5 }}>
-                  <Text style={{ fontSize: 9, color: '#FFFFFF' }}>{sanitizeForPDF(personalInfo.linkedin)}</Text>
-                </View>
+              <View style={styles.contactItem}>
+                <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.linkedin)}</Text>
               </View>
             )}
           </View>
         )}
 
         {/* Compétences */}
-        {skills && skills.length > 0 && (
+        {skills.length > 0 && (
           <View style={styles.sidebarSection}>
-            <Text style={styles.sidebarSectionTitle}>COMPÉTENCES</Text>
-            <View style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.2)', marginBottom: 10 }} />
-            <View style={styles.skillsContainer}>
-              {skills.map((skill, i) => (
-                <View key={i} style={styles.skillPill}>
-                  <Text style={styles.skillPillText}>{sanitizeForPDF(skill.name)}</Text>
+            <Text style={styles.sidebarSectionTitle}>Compétences</Text>
+            {skills.map((skill, i) => (
+              <View key={skill.id ?? i} style={styles.skillItem}>
+                <Text style={styles.skillName}>{sanitizeForPDF(skill.name)}</Text>
+                <View style={styles.skillBarBg}>
+                  <View
+                    style={[
+                      styles.skillBarFill,
+                      { width: `${SKILL_LEVEL_PCT[skill.level ?? ''] ?? 40}%` },
+                    ]}
+                  />
                 </View>
-              ))}
-            </View>
+              </View>
+            ))}
           </View>
         )}
 
         {/* Langues */}
-        {languages && languages.length > 0 && (
+        {languages.length > 0 && (
           <View style={styles.sidebarSection}>
-            <Text style={styles.sidebarSectionTitle}>LANGUES</Text>
-            <View style={{ height: 1, backgroundColor: 'rgba(255,255,255,0.2)', marginBottom: 10 }} />
+            <Text style={styles.sidebarSectionTitle}>Langues</Text>
             {languages.map((lang, i) => (
-              <View key={i} style={styles.languageItem}>
-                <View style={styles.languageHeader}>
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <LanguagesIcon size={10} color="#FFFFFF" />
-                    <View style={{ flex: 1, marginLeft: 3 }}>
-                      <Text style={{ fontSize: 8, color: '#FFFFFF', fontWeight: 'bold' }}>
-                        {sanitizeForPDF(lang.name)}
-                      </Text>
-                    </View>
-                  </View>
-                  <Text style={styles.languageLevel}>{sanitizeForPDF(lang.level)}</Text>
-                </View>
-                <View style={styles.languageBarBg}>
-                  <View style={[styles.languageBarFill, { width: langWidth(lang.level) }]} />
-                </View>
+              <View key={lang.id ?? i} style={styles.langItem}>
+                <Text style={styles.langName}>{sanitizeForPDF(lang.name)}</Text>
+                <Text style={styles.langLevel}>{sanitizeForPDF(lang.level)}</Text>
               </View>
             ))}
           </View>
         )}
       </View>
 
-      {/* CONTENU PRINCIPAL */}
-      <View style={styles.mainContent}>
+      {/* ===== CONTENU PRINCIPAL ===== */}
+      <View style={styles.main}>
         {personalInfo.summary && (
-          <Text style={styles.summary}>{sanitizeForPDF(personalInfo.summary)}</Text>
+          <View style={styles.mainSection}>
+            <Text style={[styles.mainSectionTitle, { borderBottomColor: accentColor }]}>
+              Profil
+            </Text>
+            <Text style={styles.summaryText}>{sanitizeForPDF(personalInfo.summary)}</Text>
+          </View>
         )}
 
-        {/* Expériences */}
-        {experiences && experiences.length > 0 && (
+        {experiences.length > 0 && (
           <View style={styles.mainSection}>
-            <Text style={[styles.mainSectionTitle, { color: accentColor }]}>
-              EXPÉRIENCE PROFESSIONNELLE
+            <Text style={[styles.mainSectionTitle, { borderBottomColor: accentColor }]}>
+              Expérience
             </Text>
-            <View style={{ height: 1, backgroundColor: accentColor, marginBottom: 14 }} />
             {experiences.map((exp, i) => (
-              <View key={i} style={{ flexDirection: 'row', marginBottom: 20 }}>
-                <View style={{ width: 2, backgroundColor: '#E4E4E7', marginRight: 12 }} />
-                <View style={{ flex: 1 }}>
-                  <View style={styles.timelineHeader}>
-                    <Text style={styles.timelinePosition}>{sanitizeForPDF(exp.position)}</Text>
-                    <Text style={styles.timelineDates}>
-                      {sanitizeForPDF(exp.startDate)} — {exp.isCurrent ? 'Présent' : sanitizeForPDF(exp.endDate)}
+              <View key={exp.id ?? i} style={styles.experienceItem}>
+                <View style={styles.expHeader}>
+                  {exp.position && (
+                    <Text style={styles.expPosition}>{sanitizeForPDF(exp.position)}</Text>
+                  )}
+                  {(exp.startDate || exp.endDate) && (
+                    <Text style={styles.expDate}>
+                      {sanitizeForPDF(exp.startDate)}
+                      {exp.startDate && (exp.endDate || exp.isCurrent) ? ' - ' : ''}
+                      {exp.isCurrent ? 'Présent' : sanitizeForPDF(exp.endDate)}
                     </Text>
-                  </View>
-                  <Text style={styles.timelineCompany}>{sanitizeForPDF(exp.company)}</Text>
-                  {exp.description && (
-                    <Text style={styles.timelineDescription}>{sanitizeForPDF(exp.description)}</Text>
                   )}
                 </View>
+                {exp.company && (
+                  <Text style={styles.expCompany}>{sanitizeForPDF(exp.company)}</Text>
+                )}
+                {exp.description && (
+                  <Text style={styles.expDescription}>{sanitizeForPDF(exp.description)}</Text>
+                )}
               </View>
             ))}
           </View>
         )}
 
-        {/* Formation */}
-        {education && education.length > 0 && (
+        {education.length > 0 && (
           <View style={styles.mainSection}>
-            <Text style={[styles.mainSectionTitle, { color: accentColor }]}>
-              FORMATION
+            <Text style={[styles.mainSectionTitle, { borderBottomColor: accentColor }]}>
+              Formation
             </Text>
-            <View style={{ height: 1, backgroundColor: accentColor, marginBottom: 14 }} />
             {education.map((edu, i) => (
-              <View key={i} style={styles.educationItem}>
-                <View style={styles.educationHeader}>
-                  <Text style={styles.educationDegree}>{sanitizeForPDF(edu.degree)}</Text>
-                  <Text style={styles.educationDates}>
-                    {sanitizeForPDF(edu.startDate)} — {edu.isCurrent ? 'Présent' : sanitizeForPDF(edu.endDate)}
-                  </Text>
+              <View key={edu.id ?? i} style={styles.educationItem}>
+                <View style={styles.eduHeader}>
+                  {edu.degree && (
+                    <Text style={styles.eduDegree}>{sanitizeForPDF(edu.degree)}</Text>
+                  )}
+                  {(edu.startDate || edu.endDate) && (
+                    <Text style={styles.eduDate}>
+                      {sanitizeForPDF(edu.startDate)}
+                      {edu.startDate && (edu.endDate || edu.isCurrent) ? ' - ' : ''}
+                      {edu.isCurrent ? 'Présent' : sanitizeForPDF(edu.endDate)}
+                    </Text>
+                  )}
                 </View>
-                <Text style={styles.educationInstitution}>{sanitizeForPDF(edu.institution)}</Text>
+                {edu.institution && (
+                  <Text style={styles.eduInstitution}>{sanitizeForPDF(edu.institution)}</Text>
+                )}
               </View>
             ))}
           </View>
         )}
 
-        {/* Références */}
-        {references && references.length > 0 && (
+        {references.length > 0 && (
           <View style={styles.mainSection}>
-            <Text style={[styles.mainSectionTitle, { color: accentColor }]}>
-              RÉFÉRENCES
+            <Text style={[styles.mainSectionTitle, { borderBottomColor: accentColor }]}>
+              Références
             </Text>
-            <View style={{ height: 1, backgroundColor: accentColor, marginBottom: 14 }} />
-            <View style={styles.referencesGrid}>
-              {references.map((ref, i) => (
-                <View key={i} style={styles.referenceItem}>
-                  <Text style={styles.referenceName}>{sanitizeForPDF(ref.name)}</Text>
-                  <Text style={styles.referenceDetails}>
-                    {sanitizeForPDF(ref.position)}{ref.company ? ` @ ${sanitizeForPDF(ref.company)}` : ''}
+            {references.map((ref, i) => (
+              <View key={ref.id ?? i} style={styles.refItem}>
+                {ref.name && (
+                  <Text style={styles.refName}>{sanitizeForPDF(ref.name)}</Text>
+                )}
+                {ref.position && (
+                  <Text style={styles.refDetail}>
+                    {sanitizeForPDF(ref.position)}
+                    {ref.company ? ` — ${sanitizeForPDF(ref.company)}` : ''}
                   </Text>
-                  {ref.email && <Text style={styles.referenceEmail}>{sanitizeForPDF(ref.email)}</Text>}
-                </View>
-              ))}
-            </View>
+                )}
+                {ref.email && (
+                  <Text style={styles.refDetail}>{sanitizeForPDF(ref.email)}</Text>
+                )}
+                {ref.phone && (
+                  <Text style={styles.refDetail}>{sanitizeForPDF(ref.phone)}</Text>
+                )}
+              </View>
+            ))}
           </View>
         )}
       </View>
     </View>
-  );
-};
+  )
+}
