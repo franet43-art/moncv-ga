@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
     console.log('[PDF_SUCCESS] buffer size:', buffer.length, 'bytes')
     console.log('[PDF_SUCCESS] templateId:', templateId)
 
-    return new NextResponse(buffer, {
+    return new NextResponse(new Uint8Array(buffer), {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="CV-${fullName || 'MonCV'}.pdf"`,
