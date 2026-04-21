@@ -5,9 +5,7 @@ import { ClassicPDF } from './classic-pdf'
 import { ModernPDF } from './modern-pdf'
 import { MinimalPDF } from './minimal-pdf'
 
-// Using native PDF fonts (Helvetica) to prevent loading issues on Vercel
-Font.registerHyphenationCallback((word) => [word]);
-
+Font.registerHyphenationCallback((word) => [word])
 
 export const sanitizeForPDF = (text?: string | null): string =>
   (text ?? '')
@@ -15,8 +13,7 @@ export const sanitizeForPDF = (text?: string | null): string =>
     .replace(/[\u2018\u2019]/g, "'")
     .replace(/\u2013|\u2014/g, '-')
     .replace(/\u2026/g, '...')
-    .replace(/[^\u0000-\u024F]/g, '');
-
+    .replace(/[^\u0000-\u024F]/g, '')
 
 interface CVPDFDocumentProps {
   content: CVContent
@@ -27,6 +24,8 @@ interface CVPDFDocumentProps {
 const styles = StyleSheet.create({
   page: {
     backgroundColor: '#ffffff',
+    color: '#000000',
+    padding: 0,
   },
   watermarkContainer: {
     position: 'absolute',
@@ -34,32 +33,37 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 100,
   },
   watermarkText: {
     fontSize: 60,
-    color: 'rgba(0, 0, 0, 0.08)',
-    transform: 'rotate(-45deg)',
+    color: '#000000',
+    opacity: 0.06,
     fontWeight: 'bold',
+    transform: 'rotate(-45deg)',
     textAlign: 'center',
-  }
+  },
 })
 
 export function CVPDFDocument({ content, settings, isPaid = false }: CVPDFDocumentProps) {
   return (
     <Document>
-      <Page size="A4" style={[styles.page, settings.templateId === 'modern' ? { padding: 0 } : {}]} wrap>
+      <Page size="A4" style={styles.page} wrap>
         {!isPaid && (
           <View style={styles.watermarkContainer} fixed>
             <Text style={styles.watermarkText}>BROUILLON - MonCV.ga</Text>
           </View>
         )}
-        {settings.templateId === 'classic' && <ClassicPDF content={content} settings={settings} />}
-        {settings.templateId === 'modern' && <ModernPDF content={content} settings={settings} />}
-        {settings.templateId === 'minimal' && <MinimalPDF content={content} settings={settings} />}
+        {settings.templateId === 'classic' && (
+          <ClassicPDF content={content} settings={settings} />
+        )}
+        {settings.templateId === 'modern' && (
+          <ModernPDF content={content} settings={settings} />
+        )}
+        {settings.templateId === 'minimal' && (
+          <MinimalPDF content={content} settings={settings} />
+        )}
       </Page>
     </Document>
   )
