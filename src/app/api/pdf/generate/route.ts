@@ -7,62 +7,39 @@ export const runtime = 'nodejs'
 export const maxDuration = 60
 
 export async function POST(req: NextRequest) {
-  let templateId: string | undefined
-  let fullName: string | undefined
-
+  let templateId = 'unknown'
   try {
     const body = await req.json()
     const { content, settings, isPaid } = body
-
-    templateId = settings?.templateId
-    fullName = content?.personalInfo?.fullName
+    templateId = settings?.templateId || 'unknown'
 
     console.log('[PDF_START] templateId:', templateId)
-    console.log('[PDF_START] fullName:', fullName)
-    console.log('[PDF_CONTENT_CHECK] hasPersonalInfo:', !!content?.personalInfo)
-    console.log('[PDF_CONTENT_CHECK] hasEmail:', !!content?.personalInfo?.email)
-    console.log('[PDF_CONTENT_CHECK] hasPhoto:', !!settings?.photoUrl)
-    console.log('[PDF_CONTENT_CHECK] experiencesCount:', content?.experiences?.length ?? 0)
-    console.log('[PDF_CONTENT_CHECK] educationCount:', content?.education?.length ?? 0)
-    console.log('[PDF_CONTENT_CHECK] skillsCount:', content?.skills?.length ?? 0)
-    console.log('[PDF_CONTENT_CHECK] languagesCount:', content?.languages?.length ?? 0)
-    console.log('[PDF_CONTENT_CHECK] isPaid:', !!isPaid)
+    console.log('[PDF_CONTENT] fullName:', content?.personalInfo?.fullName)
 
     if (!content?.personalInfo) {
-      console.log('[PDF_REJECT] Données CV invalides — personalInfo manquant')
-      return NextResponse.json({ error: 'Données CV invalides' }, { status: 400 })
+      return NextResponse.json({ error: 'Donnees CV invalides' }, { status: 400 })
     }
-
-    console.log('[PDF_RENDER_START] Appel renderToBuffer...')
 
     const buffer = await renderToBuffer(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      React.createElement(CVPDFDocument, { content, settings, isPaid }) as any
+      React.createElement(CVPDFDocument, { content, settings, isPaid: isPaid ?? false }) as any
     )
 
-    console.log('[PDF_SUCCESS] buffer size:', buffer.length, 'bytes')
-    console.log('[PDF_SUCCESS] templateId:', templateId)
+    console.log('[PDF_SUCCESS] templateId:', templateId, '| bytes:', buffer.length)
 
     return new NextResponse(new Uint8Array(buffer), {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="CV-${fullName || 'MonCV'}.pdf"`,
+        'Content-Disposition': `attachment; filename="CV-${content.personalInfo?.fullName || 'MonCV'}.pdf"`,
       },
     })
   } catch (error: unknown) {
-    const err = error as { name?: string; message?: string; stack?: string; cause?: { toString?: () => string } }
+    const err = error as { message?: string; stack?: string }
     console.error('[PDF_GENERATE_ERROR] templateId:', templateId)
-    console.error('[PDF_GENERATE_ERROR] fullName:', fullName)
-    console.error('[PDF_GENERATE_ERROR] name:', err?.name)
     console.error('[PDF_GENERATE_ERROR] message:', err?.message)
-    console.error('[PDF_GENERATE_ERROR] stack:', err?.stack)
-    console.error('[PDF_GENERATE_ERROR] cause:', err?.cause?.toString?.())
-
+    console.error('[PDF_GENERATE_ERROR] stack:', err?.stack?.split('\n').slice(0, 6).join('\n'))
     return NextResponse.json(
-      {
-        error: err?.message || 'Erreur generation PDF',
-        templateId,
-      },
+      { error: err?.message || 'Erreur generation PDF' },
       { status: 500 }
     )
   }

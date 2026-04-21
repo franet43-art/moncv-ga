@@ -3,30 +3,31 @@ import { View, Text, StyleSheet } from '@react-pdf/renderer'
 import { CVContent, CVSettings } from '@/types/cv'
 import { PDFPhoto } from './shared/pdf-photo'
 import { sanitizeForPDF } from './pdf-document'
-import {
-  MailIcon,
-  PhoneIcon,
-  MapPinIcon,
-  Globe2Icon,
-} from './shared/pdf-icons'
 
 interface ModernPDFProps {
   content: CVContent
   settings: CVSettings
 }
 
-const LANGUAGE_LEVEL_PCT: Record<string, number> = {
-  basique: 40,
-  intermediaire: 60,
-  courant: 80,
-  bilingue: 100,
-  natif: 100,
+const getLangWidth = (level: string): string => {
+  const l = (level || '').toLowerCase()
+  if (l.includes('natif') || l.includes('bilingue')) return '100%'
+  if (l.includes('courant')) return '85%'
+  if (l.includes('inter')) return '65%'
+  return '45%'
 }
 
 const styles = StyleSheet.create({
   pageLayout: {
     flexDirection: 'row',
-    fontFamily: 'Helvetica',
+    flex: 1,
+  },
+  sidebarBg: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    width: '35%',
   },
   sidebar: {
     width: '35%',
@@ -34,62 +35,55 @@ const styles = StyleSheet.create({
     paddingBottom: 36,
     paddingLeft: 22,
     paddingRight: 22,
-    alignItems: 'center',
   },
   main: {
     width: '65%',
-    backgroundColor: '#FFFFFF',
     paddingTop: 36,
     paddingBottom: 36,
-    paddingLeft: 28,
-    paddingRight: 28,
+    paddingLeft: 32,
+    paddingRight: 32,
   },
-  photoWrapper: {
+  photoCircle: {
     width: 84,
     height: 84,
     borderRadius: 42,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
-  },
-  photoCircle: {
-    width: 76,
-    height: 76,
-    borderRadius: 38,
     overflow: 'hidden',
+    alignSelf: 'center',
+    marginBottom: 18,
+    borderWidth: 3,
+    borderColor: 'rgba(255,255,255,0.25)',
   },
   sidebarName: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#FFFFFF',
     textAlign: 'center',
     marginBottom: 4,
-    textTransform: 'uppercase',
   },
   sidebarJobTitle: {
     fontSize: 10,
-    color: '#E5E7EB',
+    color: 'rgba(255,255,255,0.85)',
     textAlign: 'center',
-    marginBottom: 20,
     fontStyle: 'italic',
+    marginBottom: 22,
   },
-  sidebarDivider: {
-    width: '60%',
+  divider: {
+    width: '65%',
     height: 1,
-    backgroundColor: 'rgba(255,255,255,0.3)',
-    marginBottom: 18,
-  },
-  sidebarSection: {
-    width: '100%',
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    alignSelf: 'center',
     marginBottom: 20,
+  },
+  sidebarBlock: {
+    width: '100%',
+    marginBottom: 22,
   },
   sidebarSectionTitle: {
     fontSize: 9,
     fontWeight: 'bold',
     color: '#FFFFFF',
     textTransform: 'uppercase',
-    letterSpacing: 1,
+    letterSpacing: 1.5,
     marginBottom: 10,
     paddingBottom: 4,
     borderBottomWidth: 1,
@@ -97,173 +91,167 @@ const styles = StyleSheet.create({
   },
   contactRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 6,
+    alignItems: 'flex-start',
+    marginBottom: 8,
+  },
+  contactDot: {
+    width: 5,
+    height: 5,
+    borderRadius: 2,
+    backgroundColor: 'rgba(255,255,255,0.6)',
+    marginRight: 8,
+    marginTop: 3,
   },
   contactText: {
-    fontSize: 8,
-    color: '#E5E7EB',
-    marginLeft: 6,
+    fontSize: 9,
+    color: '#FFFFFF',
     flex: 1,
   },
-  skillsContainer: {
+  skillsWrap: {
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
   skillPill: {
-    backgroundColor: 'rgba(0,0,0,0.15)',
+    backgroundColor: 'rgba(0,0,0,0.12)',
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.15)',
-    borderRadius: 3,
+    borderColor: 'rgba(255,255,255,0.18)',
     paddingTop: 3,
     paddingBottom: 3,
-    paddingLeft: 6,
-    paddingRight: 6,
+    paddingLeft: 8,
+    paddingRight: 8,
     marginRight: 6,
     marginBottom: 6,
+    borderRadius: 3,
   },
-  skillText: {
+  skillPillText: {
     fontSize: 8,
-    color: '#FFFFFF',
     fontWeight: 'bold',
-    textTransform: 'uppercase',
+    color: '#FFFFFF',
   },
-  languageItem: {
-    marginBottom: 8,
+  langItem: {
+    marginBottom: 12,
   },
-  languageRow: {
+  langRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 3,
+    marginBottom: 4,
   },
-  languageName: {
-    fontSize: 8,
-    color: '#FFFFFF',
-    textTransform: 'uppercase',
+  langName: {
+    fontSize: 9,
     fontWeight: 'bold',
+    color: '#FFFFFF',
   },
-  languageLevel: {
+  langLevel: {
     fontSize: 8,
-    color: '#E5E7EB',
+    color: 'rgba(255,255,255,0.75)',
   },
-  languageBarBg: {
+  langBarBg: {
     height: 3,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    borderRadius: 2,
+    backgroundColor: 'rgba(255,255,255,0.18)',
+    borderRadius: 1,
     overflow: 'hidden',
   },
-  languageBarFill: {
+  langBarFill: {
     height: 3,
     backgroundColor: '#FFFFFF',
-    borderRadius: 2,
+    borderRadius: 1,
   },
   mainSection: {
-    marginBottom: 28,
+    marginBottom: 26,
   },
-  mainSectionTitle: {
-    fontSize: 12,
+  sectionTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  sectionBar: {
+    width: 4,
+    height: 14,
+    marginRight: 9,
+  },
+  sectionTitleText: {
+    fontSize: 11,
     fontWeight: 'bold',
     textTransform: 'uppercase',
-    marginBottom: 14,
+    letterSpacing: 1.2,
+    color: '#18181B',
   },
   summaryText: {
     fontSize: 10,
     color: '#3F3F46',
     lineHeight: 1.6,
   },
-  experienceItem: {
+  expItem: {
     marginBottom: 18,
+    paddingLeft: 14,
     borderLeftWidth: 2,
     borderLeftColor: '#E5E7EB',
-    paddingLeft: 12,
-  },
-  experienceBullet: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginBottom: 4,
-  },
-  expHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 4,
   },
   expPosition: {
     fontSize: 11,
     fontWeight: 'bold',
     color: '#18181B',
-    flex: 1,
-    paddingRight: 8,
+    marginBottom: 2,
   },
-  expDate: {
+  expMeta: {
     fontSize: 9,
-    color: '#71717A',
-    flexShrink: 0,
+    color: '#64748B',
+    marginBottom: 4,
   },
-  expCompany: {
-    fontSize: 10,
-    color: '#52525B',
-    marginBottom: 6,
-  },
-  expDescription: {
+  expDesc: {
     fontSize: 9,
-    color: '#3F3F46',
+    color: '#374151',
     lineHeight: 1.5,
   },
-  educationItem: {
+  eduItem: {
     marginBottom: 14,
   },
-  educationHeader: {
+  eduRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 3,
+    alignItems: 'flex-start',
+    marginBottom: 2,
   },
-  educationDegree: {
+  eduDegree: {
     fontSize: 11,
     fontWeight: 'bold',
     color: '#18181B',
     flex: 1,
     paddingRight: 8,
   },
-  educationDate: {
+  eduDate: {
     fontSize: 9,
-    color: '#71717A',
+    color: '#9CA3AF',
+    fontWeight: 'bold',
     flexShrink: 0,
   },
-  educationInstitution: {
+  eduInstitution: {
     fontSize: 10,
     color: '#52525B',
   },
-  referencesGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  referenceCard: {
-    width: '47%',
+  refItem: {
     backgroundColor: '#F9FAFB',
+    paddingTop: 12,
+    paddingBottom: 12,
+    paddingLeft: 12,
+    paddingRight: 12,
+    marginBottom: 10,
     borderWidth: 1,
     borderColor: '#F3F4F6',
-    borderRadius: 6,
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 10,
-    paddingRight: 10,
-    marginRight: '3%',
-    marginBottom: 10,
+    borderRadius: 4,
   },
-  referenceName: {
+  refName: {
     fontSize: 10,
     fontWeight: 'bold',
     color: '#18181B',
     marginBottom: 2,
   },
-  referenceRole: {
+  refSub: {
     fontSize: 9,
     color: '#52525B',
-    marginBottom: 4,
+    marginBottom: 3,
   },
-  referenceEmail: {
+  refEmail: {
     fontSize: 9,
     fontWeight: 'bold',
   },
@@ -272,66 +260,67 @@ const styles = StyleSheet.create({
 export function ModernPDF({ content, settings }: ModernPDFProps) {
   const {
     personalInfo,
-    experiences,
-    education,
-    skills,
-    languages,
-    references,
+    experiences = [],
+    education = [],
+    skills = [],
+    languages = [],
+    references = [],
   } = content
-
-  const accentColor = settings.accentColor || '#1E293B'
+  const accentColor = settings?.accentColor || '#6B46C1'
+  const photoUrl = settings?.photoUrl
+  const hasPhoto = !!(photoUrl && String(photoUrl).trim())
 
   return (
     <View style={styles.pageLayout}>
-      {/* SIDEBAR */}
-      <View style={[styles.sidebar, { backgroundColor: accentColor }]}>
-        {settings.photoUrl && (
-          <View style={styles.photoWrapper}>
-            <View style={styles.photoCircle}>
-              <PDFPhoto
-                src={settings.photoUrl}
-                style={{ width: 76, height: 76 }}
-              />
-            </View>
+
+      {/* ===== BACKGROUND SIDEBAR — fixed = répété sur chaque page ===== */}
+      <View
+        fixed
+        style={[styles.sidebarBg, { backgroundColor: accentColor }]}
+      />
+
+      {/* ===== SIDEBAR — contenu seulement, PAS de backgroundColor ===== */}
+      <View style={styles.sidebar}>
+        {hasPhoto && (
+          <View style={styles.photoCircle}>
+            <PDFPhoto src={photoUrl} style={{ width: 84, height: 84 }} />
           </View>
         )}
 
-        <Text style={styles.sidebarName}>
-          {sanitizeForPDF(personalInfo.fullName)}
-        </Text>
-
-        {personalInfo.jobTitle && (
-          <Text style={styles.sidebarJobTitle}>
-            {sanitizeForPDF(personalInfo.jobTitle)}
-          </Text>
+        {personalInfo?.fullName && (
+          <Text style={styles.sidebarName}>{sanitizeForPDF(personalInfo.fullName)}</Text>
+        )}
+        {personalInfo?.jobTitle && (
+          <Text style={styles.sidebarJobTitle}>{sanitizeForPDF(personalInfo.jobTitle)}</Text>
         )}
 
-        <View style={styles.sidebarDivider} />
+        <View style={styles.divider} />
 
-        {(personalInfo.email || personalInfo.phone || personalInfo.address || personalInfo.linkedin) && (
-          <View style={styles.sidebarSection}>
+        {/* Contact */}
+        {(personalInfo?.email || personalInfo?.phone || personalInfo?.address || personalInfo?.linkedin) && (
+          <View style={styles.sidebarBlock}>
             <Text style={styles.sidebarSectionTitle}>Contact</Text>
-            {personalInfo.email && (
+            {personalInfo?.email && (
               <View style={styles.contactRow}>
-                <MailIcon size={10} color="#E5E7EB" />
+                <View style={styles.contactDot} />
                 <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.email)}</Text>
               </View>
             )}
-            {personalInfo.phone && (
+            {personalInfo?.phone && (
               <View style={styles.contactRow}>
-                <PhoneIcon size={10} color="#E5E7EB" />
+                <View style={styles.contactDot} />
                 <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.phone)}</Text>
               </View>
             )}
-            {personalInfo.address && (
+            {personalInfo?.address && (
               <View style={styles.contactRow}>
-                <MapPinIcon size={10} color="#E5E7EB" />
+                <View style={styles.contactDot} />
                 <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.address)}</Text>
               </View>
             )}
-            {personalInfo.linkedin && (
+            {personalInfo?.linkedin && (
               <View style={styles.contactRow}>
-                <Globe2Icon size={10} color="#E5E7EB" />
+                <View style={styles.contactDot} />
                 <Text style={styles.contactText}>LinkedIn</Text>
               </View>
             )}
@@ -340,12 +329,13 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
 
         {/* Compétences */}
         {skills.length > 0 && (
-          <View style={styles.sidebarSection}>
-            <Text style={styles.sidebarSectionTitle}>Compétences</Text>
-            <View style={styles.skillsContainer}>
-              {skills.map((skill) => (
-                <View key={skill.id} style={styles.skillPill}>
-                  <Text style={styles.skillText}>{sanitizeForPDF(skill.name)}</Text>
+          <View style={styles.sidebarBlock}>
+            <Text style={styles.sidebarSectionTitle}>Competences</Text>
+            <View style={styles.skillsWrap}>
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {skills.map((skill: any, i: number) => (
+                <View key={skill.id ?? i} style={styles.skillPill}>
+                  <Text style={styles.skillPillText}>{sanitizeForPDF(skill.name)}</Text>
                 </View>
               ))}
             </View>
@@ -354,103 +344,124 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
 
         {/* Langues */}
         {languages.length > 0 && (
-          <View style={styles.sidebarSection}>
+          <View style={styles.sidebarBlock}>
             <Text style={styles.sidebarSectionTitle}>Langues</Text>
-            {languages.map((lang) => {
-              const pct = LANGUAGE_LEVEL_PCT[lang.level] ?? 50
-              return (
-                <View key={lang.id} style={styles.languageItem}>
-                  <View style={styles.languageRow}>
-                    <Text style={styles.languageName}>{sanitizeForPDF(lang.name)}</Text>
-                    <Text style={styles.languageLevel}>{sanitizeForPDF(lang.level)}</Text>
-                  </View>
-                  <View style={styles.languageBarBg}>
-                    <View style={[styles.languageBarFill, { width: `${pct}%` }]} />
-                  </View>
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            {languages.map((lang: any, i: number) => (
+              <View key={lang.id ?? i} style={styles.langItem}>
+                <View style={styles.langRow}>
+                  <Text style={styles.langName}>{sanitizeForPDF(lang.name)}</Text>
+                  <Text style={styles.langLevel}>{sanitizeForPDF(lang.level)}</Text>
                 </View>
-              )
-            })}
+                <View style={styles.langBarBg}>
+                  <View style={[styles.langBarFill, { width: getLangWidth(lang.level) }]} />
+                </View>
+              </View>
+            ))}
           </View>
         )}
       </View>
 
-      {/* MAIN */}
+      {/* ===== CONTENU PRINCIPAL ===== */}
       <View style={styles.main}>
-        {personalInfo.summary && (
+
+        {/* Profil */}
+        {personalInfo?.summary && (
           <View style={styles.mainSection}>
-            <Text style={[styles.mainSectionTitle, { color: accentColor }]}>
-              A propos de moi
-            </Text>
+            <View style={styles.sectionTitleRow}>
+              <View style={[styles.sectionBar, { backgroundColor: accentColor }]} />
+              <Text style={[styles.sectionTitleText, { color: accentColor }]}>Profil</Text>
+            </View>
             <Text style={styles.summaryText}>{sanitizeForPDF(personalInfo.summary)}</Text>
           </View>
         )}
 
+        {/* Expériences */}
         {experiences.length > 0 && (
           <View style={styles.mainSection}>
-            <Text style={[styles.mainSectionTitle, { color: accentColor }]}>
-              Expériences
-            </Text>
-            {experiences.map((exp) => (
-              <View key={exp.id} style={styles.experienceItem}>
-                <View style={[styles.experienceBullet, { backgroundColor: accentColor }]} />
-                <View style={styles.expHeader}>
+            <View style={styles.sectionTitleRow}>
+              <View style={[styles.sectionBar, { backgroundColor: accentColor }]} />
+              <Text style={[styles.sectionTitleText, { color: accentColor }]}>Experience</Text>
+            </View>
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            {experiences.map((exp: any, i: number) => (
+              <View key={exp.id ?? i} style={styles.expItem}>
+                {exp.position && (
                   <Text style={styles.expPosition}>{sanitizeForPDF(exp.position)}</Text>
-                  <Text style={styles.expDate}>
-                    {sanitizeForPDF(exp.startDate)} —{' '}
-                    {exp.isCurrent ? 'Présent' : sanitizeForPDF(exp.endDate)}
-                  </Text>
-                </View>
-                <Text style={styles.expCompany}>{sanitizeForPDF(exp.company)}</Text>
+                )}
+                <Text style={styles.expMeta}>
+                  {sanitizeForPDF(exp.company)}
+                  {(exp.startDate || exp.endDate || exp.isCurrent) ? '  |  ' : ''}
+                  {sanitizeForPDF(exp.startDate)}
+                  {exp.startDate ? ' - ' : ''}
+                  {exp.isCurrent ? 'Present' : sanitizeForPDF(exp.endDate)}
+                </Text>
                 {exp.description && (
-                  <Text style={styles.expDescription}>{sanitizeForPDF(exp.description)}</Text>
+                  <Text style={styles.expDesc}>{sanitizeForPDF(exp.description)}</Text>
                 )}
               </View>
             ))}
           </View>
         )}
 
+        {/* Formation */}
         {education.length > 0 && (
           <View style={styles.mainSection}>
-            <Text style={[styles.mainSectionTitle, { color: accentColor }]}>
-              Formation
-            </Text>
-            {education.map((edu) => (
-              <View key={edu.id} style={styles.educationItem}>
-                <View style={styles.educationHeader}>
-                  <Text style={styles.educationDegree}>{sanitizeForPDF(edu.degree)}</Text>
-                  <Text style={styles.educationDate}>
-                    {sanitizeForPDF(edu.startDate)} —{' '}
-                    {edu.isCurrent ? 'Présent' : sanitizeForPDF(edu.endDate)}
-                  </Text>
+            <View style={styles.sectionTitleRow}>
+              <View style={[styles.sectionBar, { backgroundColor: accentColor }]} />
+              <Text style={[styles.sectionTitleText, { color: accentColor }]}>Formation</Text>
+            </View>
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            {education.map((edu: any, i: number) => (
+              <View key={edu.id ?? i} style={styles.eduItem}>
+                <View style={styles.eduRow}>
+                  {edu.degree && (
+                    <Text style={styles.eduDegree}>{sanitizeForPDF(edu.degree)}</Text>
+                  )}
+                  {(edu.startDate || edu.endDate) && (
+                    <Text style={styles.eduDate}>
+                      {sanitizeForPDF(edu.startDate)}
+                      {edu.startDate && !edu.isCurrent && edu.endDate ? ' - ' : ''}
+                      {edu.isCurrent ? ' - Present' : sanitizeForPDF(edu.endDate)}
+                    </Text>
+                  )}
                 </View>
-                <Text style={styles.educationInstitution}>{sanitizeForPDF(edu.institution)}</Text>
+                {edu.institution && (
+                  <Text style={styles.eduInstitution}>{sanitizeForPDF(edu.institution)}</Text>
+                )}
               </View>
             ))}
           </View>
         )}
 
+        {/* Références */}
         {references.length > 0 && (
           <View style={styles.mainSection}>
-            <Text style={[styles.mainSectionTitle, { color: accentColor }]}>
-              Références
-            </Text>
-            <View style={styles.referencesGrid}>
-              {references.map((ref) => (
-                <View key={ref.id} style={styles.referenceCard}>
-                  <Text style={styles.referenceName}>{sanitizeForPDF(ref.name)}</Text>
-                  <Text style={styles.referenceRole}>
-                    {sanitizeForPDF(ref.position)}{ref.company ? ` @ ${sanitizeForPDF(ref.company)}` : ''}
-                  </Text>
-                  {ref.email && (
-                    <Text style={[styles.referenceEmail, { color: accentColor }]}>
-                      {sanitizeForPDF(ref.email)}
-                    </Text>
-                  )}
-                </View>
-              ))}
+            <View style={styles.sectionTitleRow}>
+              <View style={[styles.sectionBar, { backgroundColor: accentColor }]} />
+              <Text style={[styles.sectionTitleText, { color: accentColor }]}>References</Text>
             </View>
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            {references.map((ref: any, i: number) => (
+              <View key={ref.id ?? i} style={styles.refItem}>
+                {ref.name && <Text style={styles.refName}>{sanitizeForPDF(ref.name)}</Text>}
+                {(ref.position || ref.company) && (
+                  <Text style={styles.refSub}>
+                    {sanitizeForPDF(ref.position)}
+                    {ref.position && ref.company ? ' - ' : ''}
+                    {sanitizeForPDF(ref.company)}
+                  </Text>
+                )}
+                {ref.email && (
+                  <Text style={[styles.refEmail, { color: accentColor }]}>
+                    {sanitizeForPDF(ref.email)}
+                  </Text>
+                )}
+              </View>
+            ))}
           </View>
         )}
+
       </View>
     </View>
   )
