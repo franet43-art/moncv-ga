@@ -308,7 +308,6 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
 
         <View style={styles.sidebarDivider} />
 
-        {/* Contact */}
         {(personalInfo.email || personalInfo.phone || personalInfo.address || personalInfo.linkedin) && (
           <View style={styles.sidebarSection}>
             <Text style={styles.sidebarSectionTitle}>Contact</Text>
