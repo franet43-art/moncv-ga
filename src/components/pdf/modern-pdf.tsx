@@ -3,18 +3,24 @@ import { View, Text, StyleSheet } from '@react-pdf/renderer'
 import { CVContent, CVSettings } from '@/types/cv'
 import { PDFPhoto } from './shared/pdf-photo'
 import { sanitizeForPDF } from './pdf-document'
+import {
+  MailIcon,
+  PhoneIcon,
+  MapPinIcon,
+  Globe2Icon,
+} from './shared/pdf-icons'
 
 interface ModernPDFProps {
   content: CVContent
   settings: CVSettings
 }
 
-// skill.level est un enum string — mapping vers pourcentage
-const SKILL_LEVEL_PCT: Record<string, number> = {
-  debutant: 20,
-  intermediaire: 40,
-  avance: 70,
-  expert: 100,
+const LANGUAGE_LEVEL_PCT: Record<string, number> = {
+  basique: 40,
+  intermediaire: 60,
+  courant: 80,
+  bilingue: 100,
+  natif: 100,
 }
 
 const styles = StyleSheet.create({
@@ -32,17 +38,26 @@ const styles = StyleSheet.create({
   },
   main: {
     width: '65%',
+    backgroundColor: '#FFFFFF',
     paddingTop: 36,
     paddingBottom: 36,
     paddingLeft: 28,
     paddingRight: 28,
   },
-  photoCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    overflow: 'hidden',
+  photoWrapper: {
+    width: 84,
+    height: 84,
+    borderRadius: 42,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 16,
+  },
+  photoCircle: {
+    width: 76,
+    height: 76,
+    borderRadius: 38,
+    overflow: 'hidden',
   },
   sidebarName: {
     fontSize: 15,
@@ -50,87 +65,106 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
     marginBottom: 4,
+    textTransform: 'uppercase',
   },
   sidebarJobTitle: {
     fontSize: 10,
     color: '#E5E7EB',
     textAlign: 'center',
     marginBottom: 20,
+    fontStyle: 'italic',
   },
   sidebarDivider: {
     width: '60%',
     height: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255,255,255,0.3)',
     marginBottom: 18,
-    opacity: 0.3,
   },
   sidebarSection: {
     width: '100%',
-    marginBottom: 18,
+    marginBottom: 20,
   },
   sidebarSectionTitle: {
     fontSize: 9,
     fontWeight: 'bold',
     color: '#FFFFFF',
     textTransform: 'uppercase',
-    letterSpacing: 1.5,
-    marginBottom: 8,
+    letterSpacing: 1,
+    marginBottom: 10,
     paddingBottom: 4,
     borderBottomWidth: 1,
-    borderBottomColor: '#FFFFFF',
+    borderBottomColor: 'rgba(255,255,255,0.2)',
   },
-  contactItem: {
-    marginBottom: 5,
+  contactRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
   },
   contactText: {
     fontSize: 8,
     color: '#E5E7EB',
+    marginLeft: 6,
+    flex: 1,
   },
-  skillItem: {
+  skillsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  skillPill: {
+    backgroundColor: 'rgba(0,0,0,0.15)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.15)',
+    borderRadius: 3,
+    paddingTop: 3,
+    paddingBottom: 3,
+    paddingLeft: 6,
+    paddingRight: 6,
+    marginRight: 6,
+    marginBottom: 6,
+  },
+  skillText: {
+    fontSize: 8,
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+  },
+  languageItem: {
     marginBottom: 8,
   },
-  skillName: {
-    fontSize: 8,
-    color: '#E5E7EB',
+  languageRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 3,
   },
-  // rgba() évite le problème d'opacity cascade sur les enfants
-  skillBarBg: {
-    height: 4,
-    backgroundColor: 'rgba(255,255,255,0.25)',
+  languageName: {
+    fontSize: 8,
+    color: '#FFFFFF',
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+  },
+  languageLevel: {
+    fontSize: 8,
+    color: '#E5E7EB',
+  },
+  languageBarBg: {
+    height: 3,
+    backgroundColor: 'rgba(255,255,255,0.15)',
     borderRadius: 2,
     overflow: 'hidden',
   },
-  skillBarFill: {
-    height: 4,
-    borderRadius: 2,
+  languageBarFill: {
+    height: 3,
     backgroundColor: '#FFFFFF',
-  },
-  langItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 5,
-  },
-  langName: {
-    fontSize: 8,
-    color: '#E5E7EB',
-  },
-  langLevel: {
-    fontSize: 8,
-    color: '#D1D5DB',
+    borderRadius: 2,
   },
   mainSection: {
-    marginBottom: 22,
+    marginBottom: 28,
   },
   mainSectionTitle: {
     fontSize: 12,
     fontWeight: 'bold',
-    color: '#18181B',
     textTransform: 'uppercase',
-    letterSpacing: 1,
-    marginBottom: 10,
-    paddingBottom: 4,
-    borderBottomWidth: 2,
+    marginBottom: 14,
   },
   summaryText: {
     fontSize: 10,
@@ -138,13 +172,22 @@ const styles = StyleSheet.create({
     lineHeight: 1.6,
   },
   experienceItem: {
-    marginBottom: 14,
+    marginBottom: 18,
+    borderLeftWidth: 2,
+    borderLeftColor: '#E5E7EB',
+    paddingLeft: 12,
+  },
+  experienceBullet: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginBottom: 4,
   },
   expHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 3,
+    marginBottom: 4,
   },
   expPosition: {
     fontSize: 11,
@@ -161,7 +204,7 @@ const styles = StyleSheet.create({
   expCompany: {
     fontSize: 10,
     color: '#52525B',
-    marginBottom: 4,
+    marginBottom: 6,
   },
   expDescription: {
     fontSize: 9,
@@ -169,75 +212,98 @@ const styles = StyleSheet.create({
     lineHeight: 1.5,
   },
   educationItem: {
-    marginBottom: 12,
+    marginBottom: 14,
   },
-  eduHeader: {
+  educationHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 2,
+    marginBottom: 3,
   },
-  eduDegree: {
+  educationDegree: {
     fontSize: 11,
     fontWeight: 'bold',
     color: '#18181B',
     flex: 1,
     paddingRight: 8,
   },
-  eduDate: {
+  educationDate: {
     fontSize: 9,
     color: '#71717A',
     flexShrink: 0,
   },
-  eduInstitution: {
+  educationInstitution: {
     fontSize: 10,
     color: '#52525B',
   },
-  refItem: {
+  referencesGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  referenceCard: {
+    width: '47%',
+    backgroundColor: '#F9FAFB',
+    borderWidth: 1,
+    borderColor: '#F3F4F6',
+    borderRadius: 6,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    marginRight: '3%',
     marginBottom: 10,
   },
-  refName: {
+  referenceName: {
     fontSize: 10,
     fontWeight: 'bold',
     color: '#18181B',
     marginBottom: 2,
   },
-  refDetail: {
+  referenceRole: {
     fontSize: 9,
     color: '#52525B',
-    marginBottom: 1,
+    marginBottom: 4,
+  },
+  referenceEmail: {
+    fontSize: 9,
+    fontWeight: 'bold',
   },
 })
 
 export function ModernPDF({ content, settings }: ModernPDFProps) {
   const {
     personalInfo,
-    experiences = [],
-    education = [],
-    skills = [],
-    languages = [],
-    references = [],
+    experiences,
+    education,
+    skills,
+    languages,
+    references,
   } = content
 
   const accentColor = settings.accentColor || '#1E293B'
-  const photoUrl = settings.photoUrl
-  const hasPhoto = !!(photoUrl && String(photoUrl).trim())
 
   return (
     <View style={styles.pageLayout}>
-      {/* ===== SIDEBAR COLORÉE ===== */}
+      {/* SIDEBAR */}
       <View style={[styles.sidebar, { backgroundColor: accentColor }]}>
-        {hasPhoto && (
-          <View style={styles.photoCircle}>
-            <PDFPhoto src={photoUrl!} style={{ width: 80, height: 80 }} />
+        {settings.photoUrl && (
+          <View style={styles.photoWrapper}>
+            <View style={styles.photoCircle}>
+              <PDFPhoto
+                src={settings.photoUrl}
+                style={{ width: 76, height: 76 }}
+              />
+            </View>
           </View>
         )}
 
-        {personalInfo.fullName && (
-          <Text style={styles.sidebarName}>{sanitizeForPDF(personalInfo.fullName)}</Text>
-        )}
+        <Text style={styles.sidebarName}>
+          {sanitizeForPDF(personalInfo.fullName)}
+        </Text>
+
         {personalInfo.jobTitle && (
-          <Text style={styles.sidebarJobTitle}>{sanitizeForPDF(personalInfo.jobTitle)}</Text>
+          <Text style={styles.sidebarJobTitle}>
+            {sanitizeForPDF(personalInfo.jobTitle)}
+          </Text>
         )}
 
         <View style={styles.sidebarDivider} />
@@ -247,23 +313,27 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
           <View style={styles.sidebarSection}>
             <Text style={styles.sidebarSectionTitle}>Contact</Text>
             {personalInfo.email && (
-              <View style={styles.contactItem}>
+              <View style={styles.contactRow}>
+                <MailIcon size={10} color="#E5E7EB" />
                 <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.email)}</Text>
               </View>
             )}
             {personalInfo.phone && (
-              <View style={styles.contactItem}>
+              <View style={styles.contactRow}>
+                <PhoneIcon size={10} color="#E5E7EB" />
                 <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.phone)}</Text>
               </View>
             )}
             {personalInfo.address && (
-              <View style={styles.contactItem}>
+              <View style={styles.contactRow}>
+                <MapPinIcon size={10} color="#E5E7EB" />
                 <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.address)}</Text>
               </View>
             )}
             {personalInfo.linkedin && (
-              <View style={styles.contactItem}>
-                <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.linkedin)}</Text>
+              <View style={styles.contactRow}>
+                <Globe2Icon size={10} color="#E5E7EB" />
+                <Text style={styles.contactText}>LinkedIn</Text>
               </View>
             )}
           </View>
@@ -273,19 +343,13 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
         {skills.length > 0 && (
           <View style={styles.sidebarSection}>
             <Text style={styles.sidebarSectionTitle}>Compétences</Text>
-            {skills.map((skill, i) => (
-              <View key={skill.id ?? i} style={styles.skillItem}>
-                <Text style={styles.skillName}>{sanitizeForPDF(skill.name)}</Text>
-                <View style={styles.skillBarBg}>
-                  <View
-                    style={[
-                      styles.skillBarFill,
-                      { width: `${SKILL_LEVEL_PCT[skill.level ?? ''] ?? 40}%` },
-                    ]}
-                  />
+            <View style={styles.skillsContainer}>
+              {skills.map((skill) => (
+                <View key={skill.id} style={styles.skillPill}>
+                  <Text style={styles.skillText}>{sanitizeForPDF(skill.name)}</Text>
                 </View>
-              </View>
-            ))}
+              ))}
+            </View>
           </View>
         )}
 
@@ -293,22 +357,30 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
         {languages.length > 0 && (
           <View style={styles.sidebarSection}>
             <Text style={styles.sidebarSectionTitle}>Langues</Text>
-            {languages.map((lang, i) => (
-              <View key={lang.id ?? i} style={styles.langItem}>
-                <Text style={styles.langName}>{sanitizeForPDF(lang.name)}</Text>
-                <Text style={styles.langLevel}>{sanitizeForPDF(lang.level)}</Text>
-              </View>
-            ))}
+            {languages.map((lang) => {
+              const pct = LANGUAGE_LEVEL_PCT[lang.level] ?? 50
+              return (
+                <View key={lang.id} style={styles.languageItem}>
+                  <View style={styles.languageRow}>
+                    <Text style={styles.languageName}>{sanitizeForPDF(lang.name)}</Text>
+                    <Text style={styles.languageLevel}>{sanitizeForPDF(lang.level)}</Text>
+                  </View>
+                  <View style={styles.languageBarBg}>
+                    <View style={[styles.languageBarFill, { width: `${pct}%` }]} />
+                  </View>
+                </View>
+              )
+            })}
           </View>
         )}
       </View>
 
-      {/* ===== CONTENU PRINCIPAL ===== */}
+      {/* MAIN */}
       <View style={styles.main}>
         {personalInfo.summary && (
           <View style={styles.mainSection}>
-            <Text style={[styles.mainSectionTitle, { borderBottomColor: accentColor }]}>
-              Profil
+            <Text style={[styles.mainSectionTitle, { color: accentColor }]}>
+              A propos de moi
             </Text>
             <Text style={styles.summaryText}>{sanitizeForPDF(personalInfo.summary)}</Text>
           </View>
@@ -316,26 +388,20 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
 
         {experiences.length > 0 && (
           <View style={styles.mainSection}>
-            <Text style={[styles.mainSectionTitle, { borderBottomColor: accentColor }]}>
-              Expérience
+            <Text style={[styles.mainSectionTitle, { color: accentColor }]}>
+              Expériences
             </Text>
-            {experiences.map((exp, i) => (
-              <View key={exp.id ?? i} style={styles.experienceItem}>
+            {experiences.map((exp) => (
+              <View key={exp.id} style={styles.experienceItem}>
+                <View style={[styles.experienceBullet, { backgroundColor: accentColor }]} />
                 <View style={styles.expHeader}>
-                  {exp.position && (
-                    <Text style={styles.expPosition}>{sanitizeForPDF(exp.position)}</Text>
-                  )}
-                  {(exp.startDate || exp.endDate) && (
-                    <Text style={styles.expDate}>
-                      {sanitizeForPDF(exp.startDate)}
-                      {exp.startDate && (exp.endDate || exp.isCurrent) ? ' - ' : ''}
-                      {exp.isCurrent ? 'Présent' : sanitizeForPDF(exp.endDate)}
-                    </Text>
-                  )}
+                  <Text style={styles.expPosition}>{sanitizeForPDF(exp.position)}</Text>
+                  <Text style={styles.expDate}>
+                    {sanitizeForPDF(exp.startDate)} —{' '}
+                    {exp.isCurrent ? 'Présent' : sanitizeForPDF(exp.endDate)}
+                  </Text>
                 </View>
-                {exp.company && (
-                  <Text style={styles.expCompany}>{sanitizeForPDF(exp.company)}</Text>
-                )}
+                <Text style={styles.expCompany}>{sanitizeForPDF(exp.company)}</Text>
                 {exp.description && (
                   <Text style={styles.expDescription}>{sanitizeForPDF(exp.description)}</Text>
                 )}
@@ -346,26 +412,19 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
 
         {education.length > 0 && (
           <View style={styles.mainSection}>
-            <Text style={[styles.mainSectionTitle, { borderBottomColor: accentColor }]}>
+            <Text style={[styles.mainSectionTitle, { color: accentColor }]}>
               Formation
             </Text>
-            {education.map((edu, i) => (
-              <View key={edu.id ?? i} style={styles.educationItem}>
-                <View style={styles.eduHeader}>
-                  {edu.degree && (
-                    <Text style={styles.eduDegree}>{sanitizeForPDF(edu.degree)}</Text>
-                  )}
-                  {(edu.startDate || edu.endDate) && (
-                    <Text style={styles.eduDate}>
-                      {sanitizeForPDF(edu.startDate)}
-                      {edu.startDate && (edu.endDate || edu.isCurrent) ? ' - ' : ''}
-                      {edu.isCurrent ? 'Présent' : sanitizeForPDF(edu.endDate)}
-                    </Text>
-                  )}
+            {education.map((edu) => (
+              <View key={edu.id} style={styles.educationItem}>
+                <View style={styles.educationHeader}>
+                  <Text style={styles.educationDegree}>{sanitizeForPDF(edu.degree)}</Text>
+                  <Text style={styles.educationDate}>
+                    {sanitizeForPDF(edu.startDate)} —{' '}
+                    {edu.isCurrent ? 'Présent' : sanitizeForPDF(edu.endDate)}
+                  </Text>
                 </View>
-                {edu.institution && (
-                  <Text style={styles.eduInstitution}>{sanitizeForPDF(edu.institution)}</Text>
-                )}
+                <Text style={styles.educationInstitution}>{sanitizeForPDF(edu.institution)}</Text>
               </View>
             ))}
           </View>
@@ -373,28 +432,24 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
 
         {references.length > 0 && (
           <View style={styles.mainSection}>
-            <Text style={[styles.mainSectionTitle, { borderBottomColor: accentColor }]}>
+            <Text style={[styles.mainSectionTitle, { color: accentColor }]}>
               Références
             </Text>
-            {references.map((ref, i) => (
-              <View key={ref.id ?? i} style={styles.refItem}>
-                {ref.name && (
-                  <Text style={styles.refName}>{sanitizeForPDF(ref.name)}</Text>
-                )}
-                {ref.position && (
-                  <Text style={styles.refDetail}>
-                    {sanitizeForPDF(ref.position)}
-                    {ref.company ? ` — ${sanitizeForPDF(ref.company)}` : ''}
+            <View style={styles.referencesGrid}>
+              {references.map((ref) => (
+                <View key={ref.id} style={styles.referenceCard}>
+                  <Text style={styles.referenceName}>{sanitizeForPDF(ref.name)}</Text>
+                  <Text style={styles.referenceRole}>
+                    {sanitizeForPDF(ref.position)}{ref.company ? ` @ ${sanitizeForPDF(ref.company)}` : ''}
                   </Text>
-                )}
-                {ref.email && (
-                  <Text style={styles.refDetail}>{sanitizeForPDF(ref.email)}</Text>
-                )}
-                {ref.phone && (
-                  <Text style={styles.refDetail}>{sanitizeForPDF(ref.phone)}</Text>
-                )}
-              </View>
-            ))}
+                  {ref.email && (
+                    <Text style={[styles.referenceEmail, { color: accentColor }]}>
+                      {sanitizeForPDF(ref.email)}
+                    </Text>
+                  )}
+                </View>
+              ))}
+            </View>
           </View>
         )}
       </View>
