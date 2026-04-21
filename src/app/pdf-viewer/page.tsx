@@ -1,33 +1,30 @@
-import type { CVContent, CVSettings } from '@/types/cv'
+import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { CVViewerContent } from '@/components/templates/CVViewerContent'
 
 export const dynamic = 'force-dynamic'
 
-interface PdfViewerPageProps {
-  searchParams: { data?: string }
-}
-
-export default function PdfViewerPage({ searchParams }: PdfViewerPageProps) {
-  let content: CVContent | null = null
-  let settings: CVSettings | null = null
-  let isPaid: boolean = false
-
-  try {
-    if (searchParams.data) {
-      const decoded = JSON.parse(
-        Buffer.from(searchParams.data, 'base64').toString('utf-8')
-      )
-      content = decoded.content
-      settings = decoded.settings
-      isPaid = decoded.isPaid || false
-    }
-  } catch (e) {
-    return <div>Erreur de données</div>
+export default async function PdfViewerPage({
+  searchParams,
+}: {
+  searchParams: { jobId?: string }
+}) {
+  if (!searchParams.jobId) {
+    return <div>Job ID manquant</div>
   }
 
-  if (!content || !settings) {
-    return <div>Données manquantes</div>
+  const supabase = await createServerSupabaseClient()
+  const { data: job, error } = await supabase
+    .from('pdf_jobs')
+    .select('content, settings, is_paid')
+    .eq('id', searchParams.jobId)
+    .single()
+
+  if (error || !job) {
+    console.error('[PDF_VIEWER] Fetch error:', error)
+    return <div>Données introuvables</div>
   }
+
+  const { content, settings, is_paid } = job
 
   return (
     <html>
@@ -54,7 +51,11 @@ export default function PdfViewerPage({ searchParams }: PdfViewerPageProps) {
         />
       </head>
       <body>
-        <CVViewerContent content={content} settings={settings} isPaid={isPaid} />
+        <CVViewerContent 
+          content={content} 
+          settings={settings} 
+          isPaid={is_paid} 
+        />
       </body>
     </html>
   )

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import puppeteer from 'puppeteer-core'
+import { createServerSupabaseClient } from '@/lib/supabase/server'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
@@ -22,45 +23,50 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Service PDF non configuré' }, { status: 500 })
     }
 
-    // Encoder les données CV en base64 pour l'URL
-    const encodedData = Buffer.from(
-      JSON.stringify({ content, settings, isPaid })
-    ).toString('base64')
+    // 1. Stocker les données dans Supabase
+    const supabase = await createServerSupabaseClient()
+    const { data: job, error: insertError } = await supabase
+      .from('pdf_jobs')
+      .insert({ 
+        content, 
+        settings, 
+        is_paid: isPaid ?? false 
+      })
+      .select('id')
+      .single()
 
-    const targetUrl = `${BASE_URL}/pdf-viewer?data=${encodedData}`
+    if (insertError || !job) {
+      console.error('[PDF] Supabase insert error:', insertError)
+      return NextResponse.json({ error: 'Erreur stockage données' }, { status: 500 })
+    }
 
-    // Connexion à Browserless.io (Chrome distant)
+    // 2. URL courte avec juste l'UUID
+    const targetUrl = `${BASE_URL}/pdf-viewer?jobId=${job.id}`
+
+    // 3. Connexion Browserless
     browser = await puppeteer.connect({
       browserWSEndpoint: `wss://chrome.browserless.io?token=${BROWSERLESS_TOKEN}`,
     })
 
     const page = await browser.newPage()
+    await page.setViewport({ width: 794, height: 1123, deviceScaleFactor: 1 })
 
-    // Largeur A4 exacte (794px = 210mm à 96dpi)
-    await page.setViewport({ 
-      width: 794, 
-      height: 1123, 
-      deviceScaleFactor: 1 
-    })
-
-    // Visiter la page de preview
     await page.goto(targetUrl, {
       waitUntil: 'networkidle0',
       timeout: 30000,
     })
 
-    // Attendre que les fonts soient chargées
-    // (le script dans pdf-viewer met le title à 'PDF_READY')
+    // 4. Attendre fonts
     try {
       await page.waitForFunction(
         'document.title === "PDF_READY"',
         { timeout: 5000 }
       )
     } catch {
-      // Si timeout, on continue quand même
-      await new Promise(r => setTimeout(r, 1000))
+      await new Promise(r => setTimeout(r, 1500))
     }
 
+    // 5. Générer PDF
     const pdfBuffer = await page.pdf({
       format: 'A4',
       printBackground: true,
@@ -69,6 +75,9 @@ export async function POST(req: NextRequest) {
     })
 
     await browser.disconnect()
+
+    // 6. Nettoyer le job Supabase
+    await supabase.from('pdf_jobs').delete().eq('id', job.id)
 
     const fileName = `CV-${content.personalInfo?.fullName || 'MonCV'}.pdf`
 
