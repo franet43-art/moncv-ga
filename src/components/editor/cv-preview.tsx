@@ -477,7 +477,7 @@ function MinimalTemplate({ content, settings, tokens }: { content: CVContent, se
       {education.length > 0 && (
         <section className="space-y-6">
           <h2 className="font-bold uppercase tracking-[0.3em] text-zinc-300 border-b border-zinc-100 pb-2" style={{ fontSize: `${tokens.sectionTitleSize - 2}px` }}>Formation</h2>
-          <div className="grid grid-cols-2 gap-x-12" style={{ gapY: `${tokens.entryGap}px` }}>
+          <div className="grid grid-cols-2 gap-x-12" style={{ rowGap: `${tokens.entryGap}px` }}>
             {education.map((edu) => (
               <div key={edu.id} className="space-y-1">
                 <p className="font-bold font-sans text-zinc-400 mb-1" style={{ fontSize: `${tokens.bodySize - 2}px` }}>{edu.startDate} — {edu.endDate}</p>
