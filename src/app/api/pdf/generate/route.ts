@@ -1,45 +1,92 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { renderToBuffer } from '@react-pdf/renderer'
-import React from 'react'
-import { CVPDFDocument } from '@/components/pdf/pdf-document'
+import puppeteer from 'puppeteer-core'
 
 export const runtime = 'nodejs'
 export const maxDuration = 60
+export const dynamic = 'force-dynamic'
+
+const BROWSERLESS_TOKEN = process.env.BROWSERLESS_TOKEN
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://moncv-ga.vercel.app'
 
 export async function POST(req: NextRequest) {
-  let templateId = 'unknown'
+  let browser = null
   try {
     const body = await req.json()
     const { content, settings, isPaid } = body
-    templateId = settings?.templateId || 'unknown'
-
-    console.log('[PDF_START] templateId:', templateId)
-    console.log('[PDF_CONTENT] fullName:', content?.personalInfo?.fullName)
 
     if (!content?.personalInfo) {
-      return NextResponse.json({ error: 'Donnees CV invalides' }, { status: 400 })
+      return NextResponse.json({ error: 'Données CV invalides' }, { status: 400 })
     }
 
-    const buffer = await renderToBuffer(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      React.createElement(CVPDFDocument, { content, settings, isPaid: isPaid ?? false }) as any
-    )
+    if (!BROWSERLESS_TOKEN) {
+      return NextResponse.json({ error: 'Service PDF non configuré' }, { status: 500 })
+    }
 
-    console.log('[PDF_SUCCESS] templateId:', templateId, '| bytes:', buffer.length)
+    // Encoder les données CV en base64 pour l'URL
+    const encodedData = Buffer.from(
+      JSON.stringify({ content, settings, isPaid })
+    ).toString('base64')
 
-    return new NextResponse(new Uint8Array(buffer), {
+    const targetUrl = `${BASE_URL}/pdf-viewer?data=${encodedData}`
+
+    // Connexion à Browserless.io (Chrome distant)
+    browser = await puppeteer.connect({
+      browserWSEndpoint: `wss://chrome.browserless.io?token=${BROWSERLESS_TOKEN}`,
+    })
+
+    const page = await browser.newPage()
+
+    // Largeur A4 exacte (794px = 210mm à 96dpi)
+    await page.setViewport({ 
+      width: 794, 
+      height: 1123, 
+      deviceScaleFactor: 1 
+    })
+
+    // Visiter la page de preview
+    await page.goto(targetUrl, {
+      waitUntil: 'networkidle0',
+      timeout: 30000,
+    })
+
+    // Attendre que les fonts soient chargées
+    // (le script dans pdf-viewer met le title à 'PDF_READY')
+    try {
+      await page.waitForFunction(
+        'document.title === "PDF_READY"',
+        { timeout: 5000 }
+      )
+    } catch {
+      // Si timeout, on continue quand même
+      await new Promise(r => setTimeout(r, 1000))
+    }
+
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+      margin: { top: '0', right: '0', bottom: '0', left: '0' },
+      preferCSSPageSize: true,
+    })
+
+    await browser.disconnect()
+
+    const fileName = `CV-${content.personalInfo?.fullName || 'MonCV'}.pdf`
+
+    return new NextResponse(pdfBuffer as any, {
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="CV-${content.personalInfo?.fullName || 'MonCV'}.pdf"`,
+        'Content-Disposition': `attachment; filename="${fileName}"`,
+        'Cache-Control': 'no-store',
       },
     })
-  } catch (error: unknown) {
-    const err = error as { message?: string; stack?: string }
-    console.error('[PDF_GENERATE_ERROR] templateId:', templateId)
-    console.error('[PDF_GENERATE_ERROR] message:', err?.message)
-    console.error('[PDF_GENERATE_ERROR] stack:', err?.stack?.split('\n').slice(0, 6).join('\n'))
+
+  } catch (error: any) {
+    console.error('[PDF_ERROR]', error?.message)
+    if (browser) {
+      try { await browser.disconnect() } catch {}
+    }
     return NextResponse.json(
-      { error: err?.message || 'Erreur generation PDF' },
+      { error: error?.message || 'Erreur génération PDF' },
       { status: 500 }
     )
   }
