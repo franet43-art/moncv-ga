@@ -272,35 +272,35 @@ export function ClassicPDF({ content, settings }: ClassicPDFProps) {
           )}
           <View style={styles.contactRow}>
             {personalInfo?.email && (
-              <View style={styles.contactItem}>
-                <View style={styles.contactIconBox}>
-                  <MailIcon size={9} color={tokens.textMuted} />
-                </View>
-                <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.email)}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 18, marginBottom: 6 }}>
+                <MailIcon size={10} color={accentColor} />
+                <Text style={{ marginLeft: 6, fontSize: tokens.bodySize, color: tokens.textSecondary }}>
+                  {sanitizeForPDF(personalInfo.email)}
+                </Text>
               </View>
             )}
             {personalInfo?.phone && (
-              <View style={styles.contactItem}>
-                <View style={styles.contactIconBox}>
-                  <PhoneIcon size={9} color={tokens.textMuted} />
-                </View>
-                <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.phone)}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 18, marginBottom: 6 }}>
+                <PhoneIcon size={10} color={accentColor} />
+                <Text style={{ marginLeft: 6, fontSize: tokens.bodySize, color: tokens.textSecondary }}>
+                  {sanitizeForPDF(personalInfo.phone)}
+                </Text>
               </View>
             )}
             {personalInfo?.address && (
-              <View style={styles.contactItem}>
-                <View style={styles.contactIconBox}>
-                  <MapPinIcon size={9} color={tokens.textMuted} />
-                </View>
-                <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.address)}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 18, marginBottom: 6 }}>
+                <MapPinIcon size={10} color={accentColor} />
+                <Text style={{ marginLeft: 6, fontSize: tokens.bodySize, color: tokens.textSecondary }}>
+                  {sanitizeForPDF(personalInfo.address)}
+                </Text>
               </View>
             )}
             {personalInfo?.linkedin && (
-              <View style={styles.contactItem}>
-                <View style={styles.contactIconBox}>
-                  <GlobeIcon size={9} color={tokens.textMuted} />
-                </View>
-                <Text style={styles.contactText}>LinkedIn</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
+                <GlobeIcon size={10} color={accentColor} />
+                <Text style={{ marginLeft: 6, fontSize: tokens.bodySize, color: tokens.textSecondary }}>
+                  LinkedIn
+                </Text>
               </View>
             )}
           </View>

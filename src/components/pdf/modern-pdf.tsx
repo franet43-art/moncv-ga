@@ -323,35 +323,35 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
           <View style={styles.sidebarBlock}>
             <Text style={styles.sidebarSectionTitle}>Contact</Text>
             {personalInfo?.email && (
-              <View style={styles.contactItem}>
-                <View style={styles.contactIconBox}>
-                  <MailIcon size={9} color="rgba(255,255,255,0.7)" />
-                </View>
-                <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.email)}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                <MailIcon size={10} color="white" />
+                <Text style={{ marginLeft: 8, fontSize: tokens.bodySize, color: 'white' }}>
+                  {sanitizeForPDF(personalInfo.email)}
+                </Text>
               </View>
             )}
             {personalInfo?.phone && (
-              <View style={styles.contactItem}>
-                <View style={styles.contactIconBox}>
-                  <PhoneIcon size={9} color="rgba(255,255,255,0.7)" />
-                </View>
-                <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.phone)}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                <PhoneIcon size={10} color="white" />
+                <Text style={{ marginLeft: 8, fontSize: tokens.bodySize, color: 'white' }}>
+                  {sanitizeForPDF(personalInfo.phone)}
+                </Text>
               </View>
             )}
             {personalInfo?.address && (
-              <View style={styles.contactItem}>
-                <View style={styles.contactIconBox}>
-                  <MapPinIcon size={9} color="rgba(255,255,255,0.7)" />
-                </View>
-                <Text style={styles.contactText}>{sanitizeForPDF(personalInfo.address)}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                <MapPinIcon size={10} color="white" />
+                <Text style={{ marginLeft: 8, fontSize: tokens.bodySize, color: 'white' }}>
+                  {sanitizeForPDF(personalInfo.address)}
+                </Text>
               </View>
             )}
             {personalInfo?.linkedin && (
-              <View style={styles.contactItem}>
-                <View style={styles.contactIconBox}>
-                  <GlobeIcon size={9} color="rgba(255,255,255,0.7)" />
-                </View>
-                <Text style={styles.contactText}>LinkedIn</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                <GlobeIcon size={10} color="white" />
+                <Text style={{ marginLeft: 8, fontSize: tokens.bodySize, color: 'white' }}>
+                  LinkedIn
+                </Text>
               </View>
             )}
           </View>
@@ -400,7 +400,7 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
         {personalInfo?.summary && (
           <View style={styles.mainSection}>
             <View style={styles.sectionTitleRow}>
-              <View style={styles.sectionBar} />
+              <View style={[styles.sectionBar, { backgroundColor: accentColor }]} />
               <Text style={styles.sectionTitleText}>A propos de moi</Text>
             </View>
             <Text style={styles.summaryText}>{sanitizeForPDF(personalInfo.summary)}</Text>
@@ -410,7 +410,7 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
         {experiences.length > 0 && (
           <View style={styles.mainSection}>
             <View style={styles.sectionTitleRow}>
-              <View style={styles.sectionBar} />
+              <View style={[styles.sectionBar, { backgroundColor: accentColor }]} />
               <Text style={styles.sectionTitleText}>Experiences</Text>
             </View>
             {experiences.map((exp: any, i: number) => (
@@ -434,7 +434,7 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
         {education.length > 0 && (
           <View style={styles.mainSection}>
             <View style={styles.sectionTitleRow}>
-              <View style={styles.sectionBar} />
+              <View style={[styles.sectionBar, { backgroundColor: accentColor }]} />
               <Text style={styles.sectionTitleText}>Formation</Text>
             </View>
             {education.map((edu: any, i: number) => (
@@ -456,7 +456,7 @@ export function ModernPDF({ content, settings }: ModernPDFProps) {
         {references.length > 0 && (
           <View style={styles.mainSection}>
             <View style={styles.sectionTitleRow}>
-              <View style={styles.sectionBar} />
+              <View style={[styles.sectionBar, { backgroundColor: accentColor }]} />
               <Text style={styles.sectionTitleText}>References</Text>
             </View>
             <View style={styles.refsGrid}>
