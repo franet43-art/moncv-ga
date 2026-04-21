@@ -4,20 +4,21 @@ import { CVContent, CVSettings } from '@/types/cv'
 import { PDFPhoto } from './shared/pdf-photo'
 import { sanitizeForPDF } from './pdf-document'
 import {
-  MailIcon, PhoneIcon, MapPinIcon, Globe2Icon,
+  MailIcon, PhoneIcon, MapPinIcon, GlobeIcon,
   CalendarIcon, GraduationCapIcon, LaptopIcon, LanguagesIcon
-} from './shared/pdf-icons'
+} from '@/lib/pdf/pdf-icons'
+import { getTokens } from '@/lib/cv-design-tokens'
 
-const styles = StyleSheet.create({
+const getStyles = (tokens: any, accentColor: string) => StyleSheet.create({
   container: {
     flexDirection: 'column',
-    paddingHorizontal: 48,
-    paddingVertical: 44,
-    fontFamily: 'Helvetica',
+    paddingHorizontal: tokens.mainPadding,
+    paddingVertical: tokens.mainPadding,
+    color: tokens.textPrimary,
   },
   header: {
     alignItems: 'center',
-    marginBottom: 44,
+    marginBottom: tokens.sectionGap,
   },
   photoWrapper: {
     width: 64,
@@ -27,92 +28,80 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   name: {
-    fontSize: 32,
+    fontSize: tokens.nameSize * 1.3,
     fontWeight: 'normal',
     letterSpacing: -0.5,
     marginBottom: 8,
     textAlign: 'center',
   },
   jobTitle: {
-    fontSize: 12,
+    fontSize: tokens.jobTitleSize,
     fontWeight: 'normal',
     letterSpacing: 2,
     textTransform: 'uppercase',
-    color: '#A1A1AA',
+    color: tokens.textMuted,
     marginBottom: 16,
     textAlign: 'center',
   },
   separator: {
     height: 1,
     width: 80,
-    backgroundColor: '#E4E4E7',
+    backgroundColor: tokens.borderColor,
     marginBottom: 16,
   },
-  contactRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-  },
-  contactItem: {
-    fontSize: 8,
-    fontWeight: 'normal',
-    textTransform: 'uppercase',
-    color: '#71717A',
-    marginRight: 20,
-  },
   summary: {
-    fontSize: 10,
+    fontSize: tokens.bodySize,
     fontWeight: 'normal',
     fontStyle: 'italic',
-    color: '#52525B',
+    color: tokens.textSecondary,
     textAlign: 'center',
     lineHeight: 1.6,
-    marginBottom: 40,
+    marginBottom: tokens.sectionGap,
   },
   sectionTitle: {
-    fontSize: 8,
+    fontSize: tokens.sectionTitleSize - 2,
     fontWeight: 'normal',
     textTransform: 'uppercase',
     letterSpacing: 2,
-    color: '#D4D4D8',
+    color: tokens.textMuted,
     borderBottomWidth: 1,
-    borderBottomColor: '#E4E4E7',
+    borderBottomColor: tokens.borderColor,
     paddingBottom: 8,
     marginBottom: 16,
   },
   expRow: {
     flexDirection: 'row',
-    marginBottom: 20,
+    marginBottom: tokens.entryGap,
   },
   expDates: {
     width: '33%',
     paddingRight: 16,
   },
   expDatesText: {
-    fontSize: 8,
+    fontSize: tokens.bodySize - 2,
     fontWeight: 'bold',
-    color: '#A1A1AA',
+    color: tokens.textMuted,
     textAlign: 'right',
   },
   expContent: {
     width: '67%',
   },
   expPosition: {
-    fontSize: 12,
+    fontSize: tokens.bodySize + 2,
     fontWeight: 'bold',
-    color: '#18181B',
+    color: tokens.textPrimary,
     marginBottom: 2,
   },
   expCompany: {
-    fontSize: 9,
+    fontSize: tokens.bodySize - 1,
     fontWeight: 'normal',
-    color: '#A1A1AA',
+    color: tokens.textMuted,
     marginBottom: 4,
   },
   expDescription: {
-    fontSize: 9,
+    fontSize: tokens.bodySize - 1,
     fontWeight: 'normal',
-    color: '#3F3F46',
+    color: tokens.textSecondary,
     lineHeight: 1.5,
   },
   eduGrid: {
@@ -122,37 +111,37 @@ const styles = StyleSheet.create({
   eduItem: {
     width: '50%',
     paddingRight: 24,
-    marginBottom: 16,
+    marginBottom: tokens.entryGap,
   },
   eduDate: {
-    fontSize: 8,
+    fontSize: tokens.bodySize - 2,
     fontWeight: 'bold',
-    color: '#A1A1AA',
+    color: tokens.textMuted,
     marginBottom: 2,
   },
   eduDegree: {
-    fontSize: 10,
+    fontSize: tokens.bodySize,
     fontWeight: 'bold',
-    color: '#18181B',
+    color: tokens.textPrimary,
     marginBottom: 2,
   },
   eduInstitution: {
-    fontSize: 8,
+    fontSize: tokens.bodySize - 2,
     fontWeight: 'normal',
-    color: '#71717A',
+    color: tokens.textSecondary,
   },
   twoCol: {
     flexDirection: 'row',
-    marginBottom: 40,
+    marginBottom: tokens.sectionGap,
   },
   col: {
     width: '50%',
     paddingRight: 24,
   },
   skillText: {
-    fontSize: 9,
+    fontSize: tokens.bodySize - 1,
     fontWeight: 'normal',
-    color: '#52525B',
+    color: tokens.textSecondary,
     marginBottom: 4,
   },
   langRow: {
@@ -161,14 +150,14 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   langName: {
-    fontSize: 9,
+    fontSize: tokens.bodySize - 1,
     fontWeight: 'normal',
-    color: '#52525B',
+    color: tokens.textSecondary,
   },
   langLevel: {
-    fontSize: 9,
+    fontSize: tokens.bodySize - 1,
     fontWeight: 'normal',
-    color: '#71717A',
+    color: tokens.textMuted,
   },
   refGrid: {
     flexDirection: 'row',
@@ -180,31 +169,28 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   refName: {
-    fontSize: 10,
+    fontSize: tokens.bodySize,
     fontWeight: 'bold',
-    color: '#18181B',
+    color: tokens.textPrimary,
     marginBottom: 2,
   },
   refDetail: {
-    fontSize: 9,
+    fontSize: tokens.bodySize - 1,
     fontWeight: 'normal',
-    color: '#52525B',
+    color: tokens.textSecondary,
   },
   refEmail: {
-    fontSize: 8,
+    fontSize: tokens.bodySize - 2,
     fontWeight: 'normal',
-    color: '#71717A',
+    color: tokens.textMuted,
   },
 });
 
 export const MinimalPDF = ({ content, settings }: { content: CVContent; settings: CVSettings }) => {
   const { personalInfo, experiences, education, skills, languages, references } = content;
   const { accentColor, photoUrl } = settings;
-
-  const contacts: string[] = [];
-  if (personalInfo.email) contacts.push(sanitizeForPDF(personalInfo.email));
-  if (personalInfo.phone) contacts.push(sanitizeForPDF(personalInfo.phone));
-  if (personalInfo.address) contacts.push(sanitizeForPDF(personalInfo.address));
+  const tokens = getTokens(settings.fontSize as any);
+  const styles = getStyles(tokens, accentColor);
 
   return (
     <View style={styles.container}>
@@ -223,33 +209,33 @@ export const MinimalPDF = ({ content, settings }: { content: CVContent; settings
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
           {personalInfo.email && (
             <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16, marginBottom: 3 }}>
-              <MailIcon size={10} color="#71717A" />
+              <MailIcon size={10} color={tokens.textMuted} />
               <View style={{ flex: 1, marginLeft: 3 }}>
-                <Text style={{ fontSize: 8, color: '#71717A' }}>{sanitizeForPDF(personalInfo.email)}</Text>
+                <Text style={{ fontSize: 8, color: tokens.textMuted }}>{sanitizeForPDF(personalInfo.email)}</Text>
               </View>
             </View>
           )}
           {personalInfo.phone && (
             <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16, marginBottom: 3 }}>
-              <PhoneIcon size={10} color="#71717A" />
+              <PhoneIcon size={10} color={tokens.textMuted} />
               <View style={{ flex: 1, marginLeft: 3 }}>
-                <Text style={{ fontSize: 8, color: '#71717A' }}>{sanitizeForPDF(personalInfo.phone)}</Text>
+                <Text style={{ fontSize: 8, color: tokens.textMuted }}>{sanitizeForPDF(personalInfo.phone)}</Text>
               </View>
             </View>
           )}
           {personalInfo.address && (
             <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 16, marginBottom: 3 }}>
-              <MapPinIcon size={10} color="#71717A" />
+              <MapPinIcon size={10} color={tokens.textMuted} />
               <View style={{ flex: 1, marginLeft: 3 }}>
-                <Text style={{ fontSize: 8, color: '#71717A' }}>{sanitizeForPDF(personalInfo.address)}</Text>
+                <Text style={{ fontSize: 8, color: tokens.textMuted }}>{sanitizeForPDF(personalInfo.address)}</Text>
               </View>
             </View>
           )}
           {personalInfo.linkedin && (
             <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 3 }}>
-              <Globe2Icon size={10} color="#71717A" />
+              <GlobeIcon size={10} color={tokens.textMuted} />
               <View style={{ flex: 1, marginLeft: 3 }}>
-                <Text style={{ fontSize: 8, color: '#71717A' }}>{sanitizeForPDF(personalInfo.linkedin)}</Text>
+                <Text style={{ fontSize: 8, color: tokens.textMuted }}>{sanitizeForPDF(personalInfo.linkedin)}</Text>
               </View>
             </View>
           )}
@@ -263,15 +249,15 @@ export const MinimalPDF = ({ content, settings }: { content: CVContent; settings
 
       {/* EXPÉRIENCES */}
       {experiences && experiences.length > 0 && (
-        <View style={{ marginBottom: 40 }}>
+        <View style={{ marginBottom: tokens.sectionGap }}>
           <Text style={styles.sectionTitle}>EXPÉRIENCE</Text>
           {experiences.map((exp, i) => (
             <View key={i} style={styles.expRow}>
               <View style={styles.expDates}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
-                  <CalendarIcon size={10} color="#A1A1AA" />
+                  <CalendarIcon size={10} color={tokens.textMuted} />
                   <View style={{ flex: 1, marginLeft: 2 }}>
-                    <Text style={{ fontSize: 8, fontWeight: 'bold', color: '#A1A1AA', textAlign: 'right' }}>
+                    <Text style={styles.expDatesText}>
                       {sanitizeForPDF(exp.startDate)} — {exp.isCurrent ? 'Present' : sanitizeForPDF(exp.endDate)}
                     </Text>
                   </View>
@@ -291,7 +277,7 @@ export const MinimalPDF = ({ content, settings }: { content: CVContent; settings
 
       {/* FORMATION */}
       {education && education.length > 0 && (
-        <View style={{ marginBottom: 40 }}>
+        <View style={{ marginBottom: tokens.sectionGap }}>
           <Text style={styles.sectionTitle}>FORMATION</Text>
           <View style={styles.eduGrid}>
             {education.map((edu, i) => (
@@ -315,9 +301,9 @@ export const MinimalPDF = ({ content, settings }: { content: CVContent; settings
               <Text style={styles.sectionTitle}>COMPÉTENCES</Text>
               {skills.map((s, i) => (
                 <View key={i} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
-                  <LaptopIcon size={10} color="#71717A" />
+                  <LaptopIcon size={10} color={tokens.textMuted} />
                   <View style={{ flex: 1, marginLeft: 3 }}>
-                    <Text style={{ fontSize: 9, color: '#52525B' }}>{sanitizeForPDF(s.name)}</Text>
+                    <Text style={styles.skillText}>{sanitizeForPDF(s.name)}</Text>
                   </View>
                 </View>
               ))}
@@ -329,12 +315,12 @@ export const MinimalPDF = ({ content, settings }: { content: CVContent; settings
               {languages.map((l, i) => (
                 <View key={i} style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    <LanguagesIcon size={10} color="#71717A" />
+                    <LanguagesIcon size={10} color={tokens.textMuted} />
                     <View style={{ flex: 1, marginLeft: 3 }}>
-                      <Text style={{ fontSize: 9, color: '#52525B' }}>{sanitizeForPDF(l.name)}</Text>
+                      <Text style={styles.langName}>{sanitizeForPDF(l.name)}</Text>
                     </View>
                   </View>
-                  <Text style={{ fontSize: 9, color: '#71717A' }}>{sanitizeForPDF(l.level)}</Text>
+                  <Text style={styles.langLevel}>{sanitizeForPDF(l.level)}</Text>
                 </View>
               ))}
             </View>
