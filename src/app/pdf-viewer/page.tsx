@@ -6,9 +6,11 @@ export const dynamic = 'force-dynamic'
 export default async function PdfViewerPage({
   searchParams,
 }: {
-  searchParams: { jobId?: string }
+  searchParams: Promise<{ jobId?: string }>
 }) {
-  if (!searchParams.jobId) {
+  const params = await searchParams
+  
+  if (!params.jobId) {
     return <div>Job ID manquant</div>
   }
 
@@ -16,7 +18,7 @@ export default async function PdfViewerPage({
   const { data: job, error } = await supabase
     .from('pdf_jobs')
     .select('content, settings, is_paid')
-    .eq('id', searchParams.jobId)
+    .eq('id', params.jobId)
     .single()
 
   if (error || !job) {
