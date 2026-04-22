@@ -68,6 +68,9 @@ export function ImportCVModal({ open, onOpenChange }: ImportCVModalProps) {
         skills: parsedData.skills || [],
         languages: parsedData.languages || [],
         references: parsedData.references || [],
+        certifications: (parsedData as any).certifications || [],
+        accomplishments: (parsedData as any).accomplishments || [],
+        hobbies: (parsedData as any).hobbies || [],
       };
 
       // Validate with zod
