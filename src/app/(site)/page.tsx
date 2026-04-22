@@ -83,24 +83,21 @@ export default function Home() {
               style={{ animationDelay: '0ms' }}
             >
               <Sparkles size={14} className="animate-pulse" />
-              <span>L'Intelligence Artificielle au service de ta carrière</span>
+              <span>✨ Conçu pour l'Afrique francophone</span>
             </div>
             
             <h1 
               className={`text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-[0.9] text-slate-900 animate-fade-up ${sora.className}`}
               style={{ animationDelay: '150ms' }}
             >
-              Vois ton CV avant<br />
-              de payer. <span className="text-indigo-600 italic">Enfin.</span>
+              Ton prochain emploi commence par un CV qui impressionne.
             </h1>
             
             <p 
               className="text-xl md:text-2xl text-slate-500 mb-14 leading-relaxed max-w-2xl mx-auto font-medium animate-fade-up"
               style={{ animationDelay: '300ms' }}
             >
-              Crée et personnalise ton CV avec l'IA — gratuitement. 
-              Exporte un PDF professionnel pour 2 000 FCFA. 
-              Pas d'abonnement, juste de la qualité.
+              Des candidats à travers toute l'Afrique francophone utilisent MonCV.ga pour créer des CV professionnels assistés par l'IA en moins de 10 minutes — et décrocher des entretiens.
             </p>
             
             <div 
@@ -112,7 +109,7 @@ export default function Home() {
                 className="w-full sm:w-auto px-10 py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-black text-xl transition-all shadow-xl shadow-indigo-200 hover:-translate-y-1 hover:shadow-indigo-300/50 relative overflow-hidden shimmer-effect group"
               >
                 <span className="relative z-10 flex items-center justify-center gap-3">
-                  Créer mon CV maintenant
+                  Créer mon CV gratuitement →
                   <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
                 </span>
               </Link>
@@ -120,7 +117,7 @@ export default function Home() {
                 href="#templates" 
                 className="w-full sm:w-auto px-10 py-5 bg-white border-2 border-slate-100 hover:border-slate-200 text-slate-600 rounded-2xl font-bold text-xl transition-all flex items-center justify-center gap-2 hover:bg-slate-50"
               >
-                Voir les modèles
+                Voir les modèles ↓
               </Link>
             </div>
             
@@ -130,15 +127,15 @@ export default function Home() {
             >
               <div className="flex items-center gap-2 group cursor-help">
                 <CheckCircle2 size={16} className="text-emerald-500 group-hover:scale-125 transition-transform" />
-                <span>IA Générative</span>
+                <span>✓ Éditeur IA 100% gratuit</span>
               </div>
               <div className="flex items-center gap-2 group cursor-help">
                 <CheckCircle2 size={16} className="text-emerald-500 group-hover:scale-125 transition-transform" />
-                <span>Preview HD</span>
+                <span>✓ Résultat visible avant paiement</span>
               </div>
               <div className="flex items-center gap-2 group cursor-help">
                 <CheckCircle2 size={16} className="text-emerald-500 group-hover:scale-125 transition-transform" />
-                <span>2 000 FCFA</span>
+                <span>✓ PDF HD • 2 000 FCFA paiement unique</span>
               </div>
             </div>
           </div>
@@ -150,10 +147,10 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <div className="flex flex-wrap justify-center items-center gap-x-16 gap-y-10">
             {[
-              { icon: ShieldCheck, text: "Mobile Money & Cartes" },
-              { icon: Zap, text: "Format ATS-Friendly" },
-              { icon: Smartphone, text: "100% Mobile-Friendly" },
-              { icon: Lock, text: "Données Privées" }
+              { icon: ShieldCheck, text: "Mobile Money, Cartes & Wave — Powered by Chariow" },
+              { icon: Zap, text: "Optimisé pour passer les filtres ATS" },
+              { icon: Smartphone, text: "Créé sur mobile en 10 minutes" },
+              { icon: Lock, text: "Tes données t'appartiennent" }
             ].map((badge, i) => (
               <div key={i} className="flex items-center gap-3 text-slate-400 font-bold text-sm uppercase tracking-widest group transition-all hover:text-indigo-600 hover:-translate-y-1">
                 <badge.icon size={22} className="text-slate-300 group-hover:text-indigo-500 transition-colors" />
@@ -169,7 +166,7 @@ export default function Home() {
         <div className="container mx-auto px-6 text-center">
           <RevealOnScroll>
             <h2 className={`text-4xl md:text-6xl font-black mb-6 tracking-tight ${sora.className}`}>Des modèles qui ouvrent des portes</h2>
-            <p className="text-slate-500 text-lg mb-20 max-w-2xl mx-auto">Chaque modèle a été conçu avec des recruteurs pour garantir une lisibilité parfaite et un impact immédiat.</p>
+            <p className="text-slate-500 text-lg mb-20 max-w-2xl mx-auto">Conçus avec des recruteurs africains pour un impact immédiat dès la première lecture.</p>
           </RevealOnScroll>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-7xl mx-auto">
@@ -179,7 +176,7 @@ export default function Home() {
                 <ClassicPreview />
                 <h3 className={`text-2xl font-bold mt-4 mb-3 ${sora.className}`}>Le Classique</h3>
                 <p className="text-slate-500 text-sm max-w-[240px] leading-relaxed">
-                  L'élégance intemporelle pour les secteurs institutionnels et traditionnels.
+                  Sobre, structuré, intemporel. Le choix des secteurs Banque, Droit, Pétrole et Finance.
                 </p>
               </div>
             </RevealOnScroll>
@@ -190,7 +187,7 @@ export default function Home() {
                 <ModernPreview />
                 <h3 className={`text-2xl font-bold mt-4 mb-3 ${sora.className}`}>Le Moderne</h3>
                 <p className="text-slate-500 text-sm max-w-[240px] leading-relaxed">
-                  Un design audacieux pour se démarquer dans la Tech et les métiers créatifs.
+                  Audacieux et mémorable. Idéal pour la Tech, le Marketing et les startups africaines.
                 </p>
               </div>
             </RevealOnScroll>
@@ -201,7 +198,7 @@ export default function Home() {
                 <MinimalPreview />
                 <h3 className={`text-2xl font-bold mt-4 mb-3 ${sora.className}`}>Le Minimaliste</h3>
                 <p className="text-slate-500 text-sm max-w-[240px] leading-relaxed">
-                  La clarté absolue. Recommandé par l'IA pour maximiser la lecture rapide.
+                  Épuré et efficace. L'IA recommande ce modèle pour les candidats avec une forte expérience à valoriser.
                 </p>
               </div>
             </RevealOnScroll>
@@ -216,16 +213,16 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <div className="max-w-5xl mx-auto">
             <RevealOnScroll>
-              <h2 className={`text-4xl md:text-6xl font-black mb-24 text-center tracking-tight ${sora.className}`}>Prêt en quelques minutes</h2>
+              <h2 className={`text-4xl md:text-6xl font-black mb-24 text-center tracking-tight ${sora.className}`}>De zéro à candidature en 10 minutes</h2>
             </RevealOnScroll>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-16 relative">
               <div className="hidden md:block absolute top-12 left-[15%] right-[15%] h-px bg-slate-800 -z-0"></div>
               
               {[
-                { icon: Paintbrush2, title: "1. Remplis", text: "Importe ton ancien CV ou laisse-toi guider par notre éditeur intuitif." },
-                { icon: BrainCircuit, title: "2. Optimise", text: "Notre IA réécrit tes compétences pour les rendre irrésistibles." },
-                { icon: Download, title: "3. Télécharge", text: "Paiement unique de 2 000 FCFA via Mobile Money. C'est à toi." }
+                { icon: Paintbrush2, title: "1. Remplis", text: "Importe ton ancien CV ou laisse-toi guider par notre formulaire intelligent." },
+                { icon: BrainCircuit, title: "2. L'IA optimise", text: "Notre IA reformule ton parcours en phrases percutantes qui accrochent les recruteurs africains." },
+                { icon: Download, title: "3. Télécharge", text: "Paye 2 000 FCFA uniquement si le résultat te convainc. Mobile Money, carte bancaire ou Wave — paiement sécurisé via Chariow, disponible partout en Afrique." }
               ].map((step, i) => (
                 <RevealOnScroll key={i} delay={i * 200} className="relative z-10 flex flex-col items-center text-center group">
                   <div className="w-24 h-24 bg-slate-800/50 rounded-3xl flex items-center justify-center mb-8 border border-slate-700 transition-all duration-500 group-hover:border-indigo-500 group-hover:bg-indigo-500/20 group-hover:-translate-y-2">
@@ -242,6 +239,62 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 4.5 Testimonials Section */}
+      <section className="py-32 bg-white">
+        <RevealOnScroll>
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-20">
+              <h2 className={`text-4xl md:text-6xl font-black mb-6 tracking-tight ${sora.className}`}>
+                Ce qu'ils disent après leur premier entretien
+              </h2>
+              <p className="text-slate-500 text-lg max-w-2xl mx-auto">
+                Premiers retours de notre communauté à travers l'Afrique francophone
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+              {[
+                {
+                  text: "J'avais peur que ce soit compliqué depuis mon téléphone. En 15 minutes mon CV était prêt. J'ai eu un entretien la semaine suivante.",
+                  name: "Ornella M.",
+                  city: "Abidjan, Côte d'Ivoire",
+                  post: "Assistante RH"
+                },
+                {
+                  text: "L'IA a reformulé mes expériences mieux que je n'aurais pu le faire moi-même. Le paiement via Mobile Money était instantané.",
+                  name: "Patrick A.",
+                  city: "Libreville, Gabon",
+                  post: "Technicien Pétrole"
+                },
+                {
+                  text: "2 000 FCFA pour un CV qui fait vraiment la différence. Simple, rapide, professionnel. Je recommande à tous mes collègues.",
+                  name: "Christelle B.",
+                  city: "Dakar, Sénégal",
+                  post: "Comptable OHADA"
+                }
+              ].map((testimonial, i) => (
+                <div key={i} className="bg-white border border-slate-100 rounded-3xl p-8 shadow-lg shadow-slate-100">
+                  <div className="flex gap-0.5 mb-4">
+                    {[...Array(5)].map((_, starIndex) => (
+                      <span key={starIndex} className="text-amber-400">★</span>
+                    ))}
+                  </div>
+                  <p className="text-slate-600 leading-relaxed mb-6">"{testimonial.text}"</p>
+                  <div>
+                    <p className="font-bold text-slate-900">{testimonial.name}</p>
+                    <p className="text-sm text-slate-400 italic">{testimonial.city} • {testimonial.post}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <p className="text-xs text-slate-300 mt-8 italic text-center">
+              Témoignages illustratifs — prénoms modifiés.
+            </p>
+          </div>
+        </RevealOnScroll>
+      </section>
+
       {/* 5. Pricing Section */}
       <section className="py-40 bg-[#FAFAF8] relative overflow-hidden">
         <div className="container mx-auto px-6 text-center">
@@ -249,22 +302,26 @@ export default function Home() {
             <div className="max-w-xl mx-auto p-12 md:p-16 rounded-[3.5rem] bg-indigo-600 text-white shadow-3xl shadow-indigo-200 relative overflow-hidden pulse-ring group">
               <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-700"></div>
               
-              <h2 className="text-sm font-black mb-6 uppercase tracking-[0.3em] opacity-80">Tarif Unique & Transparent</h2>
+              <h2 className="text-sm font-black mb-6 uppercase tracking-[0.3em] opacity-80">Un tarif unique. Transparent. Africain.</h2>
               <div className="flex items-baseline justify-center gap-2 mb-10">
                 <span className={`text-8xl font-black tracking-tighter ${sora.className}`}>2 000</span>
                 <span className="text-3xl font-black">FCFA</span>
               </div>
               
-              <p className="text-indigo-100 mb-12 text-xl leading-relaxed font-medium">
-                Un paiement unique par CV téléchargé.<br />
-                <span className="opacity-70 text-base font-normal italic">Environ 2.99$ • Sans abonnement</span>
+              <p className="text-indigo-100 mb-6 text-xl leading-relaxed font-medium">
+                ~2.99$ • Sans abonnement • Sans frais cachés
               </p>
+
+              <div className="text-indigo-200 text-sm text-center mb-10">
+                <p>💳 Mobile Money • Carte bancaire • Wave</p>
+                <p>Paiement sécurisé via Chariow</p>
+              </div>
               
               <div className="space-y-5 mb-14 text-left max-w-[280px] mx-auto border-y border-white/10 py-8">
                 {[
-                  "Fichier PDF Haute Définition",
-                  "Téléchargement immédiat",
-                  "Compatible mobile & desktop"
+                  "PDF Haute Définition prêt à envoyer",
+                  "Téléchargement immédiat après paiement",
+                  "Compatible tous appareils — mobile & desktop"
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-4">
                     <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center shrink-0">
@@ -279,7 +336,7 @@ export default function Home() {
                 href="/editor/new?reset=true" 
                 className="block w-full py-6 bg-white text-indigo-600 rounded-[2rem] font-black text-2xl hover:scale-[1.03] active:scale-[0.97] transition-all shadow-xl hover:shadow-white/20 relative overflow-hidden shimmer-effect"
               >
-                Commencer mon CV
+                Créer mon CV maintenant
               </Link>
             </div>
           </RevealOnScroll>
@@ -291,7 +348,7 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <p className={`text-2xl font-black mb-4 text-slate-900 ${sora.className}`}>MonCV<span className="text-indigo-600">.ga</span></p>
           <p className="text-slate-400 text-sm font-medium">
-            © {new Date().getFullYear()} — Le standard du CV professionnel au Gabon.
+            © {new Date().getFullYear()} — Le CV professionnel accessible à tous en Afrique francophone.
           </p>
           <div className="flex justify-center gap-8 mt-8 text-xs font-black uppercase tracking-widest text-slate-300">
             <Link href="/privacy" className="hover:text-indigo-500 transition-colors">Confidentialité</Link>
