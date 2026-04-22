@@ -19,18 +19,29 @@ const CV_DATA = {
 
 interface PreviewProps {
   children: React.ReactNode;
+  badge?: {
+    text: string;
+    color: string;
+  };
 }
 
-const BasePreview = ({ children }: PreviewProps) => (
-  <div className="w-[210px] h-[297px] overflow-hidden rounded-md shadow-lg border border-slate-200 bg-white group cursor-default">
-    <div className="origin-top-left scale-[0.35] w-[600px] h-[848px] pointer-events-none p-8">
-      {children}
+const BasePreview = ({ children, badge }: PreviewProps) => (
+  <div className="group relative">
+    {badge && (
+      <div className={`absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm ${badge.color} border border-white/20 transition-transform duration-300 group-hover:-translate-y-1`}>
+        {badge.text}
+      </div>
+    )}
+    <div className="w-[210px] h-[297px] overflow-hidden rounded-xl shadow-lg border border-slate-200 bg-white cursor-default transition-all duration-500 group-hover:shadow-2xl group-hover:shadow-indigo-100 group-hover:-translate-y-2 ring-1 ring-slate-200/50">
+      <div className="origin-top-left scale-[0.35] w-[600px] h-[848px] pointer-events-none p-8">
+        {children}
+      </div>
     </div>
   </div>
 );
 
 export const ClassicPreview = () => (
-  <BasePreview>
+  <BasePreview badge={{ text: "Tous secteurs", color: "bg-slate-100 text-slate-600" }}>
     <div className="flex flex-col gap-6 text-slate-800">
       <div className="border-b-2 border-slate-900 pb-4 text-center">
         <h1 className="text-4xl font-bold uppercase tracking-wider">{CV_DATA.name}</h1>
@@ -83,7 +94,7 @@ export const ClassicPreview = () => (
 );
 
 export const ModernPreview = () => (
-  <BasePreview>
+  <BasePreview badge={{ text: "⭐ Populaire", color: "bg-indigo-600 text-white" }}>
     <div className="flex h-full -m-8">
       {/* Sidebar */}
       <div className="w-1/3 bg-slate-900 text-white p-8 space-y-8 h-full">
@@ -139,7 +150,7 @@ export const ModernPreview = () => (
 );
 
 export const MinimalPreview = () => (
-  <BasePreview>
+  <BasePreview badge={{ text: "Recommandé IA", color: "bg-emerald-100 text-emerald-700" }}>
     <div className="flex flex-col gap-10 text-slate-700 max-w-[500px] mx-auto">
       <header className="space-y-2">
         <h1 className="text-5xl font-light tracking-tight text-slate-900">{CV_DATA.name}</h1>
@@ -161,14 +172,14 @@ export const MinimalPreview = () => (
         <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-slate-300">Expérience</h2>
         <div className="space-y-8">
           {CV_DATA.experience.map((exp, i) => (
-            <div key={i} className="group">
+            <div key={i} className="group/item">
               <div className="flex justify-between items-baseline mb-1">
                 <h3 className="text-lg font-medium text-slate-800">{exp.role}</h3>
                 <span className="text-xs text-slate-400">{exp.period}</span>
               </div>
               <p className="text-slate-500 mb-3">{exp.company}</p>
               <div className="h-1 bg-slate-50 rounded-full overflow-hidden">
-                <div className="h-full bg-slate-200 w-2/3 group-hover:w-full transition-all duration-700"></div>
+                <div className="h-full bg-slate-200 w-2/3 group-hover/item:w-full transition-all duration-700"></div>
               </div>
             </div>
           ))}
