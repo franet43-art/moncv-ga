@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { ClassicPreview, ModernPreview, MinimalPreview } from "@/components/marketing/template-previews";
 import { RevealOnScroll } from "@/components/marketing/reveal-on-scroll";
+import { TypewriterHero } from "@/components/marketing/typewriter-hero";
 import { Sora, Inter } from "next/font/google";
 
 const sora = Sora({ subsets: ["latin"], weight: ["400", "600", "700", "800"] });
@@ -70,6 +71,13 @@ export default function Home() {
           z-index: -1;
           animation: pulse-ring 3s infinite ease-in-out;
         }
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
+        }
+        .animate-blink {
+          animation: blink 530ms step-end infinite;
+        }
       `}} />
 
       {/* 1. Hero Section */}
@@ -86,12 +94,7 @@ export default function Home() {
               <span>✨ Conçu pour l'Afrique francophone</span>
             </div>
             
-            <h1 
-              className={`text-6xl md:text-8xl font-black tracking-tighter mb-8 leading-[0.9] text-slate-900 animate-fade-up ${sora.className}`}
-              style={{ animationDelay: '150ms' }}
-            >
-              Ton prochain emploi commence par un CV qui impressionne.
-            </h1>
+            <TypewriterHero />
             
             <p 
               className="text-xl md:text-2xl text-slate-500 mb-14 leading-relaxed max-w-2xl mx-auto font-medium animate-fade-up"
@@ -152,7 +155,7 @@ export default function Home() {
               { icon: Smartphone, text: "Créé sur mobile en 10 minutes" },
               { icon: Lock, text: "Tes données t'appartiennent" }
             ].map((badge, i) => (
-              <div key={i} className="flex items-center gap-3 text-slate-400 font-bold text-sm uppercase tracking-widest group transition-all hover:text-indigo-600 hover:-translate-y-1">
+              <div key={i} className="flex items-center gap-3 text-slate-400 font-bold text-sm normal-case md:uppercase tracking-normal md:tracking-widest group transition-all hover:text-indigo-600 hover:-translate-y-1">
                 <badge.icon size={22} className="text-slate-300 group-hover:text-indigo-500 transition-colors" />
                 <span>{badge.text}</span>
               </div>
@@ -304,7 +307,7 @@ export default function Home() {
               
               <h2 className="text-sm font-black mb-6 uppercase tracking-[0.3em] opacity-80">Un tarif unique. Transparent. Africain.</h2>
               <div className="flex items-baseline justify-center gap-2 mb-10">
-                <span className={`text-8xl font-black tracking-tighter ${sora.className}`}>2 000</span>
+                <span className={`text-[clamp(3rem,18vw,5rem)] md:text-8xl font-black tracking-tighter ${sora.className}`}>2 000</span>
                 <span className="text-3xl font-black">FCFA</span>
               </div>
               
