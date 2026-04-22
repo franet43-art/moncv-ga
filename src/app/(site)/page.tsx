@@ -294,9 +294,9 @@ export default function Home() {
             © {new Date().getFullYear()} — Le standard du CV professionnel au Gabon.
           </p>
           <div className="flex justify-center gap-8 mt-8 text-xs font-black uppercase tracking-widest text-slate-300">
-            <Link href="#" className="hover:text-indigo-500 transition-colors">Confidentialité</Link>
-            <Link href="#" className="hover:text-indigo-500 transition-colors">Conditions</Link>
-            <Link href="#" className="hover:text-indigo-500 transition-colors">Contact</Link>
+            <Link href="/privacy" className="hover:text-indigo-500 transition-colors">Confidentialité</Link>
+            <Link href="/terms" className="hover:text-indigo-500 transition-colors">Conditions</Link>
+            <Link href="/contact" className="hover:text-indigo-500 transition-colors">Contact</Link>
           </div>
         </div>
       </footer>
