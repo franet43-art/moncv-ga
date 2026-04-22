@@ -45,14 +45,22 @@ export function TypewriterHero() {
     }
   }, [currentText, phase, currentWordIndex]);
 
+  const longestWord = words.reduce((a, b) => (a.length > b.length ? a : b), "");
+
   return (
     <h1 
       className={`text-[clamp(2.2rem,10vw,5rem)] md:text-8xl font-black tracking-tighter mb-8 leading-[0.9] text-slate-900 animate-fade-up ${sora.className}`}
       style={{ animationDelay: '150ms' }}
     >
       Ton prochain emploi commence par{" "}
-      <span className="block min-h-[140px] sm:min-h-[100px] md:min-h-[80px] lg:min-h-[160px] xl:min-h-[100px]">
-        <span className="text-indigo-600">
+      <span className="relative inline-block text-indigo-600 text-left">
+        {/* Ghost element for reserving space */}
+        <span className="invisible pointer-events-none block">
+          {longestWord}
+        </span>
+        
+        {/* Animated text positioned absolutely over the ghost */}
+        <span className="absolute top-0 left-0 w-full">
           {currentText}
           <span className="text-indigo-400 inline-block animate-blink">|</span>
         </span>
