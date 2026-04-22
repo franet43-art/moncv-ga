@@ -313,7 +313,7 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
       <main className="flex-1 max-w-[1600px] mx-auto w-full flex overflow-hidden">
         {/* Left Side: Forms */}
         <div className="flex-1 lg:max-w-[55%] border-r border-zinc-200 dark:border-zinc-800 flex flex-col items-center overflow-y-auto">
-          <div className="w-full max-w-2xl px-6 py-8 sm:py-12">
+          <div className="w-full max-w-2xl px-6 py-8 sm:py-12 pb-32 sm:pb-12">
             <Tabs 
               value={activeTab} 
               onValueChange={setActiveTab} 
@@ -397,8 +397,23 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
         </aside>
       </main>
 
+      {/* Mobile Save Bar */}
+      <div className="sm:hidden fixed bottom-8 left-0 right-0 p-4 bg-white/90 backdrop-blur-md border-t border-zinc-200 z-30 shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
+        <Button 
+          onClick={handleSaveCV} 
+          disabled={isSaving} 
+          className="w-full shadow-lg font-semibold h-12 bg-primary text-primary-foreground hover:bg-primary/90"
+        >
+          {isSaving ? (
+            <><Loader2 className="h-5 w-5 mr-2 animate-spin" /><span>Enregistrement...</span></>
+          ) : (
+            <><Save className="h-5 w-5 mr-2" /><span>Sauvegarder mon CV</span></>
+          )}
+        </Button>
+      </div>
+
       {/* Footer / Status */}
-      <footer className="h-8 bg-white dark:bg-zinc-900 border-t flex items-center px-6 text-[10px] text-muted-foreground justify-between shrink-0">
+      <footer className="h-8 bg-white dark:bg-zinc-900 border-t flex items-center px-6 text-[10px] text-muted-foreground justify-between shrink-0 relative z-40">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1">
             <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
