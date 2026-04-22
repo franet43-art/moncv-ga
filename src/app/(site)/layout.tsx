@@ -1,5 +1,4 @@
 import { Header } from "@/components/layout/header"
-import { Footer } from "@/components/layout/footer"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/sonner"
 
@@ -19,7 +18,6 @@ export default function SiteLayout({
       <main className="flex-1 flex flex-col">
         {children}
       </main>
-      <Footer />
       <Toaster />
     </ThemeProvider>
   )
