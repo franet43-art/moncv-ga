@@ -1,3 +1,10 @@
+@layer base {
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
 @import "tailwindcss";
 
 @plugin "tailwindcss-animate";

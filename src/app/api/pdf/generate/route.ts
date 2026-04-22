@@ -56,15 +56,14 @@ export async function POST(req: NextRequest) {
       timeout: 30000,
     })
 
-    // 4. Attendre fonts
-    try {
-      await page.waitForFunction(
-        'document.title === "PDF_READY"',
-        { timeout: 5000 }
-      )
-    } catch {
-      await new Promise(r => setTimeout(r, 1500))
-    }
+    // 4. Attendre que le CV soit visible
+    await page.waitForSelector('#cv-root', { timeout: 10000 })
+
+    // Attendre les fonts
+    await page.evaluate(() => document.fonts.ready)
+
+    // Buffer supplémentaire pour les images
+    await new Promise(r => setTimeout(r, 500))
 
     // 5. Générer PDF
     const pdfBuffer = await page.pdf({

@@ -25,3 +25,24 @@ export async function createServerSupabaseClient() {
     }
   )
 }
+
+export function createServiceSupabaseClient() {
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+      cookies: {
+        getAll() {
+          return []
+        },
+        setAll() {
+          // No-op for service role
+        },
+      },
+    }
+  )
+}

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useCVStore } from "@/store/cv-store"
-import NewEditorPage from "@/app/editor/new/page"
+import NewEditorPage from "@/app/(site)/editor/new/page"
 import type { CVRecord } from "@/types/database"
 
 export default function EditorLoader({ cvData, cvId }: { cvData: CVRecord, cvId: string }) {
