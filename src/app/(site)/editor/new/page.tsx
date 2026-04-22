@@ -398,7 +398,7 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
       </main>
 
       {/* Mobile Save Bar */}
-      <div className="sm:hidden fixed bottom-8 left-0 right-0 p-4 bg-white/90 backdrop-blur-md border-t border-zinc-200 z-30 shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 p-4 pb-10 bg-white/90 backdrop-blur-md border-t border-zinc-200 z-30 shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
         <Button 
           onClick={handleSaveCV} 
           disabled={isSaving} 
