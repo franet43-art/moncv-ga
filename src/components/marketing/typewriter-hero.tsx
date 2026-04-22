@@ -21,12 +21,12 @@ export function TypewriterHero() {
     
     if (phase === "typing") {
       if (currentText === word) {
-        const t = setTimeout(() => setPhase("deleting"), 2000);
+        const t = setTimeout(() => setPhase("deleting"), 8000);
         return () => clearTimeout(t);
       }
       const t = setTimeout(() => {
         setCurrentText(word.substring(0, currentText.length + 1));
-      }, 60);
+      }, 90);
       return () => clearTimeout(t);
     }
 
@@ -35,12 +35,12 @@ export function TypewriterHero() {
         const t = setTimeout(() => {
           setCurrentWordIndex((prev) => (prev + 1) % words.length);
           setPhase("typing");
-        }, 400);
+        }, 600);
         return () => clearTimeout(t);
       }
       const t = setTimeout(() => {
         setCurrentText(currentText.substring(0, currentText.length - 1));
-      }, 35);
+      }, 45);
       return () => clearTimeout(t);
     }
   }, [currentText, phase, currentWordIndex]);
@@ -51,9 +51,11 @@ export function TypewriterHero() {
       style={{ animationDelay: '150ms' }}
     >
       Ton prochain emploi commence par{" "}
-      <span className="text-indigo-600">
-        {currentText}
-        <span className="text-indigo-400 inline-block animate-blink">|</span>
+      <span className="block min-h-[140px] sm:min-h-[100px] md:min-h-[80px] lg:min-h-[160px] xl:min-h-[100px]">
+        <span className="text-indigo-600">
+          {currentText}
+          <span className="text-indigo-400 inline-block animate-blink">|</span>
+        </span>
       </span>
     </h1>
   );

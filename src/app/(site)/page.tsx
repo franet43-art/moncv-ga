@@ -306,9 +306,13 @@ export default function Home() {
               <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition-all duration-700"></div>
               
               <h2 className="text-sm font-black mb-6 uppercase tracking-[0.3em] opacity-80">Un tarif unique. Transparent. Africain.</h2>
-              <div className="flex items-baseline justify-center gap-2 mb-10">
-                <span className={`text-[clamp(3rem,18vw,5rem)] md:text-8xl font-black tracking-tighter ${sora.className}`}>2 000</span>
-                <span className="text-3xl font-black">FCFA</span>
+              <div className="flex items-baseline justify-center gap-1 mb-10 flex-nowrap whitespace-nowrap">
+                <span className={`text-[clamp(2rem,14vw,5rem)] md:text-8xl font-black tracking-tighter ${sora.className}`}>
+                  2 000
+                </span>
+                <span className="text-[clamp(1rem,5vw,1.875rem)] md:text-3xl font-black">
+                  FCFA
+                </span>
               </div>
               
               <p className="text-indigo-100 mb-6 text-xl leading-relaxed font-medium">
