@@ -17,7 +17,10 @@ import {
   Globe2,
   Users,
   Palette,
-  Save
+  Save,
+  Medal,
+  Trophy,
+  Heart
 } from "lucide-react"
 
 import { useAuth } from "@/hooks/use-auth"
@@ -45,6 +48,9 @@ import { EducationForm } from "@/components/editor/education-form"
 import { SkillsForm } from "@/components/editor/skills-form"
 import { LanguagesForm } from "@/components/editor/languages-form"
 import { ReferencesForm } from "@/components/editor/references-form"
+import { CertificationsForm } from "@/components/editor/certifications-form"
+import { AccomplishmentsForm } from "@/components/editor/accomplishments-form"
+import { HobbiesForm } from "@/components/editor/hobbies-form"
 import { DesignPanel } from "@/components/editor/design-panel"
 import { CVPreview } from "@/components/editor/cv-preview"
 import { PaymentModal } from "@/components/payment/payment-modal"
@@ -333,8 +339,17 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
                   <TabsTrigger value="skills" title="Compétences" className="gap-2 px-3 sm:px-4 py-2 sm:py-1.5 flex-1 sm:flex-initial">
                     <Lightbulb className="h-4 w-4" /> <span className="hidden sm:inline text-xs sm:text-sm">Compétences</span>
                   </TabsTrigger>
+                  <TabsTrigger value="certifications" title="Certifications" className="gap-2 px-3 sm:px-4 py-2 sm:py-1.5 flex-1 sm:flex-initial">
+                    <Medal className="h-4 w-4" /> <span className="hidden sm:inline text-xs sm:text-sm">Certifications</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="accomplishments" title="Accomplissements" className="gap-2 px-3 sm:px-4 py-2 sm:py-1.5 flex-1 sm:flex-initial">
+                    <Trophy className="h-4 w-4" /> <span className="hidden sm:inline text-xs sm:text-sm">Succès</span>
+                  </TabsTrigger>
                   <TabsTrigger value="languages" title="Langues" className="gap-2 px-3 sm:px-4 py-2 sm:py-1.5 flex-1 sm:flex-initial">
                     <Globe2 className="h-4 w-4" /> <span className="hidden sm:inline text-xs sm:text-sm">Langues</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="hobbies" title="Loisirs" className="gap-2 px-3 sm:px-4 py-2 sm:py-1.5 flex-1 sm:flex-initial">
+                    <Heart className="h-4 w-4" /> <span className="hidden sm:inline text-xs sm:text-sm">Loisirs</span>
                   </TabsTrigger>
                   <TabsTrigger value="references" title="Références" className="gap-2 px-3 sm:px-4 py-2 sm:py-1.5 flex-1 sm:flex-initial">
                     <Users className="h-4 w-4" /> <span className="hidden sm:inline text-xs sm:text-sm">Références</span>
@@ -355,8 +370,17 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
                 <TabsContent value="skills" className="outline-none m-0">
                   <SkillsForm />
                 </TabsContent>
+                <TabsContent value="certifications" className="outline-none m-0">
+                  <CertificationsForm />
+                </TabsContent>
+                <TabsContent value="accomplishments" className="outline-none m-0">
+                  <AccomplishmentsForm />
+                </TabsContent>
                 <TabsContent value="languages" className="outline-none m-0">
                   <LanguagesForm />
+                </TabsContent>
+                <TabsContent value="hobbies" className="outline-none m-0">
+                  <HobbiesForm />
                 </TabsContent>
                 <TabsContent value="references" className="outline-none m-0">
                   <ReferencesForm />
@@ -370,7 +394,7 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
                   className="text-muted-foreground hover:bg-zinc-100" 
                   disabled={activeTab === "personal"}
                   onClick={() => {
-                    const tabs = ["personal", "experience", "education", "skills", "languages", "references"]
+                    const tabs = ["personal", "experience", "education", "skills", "certifications", "accomplishments", "languages", "hobbies", "references"]
                     const idx = tabs.indexOf(activeTab)
                     if (idx > 0) setActiveTab(tabs[idx - 1])
                   }}
@@ -379,7 +403,7 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
                 </Button>
                 <Button className="font-semibold shadow-lg shadow-primary/20 min-w-[120px]" 
                         onClick={() => {
-                          const tabs = ["personal", "experience", "education", "skills", "languages", "references"]
+                          const tabs = ["personal", "experience", "education", "skills", "certifications", "accomplishments", "languages", "hobbies", "references"]
                           const idx = tabs.indexOf(activeTab)
                           if (idx < tabs.length - 1) setActiveTab(tabs[idx + 1])
                         }}>

@@ -45,6 +45,18 @@ interface CVState {
   updateReference: (id: string, ref: Partial<CVContent["references"][number]>) => void;
   removeReference: (id: string) => void;
 
+  addCertification: (cert: CVContent["certifications"][number]) => void;
+  updateCertification: (id: string, cert: Partial<CVContent["certifications"][number]>) => void;
+  removeCertification: (id: string) => void;
+
+  addAccomplishment: (acc: CVContent["accomplishments"][number]) => void;
+  updateAccomplishment: (id: string, acc: Partial<CVContent["accomplishments"][number]>) => void;
+  removeAccomplishment: (id: string) => void;
+
+  addHobby: (hobby: CVContent["hobbies"][number]) => void;
+  updateHobby: (id: string, hobby: Partial<CVContent["hobbies"][number]>) => void;
+  removeHobby: (id: string) => void;
+
   // Sync
   clearLocalCV: () => void;
   setFromSupabase: (cv: CV) => void;
@@ -282,6 +294,108 @@ export const useCVStore = create<CVState>()(
             content: {
               ...state.currentCV.content,
               references: state.currentCV.content.references.filter((r) => r.id !== id),
+            },
+          },
+        })),
+
+      // Certifications
+      addCertification: (cert) =>
+        set((state) => ({
+          currentCV: {
+            ...state.currentCV,
+            content: {
+              ...state.currentCV.content,
+              certifications: [...(state.currentCV.content.certifications || []), cert],
+            },
+          },
+        })),
+      updateCertification: (id, updates) =>
+        set((state) => ({
+          currentCV: {
+            ...state.currentCV,
+            content: {
+              ...state.currentCV.content,
+              certifications: (state.currentCV.content.certifications || []).map((c) =>
+                c.id === id ? { ...c, ...updates } : c
+              ),
+            },
+          },
+        })),
+      removeCertification: (id) =>
+        set((state) => ({
+          currentCV: {
+            ...state.currentCV,
+            content: {
+              ...state.currentCV.content,
+              certifications: (state.currentCV.content.certifications || []).filter((c) => c.id !== id),
+            },
+          },
+        })),
+
+      // Accomplishments
+      addAccomplishment: (acc) =>
+        set((state) => ({
+          currentCV: {
+            ...state.currentCV,
+            content: {
+              ...state.currentCV.content,
+              accomplishments: [...(state.currentCV.content.accomplishments || []), acc],
+            },
+          },
+        })),
+      updateAccomplishment: (id, updates) =>
+        set((state) => ({
+          currentCV: {
+            ...state.currentCV,
+            content: {
+              ...state.currentCV.content,
+              accomplishments: (state.currentCV.content.accomplishments || []).map((a) =>
+                a.id === id ? { ...a, ...updates } : a
+              ),
+            },
+          },
+        })),
+      removeAccomplishment: (id) =>
+        set((state) => ({
+          currentCV: {
+            ...state.currentCV,
+            content: {
+              ...state.currentCV.content,
+              accomplishments: (state.currentCV.content.accomplishments || []).filter((a) => a.id !== id),
+            },
+          },
+        })),
+
+      // Hobbies
+      addHobby: (hobby) =>
+        set((state) => ({
+          currentCV: {
+            ...state.currentCV,
+            content: {
+              ...state.currentCV.content,
+              hobbies: [...(state.currentCV.content.hobbies || []), hobby],
+            },
+          },
+        })),
+      updateHobby: (id, updates) =>
+        set((state) => ({
+          currentCV: {
+            ...state.currentCV,
+            content: {
+              ...state.currentCV.content,
+              hobbies: (state.currentCV.content.hobbies || []).map((h) =>
+                h.id === id ? { ...h, ...updates } : h
+              ),
+            },
+          },
+        })),
+      removeHobby: (id) =>
+        set((state) => ({
+          currentCV: {
+            ...state.currentCV,
+            content: {
+              ...state.currentCV.content,
+              hobbies: (state.currentCV.content.hobbies || []).filter((h) => h.id !== id),
             },
           },
         })),

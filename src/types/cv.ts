@@ -53,6 +53,26 @@ export const referenceSchema = z.object({
   email: z.string().email().optional().or(z.literal("")),
 });
 
+export const certificationSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1, "Le nom de la certification est requis"),
+  issuer: z.string().min(1, "L'organisme est requis"),
+  date: z.string(),
+  url: z.string().url().optional().or(z.literal("")),
+});
+
+export const accomplishmentSchema = z.object({
+  id: z.string(),
+  title: z.string().min(1, "Le titre est requis"),
+  date: z.string(),
+  description: z.string().optional(),
+});
+
+export const hobbySchema = z.object({
+  id: z.string(),
+  name: z.string().min(1, "Le centre d'intérêt est requis"),
+});
+
 // === Design & Personalization Schemas ===
 
 export const cvSettingsSchema = z.object({
@@ -72,6 +92,9 @@ export const cvContentSchema = z.object({
   skills: z.array(skillSchema),
   languages: z.array(languageSchema),
   references: z.array(referenceSchema),
+  certifications: z.array(certificationSchema).default([]),
+  accomplishments: z.array(accomplishmentSchema).default([]),
+  hobbies: z.array(hobbySchema).default([]),
 });
 
 // === Inferred Types ===
@@ -82,6 +105,9 @@ export type Education = z.infer<typeof educationSchema>;
 export type Skill = z.infer<typeof skillSchema>;
 export type Language = z.infer<typeof languageSchema>;
 export type Reference = z.infer<typeof referenceSchema>;
+export type Certification = z.infer<typeof certificationSchema>;
+export type Accomplishment = z.infer<typeof accomplishmentSchema>;
+export type Hobby = z.infer<typeof hobbySchema>;
 export type CVSettings = z.infer<typeof cvSettingsSchema>;
 export type CVContent = z.infer<typeof cvContentSchema>;
 
@@ -111,6 +137,9 @@ export const defaultCVContent: CVContent = {
   skills: [],
   languages: [],
   references: [],
+  certifications: [],
+  accomplishments: [],
+  hobbies: [],
 };
 
 // === Full CV Schema ===
