@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/hooks/use-auth"
 import { Button } from "@/components/ui/button"
-import { FileText, Plus, LogOut } from "lucide-react"
+import { FileText, Plus, LogOut, Settings } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import {
@@ -74,6 +74,12 @@ export function UserMenu() {
           <Link href="/editor/new?reset=true" className="flex items-center">
             <Plus className="mr-2 h-4 w-4" />
             <span>Nouveau CV</span>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild className="cursor-pointer">
+          <Link href="/dashboard/account" className="flex items-center">
+            <Settings className="mr-2 h-4 w-4" />
+            <span>Paramètres</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
