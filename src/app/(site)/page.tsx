@@ -215,13 +215,13 @@ export default function Home() {
                 <div className="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center">
                   <CheckCircle2 size={14} />
                 </div>
-                <span>Accès à vie aux mises à jour</span>
+                <span>Téléchargement immédiat</span>
               </li>
               <li className="flex items-center gap-3">
                 <div className="w-5 h-5 bg-white/20 rounded-full flex items-center justify-center">
                   <CheckCircle2 size={14} />
                 </div>
-                <span>Support Prioritaire</span>
+                <span>Compatible mobile & desktop</span>
               </li>
             </ul>
 
