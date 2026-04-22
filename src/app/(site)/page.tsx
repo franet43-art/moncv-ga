@@ -177,7 +177,7 @@ export default function Home() {
             <RevealOnScroll delay={100}>
               <div className="flex flex-col items-center">
                 <ClassicPreview />
-                <h3 className={`text-2xl font-bold mt-10 mb-3 ${sora.className}`}>Le Classique</h3>
+                <h3 className={`text-2xl font-bold mt-4 mb-3 ${sora.className}`}>Le Classique</h3>
                 <p className="text-slate-500 text-sm max-w-[240px] leading-relaxed">
                   L'élégance intemporelle pour les secteurs institutionnels et traditionnels.
                 </p>
@@ -188,7 +188,7 @@ export default function Home() {
             <RevealOnScroll delay={250}>
               <div className="flex flex-col items-center">
                 <ModernPreview />
-                <h3 className={`text-2xl font-bold mt-10 mb-3 ${sora.className}`}>Le Moderne</h3>
+                <h3 className={`text-2xl font-bold mt-4 mb-3 ${sora.className}`}>Le Moderne</h3>
                 <p className="text-slate-500 text-sm max-w-[240px] leading-relaxed">
                   Un design audacieux pour se démarquer dans la Tech et les métiers créatifs.
                 </p>
@@ -199,7 +199,7 @@ export default function Home() {
             <RevealOnScroll delay={400}>
               <div className="flex flex-col items-center">
                 <MinimalPreview />
-                <h3 className={`text-2xl font-bold mt-10 mb-3 ${sora.className}`}>Le Minimaliste</h3>
+                <h3 className={`text-2xl font-bold mt-4 mb-3 ${sora.className}`}>Le Minimaliste</h3>
                 <p className="text-slate-500 text-sm max-w-[240px] leading-relaxed">
                   La clarté absolue. Recommandé par l'IA pour maximiser la lecture rapide.
                 </p>

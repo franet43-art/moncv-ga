@@ -26,17 +26,17 @@ interface PreviewProps {
 }
 
 const BasePreview = ({ children, badge }: PreviewProps) => (
-  <div className="group relative">
-    {badge && (
-      <div className={`absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm ${badge.color} border border-white/20 transition-transform duration-300 group-hover:-translate-y-1`}>
-        {badge.text}
-      </div>
-    )}
-    <div className="w-[210px] h-[297px] overflow-hidden rounded-xl shadow-lg border border-slate-200 bg-white cursor-default transition-all duration-500 group-hover:shadow-2xl group-hover:shadow-indigo-100 group-hover:-translate-y-2 ring-1 ring-slate-200/50">
-      <div className="origin-top-left scale-[0.35] w-[600px] h-[848px] pointer-events-none p-8">
+  <div className="group flex flex-col items-center">
+    <div className="w-[270px] h-[382px] overflow-hidden rounded-2xl shadow-xl border border-slate-200 bg-white cursor-default transition-all duration-500 group-hover:shadow-2xl group-hover:shadow-indigo-100 group-hover:-translate-y-2 ring-1 ring-slate-200/50">
+      <div className="origin-top-left scale-[0.45] w-[600px] h-[848px] pointer-events-none p-8">
         {children}
       </div>
     </div>
+    {badge && (
+      <div className={`mt-5 px-4 py-1.5 rounded-full text-[11px] font-black uppercase tracking-widest shadow-sm ${badge.color} border border-white/20 transition-all duration-300 group-hover:scale-110`}>
+        {badge.text}
+      </div>
+    )}
   </div>
 );
 
