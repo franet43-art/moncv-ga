@@ -2,7 +2,7 @@ import type { CVContent, CVSettings } from "@/types/cv"
 import { TemplateTokens } from "@/lib/cv-design-tokens"
 
 export function MinimalTemplate({ content, settings, tokens }: { content: CVContent, settings: CVSettings, tokens: TemplateTokens }) {
-  const { personalInfo, experiences, education, skills, languages, references } = content
+  const { personalInfo, experiences, education, skills, languages, references, certifications = [], accomplishments = [], hobbies = [] } = content
 
   return (
     <div className="flex flex-col px-4" style={{ gap: `${tokens.sectionGap}px` }}>
@@ -37,6 +37,16 @@ export function MinimalTemplate({ content, settings, tokens }: { content: CVCont
         <section className="max-w-2xl mx-auto">
           <p className="text-zinc-600 whitespace-pre-wrap text-center leading-relaxed italic" style={{ fontSize: `${tokens.bodySize}px` }}>
             "{personalInfo.summary}"
+          </p>
+        </section>
+      )}
+
+      {/* Hobbies */}
+      {hobbies.length > 0 && (
+        <section className="text-center pt-4">
+          <div className="h-px w-12 bg-zinc-100 mx-auto mb-6" />
+          <p className="text-zinc-400 italic font-serif" style={{ fontSize: `${tokens.bodySize - 1}px` }}>
+            Intérêts : {hobbies.map(h => h.name).join(" • ")}
           </p>
         </section>
       )}
@@ -76,6 +86,44 @@ export function MinimalTemplate({ content, settings, tokens }: { content: CVCont
                 <p className="font-bold font-sans text-zinc-400 mb-1" style={{ fontSize: `${tokens.bodySize - 2}px` }}>{edu.startDate} — {edu.endDate}</p>
                 <h3 className="font-bold text-zinc-900 leading-tight" style={{ fontSize: `${tokens.bodySize}px` }}>{edu.degree}</h3>
                 <p className="text-zinc-500" style={{ fontSize: `${tokens.bodySize - 2}px` }}>{edu.institution}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Certifications */}
+      {certifications.length > 0 && (
+        <section className="space-y-6">
+          <h2 className="font-bold uppercase tracking-[0.3em] text-zinc-300 border-b border-zinc-100 pb-2" style={{ fontSize: `${tokens.sectionTitleSize - 2}px` }}>Certifications</h2>
+          <div className="grid grid-cols-2 gap-x-12" style={{ rowGap: `${tokens.entryGap}px` }}>
+            {certifications.map((cert) => (
+              <div key={cert.id} className="space-y-1">
+                <p className="font-bold font-sans text-zinc-400 mb-1" style={{ fontSize: `${tokens.bodySize - 2}px` }}>{cert.date}</p>
+                <h3 className="font-bold text-zinc-900 leading-tight" style={{ fontSize: `${tokens.bodySize}px` }}>{cert.name}</h3>
+                <p className="text-zinc-500" style={{ fontSize: `${tokens.bodySize - 2}px` }}>{cert.issuer}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Accomplishments */}
+      {accomplishments.length > 0 && (
+        <section className="space-y-6">
+          <h2 className="font-bold uppercase tracking-[0.3em] text-zinc-300 border-b border-zinc-100 pb-2" style={{ fontSize: `${tokens.sectionTitleSize - 2}px` }}>Réalisations</h2>
+          <div className="flex flex-col" style={{ gap: `${tokens.entryGap}px` }}>
+            {accomplishments.map((acc) => (
+              <div key={acc.id} className="space-y-2">
+                <div className="flex justify-between items-baseline">
+                  <h3 className="font-bold text-zinc-900" style={{ fontSize: `${tokens.bodySize}px` }}>{acc.title}</h3>
+                  <span className="text-zinc-400 font-sans font-bold" style={{ fontSize: `${tokens.bodySize - 3}px` }}>{acc.date}</span>
+                </div>
+                {acc.description && (
+                  <p className="text-zinc-500 leading-relaxed" style={{ fontSize: `${tokens.bodySize - 1}px` }}>
+                    {acc.description}
+                  </p>
+                )}
               </div>
             ))}
           </div>

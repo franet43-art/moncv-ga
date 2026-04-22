@@ -1,13 +1,15 @@
-import { Mail, Phone, MapPin, Globe2, GraduationCap, Building2, UserCheck } from "lucide-react"
+import { Mail, Phone, MapPin, Globe2, GraduationCap, Building2, UserCheck, Medal, Trophy, Heart, ExternalLink } from "lucide-react"
 import type { CVContent, CVSettings } from "@/types/cv"
 import { TemplateTokens } from "@/lib/cv-design-tokens"
 
 // Modern Template helper icons to avoid redundancy
 const BriefcaseIcon = ({ className }: { className?: string }) => <Building2 className={className} />
 const UsersIcon = ({ className }: { className?: string }) => <UserCheck className={className} />
+const MedalIcon = ({ className }: { className?: string }) => <Medal className={className} />
+const TrophyIcon = ({ className }: { className?: string }) => <Trophy className={className} />
 
 export function ModernTemplate({ content, settings, tokens }: { content: CVContent, settings: CVSettings, tokens: TemplateTokens }) {
-  const { personalInfo, experiences, education, skills, languages, references } = content
+  const { personalInfo, experiences, education, skills, languages, references, certifications = [], accomplishments = [], hobbies = [] } = content
 
   return (
     <div className="flex min-h-[1050px]">
@@ -80,6 +82,29 @@ export function ModernTemplate({ content, settings, tokens }: { content: CVConte
           </section>
         )}
 
+        {/* Certifications */}
+        {certifications.length > 0 && (
+          <section className="space-y-4">
+            <h2 className="font-bold uppercase tracking-widest border-b border-white/20 pb-1" style={{ fontSize: `${tokens.sectionTitleSize}px` }}>Certifications</h2>
+            <div className="space-y-3 font-sans" style={{ fontSize: `${tokens.bodySize - 1}px` }}>
+              {certifications.map((cert) => (
+                <div key={cert.id} className="space-y-0.5">
+                  <div className="font-bold flex items-center justify-between">
+                    <span>{cert.name}</span>
+                    {cert.url && (
+                      <a href={cert.url} target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white">
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    )}
+                  </div>
+                  <div className="text-white/70 text-[11px]">{cert.issuer}</div>
+                  <div className="text-white/50 text-[10px] uppercase tracking-wider">{cert.date}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Languages */}
         {languages.length > 0 && (
           <section className="space-y-4">
@@ -102,6 +127,20 @@ export function ModernTemplate({ content, settings, tokens }: { content: CVConte
                     />
                   </div>
                 </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Hobbies */}
+        {hobbies.length > 0 && (
+          <section className="space-y-4">
+            <h2 className="font-bold uppercase tracking-widest border-b border-white/20 pb-1" style={{ fontSize: `${tokens.sectionTitleSize}px` }}>Loisirs</h2>
+            <div className="flex flex-wrap gap-2">
+              {hobbies.map((hobby) => (
+                <span key={hobby.id} className="flex items-center gap-1.5 font-sans italic opacity-80" style={{ fontSize: `${tokens.bodySize - 1}px` }}>
+                  <Heart className="h-3 w-3" /> {hobby.name}
+                </span>
               ))}
             </div>
           </section>
@@ -180,6 +219,37 @@ export function ModernTemplate({ content, settings, tokens }: { content: CVConte
                     <span className="font-bold font-sans opacity-50" style={{ fontSize: `${tokens.bodySize - 3}px` }}>{edu.startDate} — {edu.endDate}</span>
                   </div>
                   <div className="opacity-70" style={{ fontSize: `${tokens.bodySize}px` }}>{edu.institution}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Accomplishments */}
+        {accomplishments.length > 0 && (
+          <section>
+            <h2 className="font-bold uppercase tracking-widest flex items-center gap-2" style={{ 
+              color: settings.accentColor, 
+              fontSize: `${tokens.sectionTitleSize + 2}px`,
+              marginBottom: `${tokens.entryGap}px`
+            }}>
+               <div className="w-6 h-6 rounded bg-zinc-100 flex items-center justify-center">
+                 <TrophyIcon className="h-4 w-4" />
+               </div>
+               Réalisations
+            </h2>
+            <div className="flex flex-col" style={{ gap: `${tokens.entryGap}px` }}>
+              {accomplishments.map((acc) => (
+                <div key={acc.id} className="flex flex-col gap-1">
+                  <div className="flex justify-between items-start">
+                    <h3 className="font-bold text-zinc-950" style={{ fontSize: `${tokens.bodySize + 1}px` }}>{acc.title}</h3>
+                    <span className="font-bold font-sans opacity-50" style={{ fontSize: `${tokens.bodySize - 3}px` }}>{acc.date}</span>
+                  </div>
+                  {acc.description && (
+                    <p className="text-zinc-600 whitespace-pre-wrap leading-normal" style={{ fontSize: `${tokens.bodySize - 1}px` }}>
+                      {acc.description}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>

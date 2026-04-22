@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin, Globe2, Calendar, GraduationCap, Building2, Languages as LangIcon, UserCheck, Laptop } from "lucide-react"
+import { Mail, Phone, MapPin, Globe2, Calendar, GraduationCap, Building2, Languages as LangIcon, UserCheck, Laptop, Medal, Trophy, Heart, ExternalLink } from "lucide-react"
 import type { CVContent, CVSettings } from "@/types/cv"
 import { cn } from "@/lib/utils"
 import { TemplateTokens } from "@/lib/cv-design-tokens"
@@ -18,7 +18,7 @@ const SectionTitle = ({ title, accentColor, tokens, className }: { title: string
 )
 
 export function ClassicTemplate({ content, settings, tokens }: { content: CVContent, settings: CVSettings, tokens: TemplateTokens }) {
-  const { personalInfo, experiences, education, skills, languages, references } = content
+  const { personalInfo, experiences, education, skills, languages, references, certifications = [], accomplishments = [], hobbies = [] } = content
 
   return (
     <div className="flex flex-col" style={{ gap: `${tokens.sectionGap}px` }}>
@@ -128,6 +128,66 @@ export function ClassicTemplate({ content, settings, tokens }: { content: CVCont
         </section>
       )}
 
+      {/* Certifications */}
+      {certifications.length > 0 && (
+        <section>
+          <SectionTitle title="Certifications" accentColor={settings.accentColor} tokens={tokens} />
+          <div className="flex flex-col" style={{ gap: `${tokens.entryGap / 1.5}px` }}>
+            {certifications.map((cert) => (
+              <div key={cert.id} className="flex justify-between items-start">
+                <div className="flex gap-3">
+                  <div className="mt-1 bg-zinc-100 p-1.5 rounded-full">
+                    <Medal className="h-3.5 w-3.5 text-zinc-600" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-bold text-zinc-900" style={{ fontSize: `${tokens.bodySize + 1}px` }}>{cert.name}</h3>
+                      {cert.url && (
+                        <a href={cert.url} target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-zinc-600">
+                          <ExternalLink className="h-3 w-3" />
+                        </a>
+                      )}
+                    </div>
+                    <p className="text-zinc-600 font-sans" style={{ fontSize: `${tokens.bodySize}px` }}>{cert.issuer}</p>
+                  </div>
+                </div>
+                <div className="text-zinc-500 font-sans mt-1" style={{ fontSize: `${tokens.bodySize - 2}px` }}>
+                  {cert.date}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Accomplishments */}
+      {accomplishments.length > 0 && (
+        <section>
+          <SectionTitle title="Réalisations & Succès" accentColor={settings.accentColor} tokens={tokens} />
+          <div className="flex flex-col" style={{ gap: `${tokens.entryGap}px` }}>
+            {accomplishments.map((acc) => (
+              <div key={acc.id} className="relative pl-4 border-l-2 border-zinc-100">
+                <div className="flex justify-between items-start mb-1">
+                  <h3 className="font-bold text-zinc-900 flex items-center gap-2" style={{ fontSize: `${tokens.bodySize + 1}px` }}>
+                    <Trophy className="h-3.5 w-3.5" style={{ color: settings.accentColor }} />
+                    {acc.title}
+                  </h3>
+                  <div className="flex items-center gap-1.5 text-zinc-500 font-sans" style={{ fontSize: `${tokens.bodySize - 2}px` }}>
+                    <Calendar className="h-3 w-3" />
+                    <span>{acc.date}</span>
+                  </div>
+                </div>
+                {acc.description && (
+                  <p className="text-zinc-700 whitespace-pre-wrap leading-normal" style={{ fontSize: `${tokens.bodySize - 1}px` }}>
+                    {acc.description}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Skills & Languages Grid */}
       <div className="grid grid-cols-2" style={{ gap: `${tokens.sectionGap}px` }}>
         {skills.length > 0 && (
@@ -161,6 +221,21 @@ export function ClassicTemplate({ content, settings, tokens }: { content: CVCont
           </section>
         )}
       </div>
+
+      {/* Hobbies */}
+      {hobbies.length > 0 && (
+        <section>
+          <SectionTitle title="Centres d'intérêt" accentColor={settings.accentColor} tokens={tokens} />
+          <div className="flex flex-wrap gap-x-4 gap-y-2">
+            {hobbies.map((hobby) => (
+              <div key={hobby.id} className="flex items-center gap-2 text-zinc-600 font-sans" style={{ fontSize: `${tokens.bodySize - 1}px` }}>
+                <Heart className="h-3 w-3 opacity-40" />
+                <span>{hobby.name}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* References */}
       {references.length > 0 && (
