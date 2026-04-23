@@ -147,8 +147,11 @@ export function PaymentModal({ isOpen, onClose, cvId, onAlreadyPaid, onPaymentIn
             <DialogHeader>
               <DialogTitle className="text-xl">Téléchargez votre CV sans filigrane</DialogTitle>
               <DialogDescription>
-                Payez 500 FCFA une seule fois pour obtenir votre CV en haute qualité
+                Obtenez votre CV premium sans filigrane et propulsez votre carrière — paiement unique de 2 000 FCFA.
               </DialogDescription>
+              <p className="text-xs text-muted-foreground mt-1">
+                Vous avez un code promo ? Renseignez-le lors du paiement pour bénéficier d'une réduction.
+              </p>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4 mt-4">
               <div className="grid grid-cols-2 gap-4">
@@ -215,10 +218,10 @@ export function PaymentModal({ isOpen, onClose, cvId, onAlreadyPaid, onPaymentIn
 
               <div className="pt-4 space-y-3">
                 <Button type="submit" className="w-full bg-[#6C63FF] hover:bg-[#5a52d4] font-semibold text-white shadow-lg shadow-primary/20 h-10">
-                  💳 Payer 500 FCFA et télécharger
+                  💳 Payer 2 000 FCFA et débloquer mon CV
                 </Button>
                 <p className="text-[10px] text-center text-muted-foreground">
-                  🔒 Paiement sécurisé via Chariow • Mobile Money & Cartes bancaires
+                  🔒 Paiement sécurisé via Chariow • Mobile Money & Cartes bancaires • Réduction avec code promo
                 </p>
               </div>
             </form>

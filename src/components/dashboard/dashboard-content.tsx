@@ -257,7 +257,7 @@ export function DashboardContent() {
                             setSelectedCvId(cv.id)
                             setPaymentModalOpen(true)
                           }}>
-                            💳 Débloquer CV (500 FCFA)
+                            💳 Débloquer mon CV (2 000 FCFA)
                           </Button>
                         )}
                      </div>
