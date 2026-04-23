@@ -15,6 +15,7 @@ interface PaymentModalProps {
   onClose: () => void
   cvId: string | null
   onAlreadyPaid: () => void
+  onPaymentInitiated?: (cvId: string) => void
 }
 
 const COUNTRIES = [
@@ -33,7 +34,7 @@ const COUNTRIES = [
   { code: 'US', label: '🌍 Autre pays (carte bancaire)' }
 ]
 
-export function PaymentModal({ isOpen, onClose, cvId, onAlreadyPaid }: PaymentModalProps) {
+export function PaymentModal({ isOpen, onClose, cvId, onAlreadyPaid, onPaymentInitiated }: PaymentModalProps) {
   const { user } = useAuth()
   
   const [step, setStep] = useState<'form' | 'loading' | 'error'>('form')
@@ -114,8 +115,14 @@ export function PaymentModal({ isOpen, onClose, cvId, onAlreadyPaid }: PaymentMo
       }
 
       if (data.checkout_url) {
-        // Redirect to Chariow
-        window.location.href = data.checkout_url
+        // Ouvrir Chariow dans un nouvel onglet — l'éditeur reste intact
+        window.open(data.checkout_url, '_blank', 'noopener,noreferrer')
+        // Remonter l'info au parent pour démarrer le polling
+        if (onPaymentInitiated && cvId) {
+          onPaymentInitiated(cvId)
+        }
+        // Fermer le modal
+        onClose()
         return
       }
 

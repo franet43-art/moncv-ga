@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useEffect, Suspense } from "react"
+import { useState, useMemo, useEffect, Suspense, useRef } from "react"
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
 import { useRouter, useSearchParams } from "next/navigation"
@@ -69,6 +69,7 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
   const [isSaving, setIsSaving] = useState(false)
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
   const { resetCV } = useCVStore()
+  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
   // Reset store ONLY when the user explicitly requests a new CV via ?reset=true.
   // This prevents wiping the store when the user comes back from login
@@ -133,6 +134,21 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
     if (isPaid) {
       generatePDF(true)
     } else {
+      // Garantir que le CV est sauvegardé avant paiement
+      let resolvedCvId = cvId
+      if (!resolvedCvId) {
+        setIsSaving(true)
+        try {
+          const savedDoc = await saveCV(currentCV, null)
+          resolvedCvId = savedDoc.id
+          setCvId(resolvedCvId)
+        } catch {
+          toast.error("Impossible de sauvegarder le CV avant le paiement. Réessayez.")
+          setIsSaving(false)
+          return
+        }
+        setIsSaving(false)
+      }
       setIsPaymentModalOpen(true)
     }
   }
@@ -161,6 +177,47 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
       setIsSaving(false)
     }
   }
+  
+  const startPaymentPolling = (cvIdToWatch: string) => {
+    // Nettoyer tout polling précédent
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current)
+    }
+
+    pollingIntervalRef.current = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/cv/${cvIdToWatch}/status`)
+        if (!res.ok) return
+        const { is_paid } = await res.json()
+        if (is_paid) {
+          if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current)
+          pollingIntervalRef.current = null
+          // Mettre à jour Zustand sans rechargement de page
+          useCVStore.setState((state) => ({
+            currentCV: { ...state.currentCV, isPaid: true }
+          }))
+          toast.success('🎉 Paiement confirmé ! Votre CV est maintenant débloqué.')
+          generatePDF(true)
+        }
+      } catch { /* silencieux, on réessaiera au prochain tick */ }
+    }, 4000)
+
+    // Arrêt automatique après 10 minutes
+    setTimeout(() => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current)
+        pollingIntervalRef.current = null
+      }
+    }, 600000)
+  }
+
+  useEffect(() => {
+    return () => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current)
+      }
+    }
+  }, [])
 
   // Load animation check
   const completionPercentage = useMemo(() => {
@@ -307,6 +364,7 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
         isOpen={isPaymentModalOpen} 
         onClose={() => setIsPaymentModalOpen(false)} 
         cvId={cvId} 
+        onPaymentInitiated={(paidCvId) => startPaymentPolling(paidCvId)}
         onAlreadyPaid={() => {
           useCVStore.setState((state) => ({
             currentCV: { ...state.currentCV, isPaid: true }
