@@ -45,7 +45,8 @@ export function PaymentModal({ isOpen, onClose, cvId, onAlreadyPaid, onPaymentIn
     lastName: "",
     email: "",
     phone: "",
-    countryCode: "GA"
+    countryCode: "GA",
+    discountCode: ""
   })
 
   // Prefill email if available
@@ -91,7 +92,8 @@ export function PaymentModal({ isOpen, onClose, cvId, onAlreadyPaid, onPaymentIn
           customerLastName: formData.lastName,
           customerEmail: formData.email,
           customerPhone: formData.phone,
-          customerCountryCode: formData.countryCode
+          customerCountryCode: formData.countryCode,
+          ...(formData.discountCode.trim() && { discountCode: formData.discountCode.trim().toUpperCase() })
         }),
       })
 
@@ -197,6 +199,19 @@ export function PaymentModal({ isOpen, onClose, cvId, onAlreadyPaid, onPaymentIn
                   required 
                   value={formData.phone} 
                   onChange={handleChange} 
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="discountCode">
+                  Code promo <span className="text-muted-foreground text-xs">(optionnel)</span>
+                </Label>
+                <Input
+                  id="discountCode"
+                  name="discountCode"
+                  placeholder="Ex: LAUNCH50"
+                  value={formData.discountCode}
+                  onChange={handleChange}
+                  className="uppercase"
                 />
               </div>
               <div className="space-y-2">

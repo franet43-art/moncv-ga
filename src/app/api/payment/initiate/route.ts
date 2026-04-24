@@ -10,7 +10,8 @@ export async function POST(req: Request) {
       customerFirstName, 
       customerLastName, 
       customerPhone, 
-      customerCountryCode 
+      customerCountryCode,
+      discountCode
     } = body;
 
     console.log('[PAYMENT_INITIATE] Démarrage pour cvId:', cvId);
@@ -64,7 +65,8 @@ export async function POST(req: Request) {
       last_name: customerLastName || "",
       ...phonePayload,
       redirect_url: `${NEXT_PUBLIC_APP_URL}/payment/return?cv_id=${cvId}&sale_id={sale_id}`,
-      custom_metadata: { cv_id: cvId }
+      custom_metadata: { cv_id: cvId },
+      ...(discountCode && { discount_code: discountCode })
     };
 
 
