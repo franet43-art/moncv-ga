@@ -38,11 +38,16 @@ export function DesignPanel() {
           <p className="text-sm text-muted-foreground">Choisissez la mise en page qui vous correspond.</p>
         </div>
         
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { id: "classic", name: "Classique", icon: "vertical" },
-            { id: "modern", name: "Moderne", icon: "sidebar" },
-            { id: "minimal", name: "Minimaliste", icon: "clean" },
+            { id: "classic", name: "Classique" },
+            { id: "modern", name: "Moderne" },
+            { id: "minimal", name: "Minimaliste" },
+            { id: "executive", name: "Executive" },
+            { id: "creative", name: "Creative" },
+            { id: "tech", name: "Tech" },
+            { id: "elegant", name: "Elegant" },
+            { id: "compact", name: "Compact" },
           ].map((template) => (
             <button
               key={template.id}
@@ -87,6 +92,87 @@ export function DesignPanel() {
                        <div className="h-1 w-full bg-zinc-100/50" />
                        <div className="h-1 w-full bg-zinc-100/50" />
                        <div className="h-1 w-3/4 bg-zinc-100/50" />
+                    </div>
+                  </div>
+                )}
+                {template.id === "executive" && (
+                  <div className="flex flex-col h-full">
+                    <div className="h-1.5 w-full bg-primary/40 rounded-t-sm" />
+                    <div className="px-1 py-2 border-b border-zinc-100 dark:border-zinc-800">
+                      <div className="h-2 w-1/3 bg-zinc-200 dark:bg-zinc-700 mb-1" />
+                      <div className="h-1 w-1/4 bg-primary/30" />
+                    </div>
+                    <div className="flex gap-1 flex-1 mt-1">
+                      <div className="flex-1 space-y-1">
+                         <div className="h-1 w-full bg-zinc-100 dark:bg-zinc-800" />
+                         <div className="h-1 w-full bg-zinc-100 dark:bg-zinc-800" />
+                      </div>
+                      <div className="w-1/3 space-y-1 bg-zinc-50 dark:bg-zinc-900">
+                         <div className="h-1 w-full bg-zinc-100 dark:bg-zinc-800" />
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {template.id === "creative" && (
+                  <div className="flex gap-2 h-full">
+                    <div className="flex-1 space-y-2 pt-2">
+                      <div className="h-2 w-1/2 bg-zinc-200 dark:bg-zinc-700" />
+                      <div className="h-1 w-3/4 bg-primary/30" />
+                      <div className="h-6 w-full bg-zinc-100 dark:bg-zinc-800" />
+                    </div>
+                    <div className="w-1/3 h-full bg-primary/20 rounded-sm p-1 space-y-1">
+                       <div className="h-1 w-full bg-primary/40" />
+                       <div className="h-1 w-4/5 bg-primary/40" />
+                    </div>
+                  </div>
+                )}
+                {template.id === "tech" && (
+                  <div className="flex flex-col h-full bg-zinc-900 rounded-sm p-1 space-y-2">
+                    <div className="h-2 w-1/2 bg-zinc-700" />
+                    <div className="flex gap-1">
+                      <div className="h-2 w-4 bg-primary/50 rounded-sm" />
+                      <div className="h-2 w-6 bg-primary/50 rounded-sm" />
+                      <div className="h-2 w-5 bg-primary/50 rounded-sm" />
+                    </div>
+                    <div className="space-y-1 pl-2 border-l border-zinc-700">
+                      <div className="h-1 w-full bg-zinc-800" />
+                      <div className="h-1 w-4/5 bg-zinc-800" />
+                    </div>
+                  </div>
+                )}
+                {template.id === "elegant" && (
+                  <div className="space-y-2 pt-2 flex flex-col items-center">
+                    <div className="h-3 w-3 rounded-full bg-zinc-200 dark:bg-zinc-700" />
+                    <div className="flex items-center gap-1 w-full justify-center">
+                      <div className="h-px w-4 bg-primary/30" />
+                      <div className="h-0.5 w-0.5 bg-primary/50" />
+                      <div className="h-px w-4 bg-primary/30" />
+                    </div>
+                    <div className="h-2 w-1/2 bg-zinc-200 dark:bg-zinc-700" />
+                    <div className="flex w-full gap-2 mt-2">
+                       <div className="flex-1 h-1 bg-zinc-100 dark:bg-zinc-800" />
+                       <div className="flex-1 h-1 bg-zinc-100 dark:bg-zinc-800" />
+                    </div>
+                  </div>
+                )}
+                {template.id === "compact" && (
+                  <div className="flex flex-col h-full space-y-1 pt-1">
+                    <div className="flex gap-2 border-b border-primary/20 pb-1">
+                       <div className="h-3 w-3 bg-zinc-200 dark:bg-zinc-700 rounded-sm" />
+                       <div className="flex-1 space-y-0.5">
+                         <div className="h-1.5 w-1/2 bg-zinc-200 dark:bg-zinc-700" />
+                         <div className="h-1 w-1/3 bg-primary/40" />
+                       </div>
+                    </div>
+                    <div className="flex gap-2 flex-1">
+                      <div className="flex-1 space-y-1">
+                        <div className="h-1 w-full bg-zinc-100 dark:bg-zinc-800" />
+                        <div className="h-1 w-4/5 bg-zinc-100 dark:bg-zinc-800" />
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <div className="h-1 w-full bg-zinc-100 dark:bg-zinc-800" />
+                        <div className="h-1 w-5/6 bg-zinc-100 dark:bg-zinc-800" />
+                      </div>
                     </div>
                   </div>
                 )}

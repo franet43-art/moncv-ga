@@ -25,10 +25,34 @@ const templates = [
     description: "Clean, distraction-free layout focusing on metrics.",
   },
   {
+    id: "executive",
+    name: "Executive",
+    accent: "bg-indigo-600",
+    description: "Sober and structured, perfect for management roles.",
+  },
+  {
     id: "creative",
     name: "Creative Edge",
     accent: "bg-purple-600",
     description: "Bold and unique for marketing and creative roles.",
+  },
+  {
+    id: "tech",
+    name: "Tech",
+    accent: "bg-emerald-600",
+    description: "Dark-accented theme ideal for developers and engineers.",
+  },
+  {
+    id: "elegant",
+    name: "Elegant",
+    accent: "bg-rose-600",
+    description: "Refined typography and ornaments for a premium look.",
+  },
+  {
+    id: "compact",
+    name: "Compact",
+    accent: "bg-orange-600",
+    description: "Dense two-column layout maximizing content per page.",
   },
 ]
 

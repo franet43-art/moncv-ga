@@ -76,7 +76,7 @@ export const hobbySchema = z.object({
 // === Design & Personalization Schemas ===
 
 export const cvSettingsSchema = z.object({
-  templateId: z.enum(["classic", "modern", "minimal"]).default("classic"),
+  templateId: z.enum(["classic", "modern", "minimal", "executive", "creative", "tech", "elegant", "compact"]).default("classic"),
   accentColor: z.string().default("#6C63FF"),
   fontFamily: z.enum(["inter", "merriweather", "playfair", "roboto"]).default("inter"),
   photoUrl: z.string().optional(),
@@ -159,7 +159,7 @@ export type CV = z.infer<typeof cvSchema>;
 
 // === Template Definitions ===
 
-export type TemplateId = "classic" | "modern" | "minimal";
+export type TemplateId = "classic" | "modern" | "minimal" | "executive" | "creative" | "tech" | "elegant" | "compact";
 
 export interface CVTemplate {
   id: TemplateId;

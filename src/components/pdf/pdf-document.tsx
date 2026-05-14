@@ -4,6 +4,11 @@ import { CVContent, CVSettings } from '@/types/cv'
 import { ClassicPDF } from './classic-pdf'
 import { ModernPDF } from './modern-pdf'
 import { MinimalPDF } from './minimal-pdf'
+import { ExecutivePDF } from './executive-pdf'
+import { CreativePDF } from './creative-pdf'
+import { TechPDF } from './tech-pdf'
+import { ElegantPDF } from './elegant-pdf'
+import { CompactPDF } from './compact-pdf'
 
 Font.registerHyphenationCallback((word) => [word])
 
@@ -63,6 +68,21 @@ export function CVPDFDocument({ content, settings, isPaid = false }: CVPDFDocume
         )}
         {settings.templateId === 'minimal' && (
           <MinimalPDF content={content} settings={settings} />
+        )}
+        {settings.templateId === 'executive' && (
+          <ExecutivePDF content={content} settings={settings} />
+        )}
+        {settings.templateId === 'creative' && (
+          <CreativePDF content={content} settings={settings} />
+        )}
+        {settings.templateId === 'tech' && (
+          <TechPDF content={content} settings={settings} />
+        )}
+        {settings.templateId === 'elegant' && (
+          <ElegantPDF content={content} settings={settings} />
+        )}
+        {settings.templateId === 'compact' && (
+          <CompactPDF content={content} settings={settings} />
         )}
       </Page>
     </Document>

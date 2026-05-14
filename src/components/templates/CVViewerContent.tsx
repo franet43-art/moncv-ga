@@ -5,6 +5,11 @@ import { getTokens } from "@/lib/cv-design-tokens"
 import { ClassicTemplate } from "./ClassicTemplate"
 import { ModernTemplate } from "./ModernTemplate"
 import { MinimalTemplate } from "./MinimalTemplate"
+import { ExecutiveTemplate } from "./ExecutiveTemplate"
+import { CreativeTemplate } from "./CreativeTemplate"
+import { TechTemplate } from "./TechTemplate"
+import { ElegantTemplate } from "./ElegantTemplate"
+import { CompactTemplate } from "./CompactTemplate"
 
 interface CVViewerContentProps {
   content: CVContent
@@ -65,6 +70,11 @@ export function CVViewerContent({ content, settings, isPaid }: CVViewerContentPr
         {settings.templateId === "classic" && <ClassicTemplate content={content} settings={settings} tokens={tokens} />}
         {settings.templateId === "modern" && <ModernTemplate content={content} settings={settings} tokens={tokens} />}
         {settings.templateId === "minimal" && <MinimalTemplate content={content} settings={settings} tokens={tokens} />}
+        {settings.templateId === "executive" && <ExecutiveTemplate content={content} settings={settings} tokens={tokens} />}
+        {settings.templateId === "creative" && <CreativeTemplate content={content} settings={settings} tokens={tokens} />}
+        {settings.templateId === "tech" && <TechTemplate content={content} settings={settings} tokens={tokens} />}
+        {settings.templateId === "elegant" && <ElegantTemplate content={content} settings={settings} tokens={tokens} />}
+        {settings.templateId === "compact" && <CompactTemplate content={content} settings={settings} tokens={tokens} />}
       </div>
 
       <style jsx global>{`
