@@ -67,196 +67,287 @@ const templates = [
 ]
 
 const CVThumbnail = ({ id, profile }: { id: string; profile: any }) => {
-  // Common visual elements
-  const Bullet = () => <div className="w-[2px] h-[2px] rounded-full bg-current opacity-30" />
-  const Line = ({ width = "100%", opacity = "opacity-10", color = "bg-slate-900" }) => (
-    <div className={`h-[1.5px] ${width} ${color} ${opacity} rounded-full`} />
-  )
-
   return (
     <div className="w-full h-full bg-white relative overflow-hidden select-none shadow-inner border border-slate-100">
-      {/* Container mis à l'échelle pour permettre une précision typographique fine */}
-      <div style={{ position:'absolute', top:0, left:0, width:'250%', height:'250%', transform:'scale(0.4)', transformOrigin:'top left', padding:'2.5rem', fontFamily:'sans-serif', display:'flex', flexDirection:'column' }}>
+      <div style={{ 
+        position: 'absolute', 
+        top: 0, 
+        left: 0, 
+        width: '250%', 
+        height: '250%', 
+        transform: 'scale(0.4)', 
+        transformOrigin: 'top left',
+        backgroundColor: 'white',
+        display: 'flex',
+        flexDirection: 'column'
+      }}>
         
         {id === "classic" && (
-          <div className="flex flex-col gap-6 text-[#1a1a1a]">
-            <div className="flex justify-between items-start border-b-[3px] border-[#1a1a1a] pb-6 mb-8">
-              <div className="flex-1">
-                <h4 className="text-4xl font-serif font-bold uppercase tracking-[4px] leading-tight mb-2">{profile.name}</h4>
-                <p className="text-xl italic font-medium opacity-80 mb-5">{profile.title}</p>
-                <div className="flex flex-wrap gap-4 text-xs opacity-60 font-bold uppercase tracking-widest">
-                   <div className="flex items-center gap-2">Libreville</div>
-                   <div className="flex items-center gap-2"><Bullet /> contact@site.ga</div>
+          <div style={{ padding: '32px 36px', fontFamily: '"DM Sans", sans-serif', fontSize: '9px', color: '#1a1a1a', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '14px', borderBottom: '2px solid #1a1a1a', marginBottom: '16px' }}>
+              <div>
+                <h4 style={{ fontFamily: '"EB Garamond", serif', fontSize: '22px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '4px', lineHeight: 1 }}>Jean-Marc Mba</h4>
+                <p style={{ fontSize: '10px', fontStyle: 'italic', fontWeight: 500, marginBottom: '10px', color: '#444' }}>Auditeur Financier Senior</p>
+                <div style={{ display: 'flex', gap: '14px', fontSize: '8px', color: '#555' }}>
+                  <span>Libreville, Gabon</span>
+                  <span>contact@jmmba.ga</span>
+                  <span>+241 07 00 00 00</span>
                 </div>
               </div>
-              <div 
-                className="w-24 h-24 rounded-full flex items-center justify-center text-white text-3xl font-serif font-bold border-4 border-[#e8e0d8] shadow-lg shrink-0 ml-8"
-                style={{ background: profile.color }}
-              >
-                {profile.initials}
+              <div style={{ width: '68px', height: '68px', borderRadius: '50%', background: 'linear-gradient(135deg, #c8a882, #8b6b4a)', border: '2px solid #e8e0d8', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '18px', fontWeight: 700, fontFamily: '"EB Garamond", serif' }}>
+                JM
               </div>
             </div>
-            
-            <div className="flex flex-col gap-10">
-              <section>
-                <h5 className="text-[10px] font-bold uppercase tracking-[2px] border-b border-black/5 pb-2 mb-6">Expérience Professionnelle</h5>
-                <div className="pl-6 border-l-[3px] border-slate-100 space-y-8">
-                   {[1, 2].map(i => (
-                     <div key={i} className="space-y-2">
-                        <div className="flex justify-between font-bold text-2xl"><span>Role de Responsable</span> <span className="opacity-40 text-sm italic font-normal">2021 — Présent</span></div>
-                        <div className="text-lg opacity-60 font-bold">Entreprise Gabonaise S.A.</div>
-                        <div className="space-y-2 pt-2 opacity-30"><Line /><Line width="80%" /></div>
-                     </div>
-                   ))}
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+              <div>
+                <h5 style={{ fontSize: '8px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1.5px', borderBottom: '1px solid rgba(26,26,26,0.12)', paddingBottom: '4px', marginBottom: '8px' }}>Expérience Professionnelle</h5>
+                <div style={{ paddingLeft: '10px', borderLeft: '2px solid #e8e8e8', marginBottom: '8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600, fontSize: '9.5px', marginBottom: '2px' }}>
+                    <span>Auditeur Senior</span>
+                    <span style={{ fontSize: '7.5px', color: '#888', fontWeight: 400 }}>2021 — Présent</span>
+                  </div>
+                  <div style={{ fontSize: '8.5px', color: '#444', fontWeight: 500, marginBottom: '4px' }}>Deloitte Afrique Central</div>
+                  <div style={{ height: '1px', width: '100%', background: '#f0f0f0', marginBottom: '4px' }} />
+                  <div style={{ height: '1px', width: '80%', background: '#f0f0f0' }} />
                 </div>
-              </section>
-              <section>
-                <h5 className="text-[10px] font-bold uppercase tracking-[2px] border-b border-black/5 pb-2 mb-4">Formation</h5>
-                <div className="flex justify-between text-xl font-bold"><span>Master en Finance & Audit</span><span className="opacity-40">2018</span></div>
-              </section>
+                <div style={{ paddingLeft: '10px', borderLeft: '2px solid #e8e8e8', marginBottom: '8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600, fontSize: '9.5px', marginBottom: '2px' }}>
+                    <span>Auditeur Junior</span>
+                    <span style={{ fontSize: '7.5px', color: '#888', fontWeight: 400 }}>2018 — 2021</span>
+                  </div>
+                  <div style={{ fontSize: '8.5px', color: '#444', fontWeight: 500, marginBottom: '4px' }}>BGFIBank Gabon</div>
+                </div>
+              </div>
+              <div>
+                <h5 style={{ fontSize: '8px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '1.5px', borderBottom: '1px solid rgba(26,26,26,0.12)', paddingBottom: '4px', marginBottom: '8px' }}>Formation & Compétences</h5>
+                <div style={{ marginBottom: '12px' }}>
+                  <div style={{ fontWeight: 600, fontSize: '9px' }}>Master en Finance et Audit</div>
+                  <div style={{ fontSize: '8px', color: '#666' }}>INSG, Libreville — 2018</div>
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                  {['Audit Financier', 'Normes IFRS', 'Analyse Risques', 'Reporting', 'Fiscalité'].map(skill => (
+                    <span key={skill} style={{ fontSize: '7.5px', padding: '2px 7px', background: '#f4f4f4', border: '1px solid #e0e0e0', borderRadius: '2px', color: '#555' }}>{skill}</span>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         )}
 
         {id === "modern" && (
-          <div className="flex">
-            <div className="w-[35%] bg-slate-900 text-white p-12 flex flex-col gap-12">
-               <div className="w-40 h-40 rounded-3xl bg-blue-600 flex items-center justify-center text-6xl font-black shadow-2xl rotate-3">{profile.initials}</div>
-               <div className="space-y-8">
-                  <div className="h-px bg-white/10 w-full" />
-                  <div className="space-y-3 opacity-60 text-lg uppercase font-bold tracking-widest">
-                     <div>Contact</div>
-                     <div>Skills</div>
-                     <div>Awards</div>
-                  </div>
-               </div>
+          <div style={{ display: 'flex', minHeight: '560px', fontFamily: 'sans-serif' }}>
+            <div style={{ width: '155px', background: '#2563eb', color: 'white', padding: '24px 16px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+              <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(255,255,255,0.2)', border: '2px solid rgba(255,255,255,0.3)', fontSize: '20px', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto' }}>SO</div>
+              <div style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', textAlign: 'center', letterSpacing: '1px' }}>Sandrine Obame</div>
+              
+              <div>
+                <h5 style={{ fontSize: '7px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1.5px', borderBottom: '1px solid rgba(255,255,255,0.2)', paddingBottom: '4px', marginBottom: '8px' }}>Contact</h5>
+                <div style={{ fontSize: '7px', opacity: 0.8, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <span>Libreville, Gabon</span>
+                  <span>s.obame@email.com</span>
+                  <span>+241 06 11 22 33</span>
+                </div>
+              </div>
+
+              <div>
+                <h5 style={{ fontSize: '7px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1.5px', borderBottom: '1px solid rgba(255,255,255,0.2)', paddingBottom: '4px', marginBottom: '8px' }}>Expertise</h5>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                  {['Marketing Digital', 'Stratégie Com', 'Branding', 'Event Planning'].map(skill => (
+                    <span key={skill} style={{ fontSize: '7px', padding: '2px 6px', background: 'rgba(0,0,0,0.15)', borderRadius: '2px' }}>{skill}</span>
+                  ))}
+                </div>
+              </div>
             </div>
-            <div className="flex-1 p-16 flex flex-col gap-12 bg-white">
-               <div>
-                 <h4 className="text-7xl font-black text-slate-900 leading-none tracking-tighter mb-4 uppercase">{profile.name}</h4>
-                 <p className="text-3xl font-bold text-blue-600 uppercase tracking-widest">{profile.title}</p>
-               </div>
-               <div className="space-y-8">
-                  <div className="flex items-center gap-6"><div className="h-2 w-2 rounded-full bg-blue-600" /><div className="h-0.5 flex-1 bg-slate-100" /></div>
-                  <div className="space-y-4">
-                     {[1,2,3].map(i => <div key={i} className="h-4 bg-slate-50 rounded-lg w-full" style={{ width: `${100 - (i*10)}%` }} />)}
+            
+            <div style={{ flex: 1, padding: '24px 20px', display: 'flex', flexDirection: 'column', gap: '16px', backgroundColor: 'white' }}>
+              <div>
+                <h4 style={{ fontSize: '18px', fontWeight: 900, color: '#1e293b', textTransform: 'uppercase', lineHeight: 1 }}>Directrice Marketing</h4>
+                <div style={{ height: '3px', width: '40px', background: '#2563eb', marginTop: '6px' }} />
+              </div>
+
+              <section>
+                <h5 style={{ fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', color: '#2563eb', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  Parcours Professionnel
+                  <div style={{ height: '1px', flex: 1, background: '#e2e8f0' }} />
+                </h5>
+                <div style={{ marginTop: '10px', position: 'relative', paddingLeft: '14px', borderLeft: '1px solid #e2e8f0' }}>
+                  <div style={{ position: 'absolute', left: '-5px', top: '4px', width: '8px', height: '8px', borderRadius: '50%', background: '#2563eb' }} />
+                  <div style={{ fontWeight: 700, fontSize: '10px', marginBottom: '2px' }}>Canal+ Gabon — Directrice Marketing</div>
+                  <div style={{ fontSize: '8px', color: '#64748b', marginBottom: '4px' }}>Janvier 2022 — Présent</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                    <div style={{ height: '4px', background: '#f1f5f9', width: '100%' }} />
+                    <div style={{ height: '4px', background: '#f1f5f9', width: '90%' }} />
                   </div>
-               </div>
+                </div>
+                <div style={{ marginTop: '12px', position: 'relative', paddingLeft: '14px', borderLeft: '1px solid #e2e8f0' }}>
+                  <div style={{ position: 'absolute', left: '-5px', top: '4px', width: '8px', height: '8px', borderRadius: '50%', background: '#94a3b8' }} />
+                  <div style={{ fontWeight: 700, fontSize: '10px', marginBottom: '2px' }}>Airtel Gabon — Responsable Brand</div>
+                  <div style={{ fontSize: '8px', color: '#64748b', marginBottom: '4px' }}>2019 — 2021</div>
+                </div>
+              </section>
+            </div>
+          </div>
+        )}
+
+        {id === "minimal" && (
+          <div style={{ padding: '40px', fontSize: '9px', fontFamily: 'sans-serif', backgroundColor: 'white' }}>
+            <h4 style={{ fontSize: '28px', fontWeight: 300, letterSpacing: '-0.5px', color: '#0f172a', marginBottom: '4px' }}>Patrick Nguema</h4>
+            <p style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '3px', color: '#94a3b8', marginBottom: '32px' }}>Ingénieur Réseaux & Télécoms</p>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <section>
+                <h5 style={{ fontSize: '8px', textTransform: 'uppercase', letterSpacing: '2px', color: '#cbd5e1', fontWeight: 600, marginBottom: '8px' }}>Expérience</h5>
+                <div style={{ height: '1px', background: '#f1f5f9', marginBottom: '12px' }} />
+                <div style={{ marginBottom: '16px' }}>
+                  <div style={{ fontSize: '10px', fontWeight: 600, color: '#0f172a', marginBottom: '2px' }}>Gabon Telecom — Expert Backbone</div>
+                  <div style={{ color: '#94a3b8', fontSize: '8px', marginBottom: '6px' }}>2020 — Présent</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <div style={{ height: '2px', background: '#f8fafc', width: '100%' }} />
+                    <div style={{ height: '2px', background: '#f8fafc', width: '95%' }} />
+                  </div>
+                </div>
+                <div style={{ marginBottom: '16px' }}>
+                  <div style={{ fontSize: '10px', fontWeight: 600, color: '#0f172a', marginBottom: '2px' }}>MTN Gabon — Ingénieur Support</div>
+                  <div style={{ color: '#94a3b8', fontSize: '8px' }}>2017 — 2020</div>
+                </div>
+              </section>
+              
+              <section>
+                <h5 style={{ fontSize: '8px', textTransform: 'uppercase', letterSpacing: '2px', color: '#cbd5e1', fontWeight: 600, marginBottom: '8px' }}>Expertise Tech</h5>
+                <div style={{ height: '1px', background: '#f1f5f9', marginBottom: '12px' }} />
+                <div style={{ display: 'flex', gap: '20px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
+                    <div style={{ height: '6px', background: '#f1f5f9', borderRadius: '2px', width: '100%' }} />
+                    <div style={{ height: '6px', background: '#f1f5f9', borderRadius: '2px', width: '80%' }} />
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1 }}>
+                    <div style={{ height: '6px', background: '#f1f5f9', borderRadius: '2px', width: '90%' }} />
+                    <div style={{ height: '6px', background: '#f1f5f9', borderRadius: '2px', width: '70%' }} />
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        )}
+
+        {id === "executive" && (
+          <div style={{ fontFamily: 'sans-serif', backgroundColor: 'white' }}>
+            <div style={{ height: '6px', background: '#4f46e5', width: '100%' }} />
+            <div style={{ padding: '20px 28px 16px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+              <div>
+                <h4 style={{ fontFamily: '"Playfair Display", serif', fontSize: '24px', fontWeight: 700, color: '#0f172a', lineHeight: 1 }}>Christine Mezui</h4>
+                <p style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '2px', color: '#4f46e5', marginTop: '6px', fontWeight: 600 }}>Directrice Générale Adjointe</p>
+              </div>
+              <div style={{ textAlign: 'right', fontSize: '8px', color: '#64748b', fontWeight: 500 }}>
+                Libreville, Gabon<br />mezui.christine@gov.ga
+              </div>
+            </div>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px', padding: '20px 28px' }}>
+              <div>
+                <h5 style={{ fontSize: '8px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1.5px', color: '#4f46e5', borderBottom: '2px solid #4f46e5', paddingBottom: '4px', marginBottom: '12px' }}>Parcours Exécutif</h5>
+                <div style={{ marginBottom: '16px' }}>
+                  <div style={{ fontSize: '10px', fontWeight: 700, color: '#1e293b' }}>SEEG — DG Adjointe en charge de la Stratégie</div>
+                  <div style={{ fontSize: '8px', color: '#4f46e5', fontWeight: 600, marginBottom: '6px' }}>2021 — Présent</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <div style={{ height: '3px', background: '#f1f5f9', width: '100%' }} />
+                    <div style={{ height: '3px', background: '#f1f5f9', width: '98%' }} />
+                    <div style={{ height: '3px', background: '#f1f5f9', width: '95%' }} />
+                  </div>
+                </div>
+                <div style={{ marginBottom: '16px' }}>
+                  <div style={{ fontSize: '10px', fontWeight: 700, color: '#1e293b' }}>Ministère de l'Économie — Conseillère Spéciale</div>
+                  <div style={{ fontSize: '8px', color: '#4f46e5', fontWeight: 600, marginBottom: '4px' }}>2018 — 2021</div>
+                </div>
+              </div>
+              <div>
+                <h5 style={{ fontSize: '8px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1.5px', color: '#4f46e5', borderBottom: '2px solid #4f46e5', paddingBottom: '4px', marginBottom: '12px' }}>Gouvernance</h5>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                   {['Gestion de Crise', 'Stratégie Public-Privé', 'Leadership', 'Relations Institutionnelles'].map(item => (
+                     <div key={item} style={{ fontSize: '8px', fontWeight: 500, color: '#475569', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                       <div style={{ width: '3px', height: '3px', borderRadius: '50%', background: '#4f46e5' }} />
+                       {item}
+                     </div>
+                   ))}
+                </div>
+              </div>
             </div>
           </div>
         )}
 
         {id === "tech" && (
-          <div className="bg-slate-950 p-16 font-mono text-emerald-400 border-[12px] border-slate-900">
-             <div className="flex justify-between items-start mb-20 border-b border-emerald-900/30 pb-10">
+          <div style={{ background: '#0f172a', padding: '24px', fontFamily: '"Space Mono", monospace', color: '#e2e8f0' }}>
+            <div style={{ borderBottom: '1px solid rgba(16,185,129,0.2)', paddingBottom: '16px', marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div>
+                <h4 style={{ fontSize: '22px', fontWeight: 700, color: 'white', letterSpacing: '-0.5px', lineHeight: 1 }}>Fatima Diallo</h4>
+                <div style={{ marginTop: '8px', display: 'flex', gap: '6px' }}>
+                  <span style={{ fontSize: '8px', background: 'rgba(16,185,129,0.15)', color: '#10b981', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '2px', padding: '2px 8px' }}>FULLSTACK_DEV</span>
+                  <span style={{ fontSize: '8px', background: 'rgba(255,255,255,0.05)', color: '#94a3b8', borderRadius: '2px', padding: '2px 8px' }}>v2.4.0</span>
+                </div>
+              </div>
+              <div style={{ fontSize: '7px', color: '#475569', textAlign: 'right' }}>
+                {`{ location: "Dakar", available: true }`}
+              </div>
+            </div>
+
+            <section style={{ marginBottom: '20px' }}>
+              <h5 style={{ fontSize: '7px', textTransform: 'uppercase', letterSpacing: '2px', color: '#10b981', fontWeight: 700, marginBottom: '10px' }}>{`// experience.map()`}</h5>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', paddingLeft: '8px', borderLeft: '1px solid rgba(16,185,129,0.1)' }}>
                 <div>
-                  <div className="text-2xl text-emerald-900 mb-4">{`// FullStack_Dev`}</div>
-                  <h4 className="text-7xl font-bold text-white tracking-tighter">{profile.name}</h4>
-                  <p className="text-3xl text-emerald-500/60 mt-4 underline decoration-emerald-500/20 underline-offset-8">{profile.title}</p>
+                  <div style={{ fontSize: '9px', fontWeight: 700, color: 'white' }}>Wave Africa — Senior Engineer</div>
+                  <div style={{ fontSize: '7px', color: '#10b981', opacity: 0.6, marginBottom: '4px' }}>const duration = "2021-PRESENT"</div>
+                  <div style={{ height: '4px', background: 'rgba(16,185,129,0.05)', width: '100%', borderRadius: '1px' }} />
                 </div>
-                <div className="w-24 h-24 rounded-2xl bg-emerald-500/5 border border-emerald-500/20 flex items-center justify-center text-5xl font-bold">{profile.initials}</div>
-             </div>
-             <div className="space-y-12">
-                <div className="text-xl font-bold text-white flex items-center gap-6"><span className="opacity-30">01.</span> EXPERIENCE.MAP()</div>
-                <div className="pl-12 border-l-2 border-emerald-900/50 space-y-10">
-                   {[1,2].map(i => (
-                     <div key={i} className="space-y-4">
-                        <div className="text-2xl text-white font-bold">{`{ company: "Wave Africa", role: "Sr_Engineer" }`}</div>
-                        <div className="h-2 bg-emerald-500/10 rounded w-full" />
-                     </div>
-                   ))}
+                <div>
+                  <div style={{ fontSize: '9px', fontWeight: 700, color: 'white' }}>Jumia Senegal — React Developer</div>
+                  <div style={{ fontSize: '7px', color: '#10b981', opacity: 0.6 }}>const duration = "2019-2021"</div>
                 </div>
-             </div>
+              </div>
+            </section>
+
+            <section>
+              <h5 style={{ fontSize: '7px', textTransform: 'uppercase', letterSpacing: '2px', color: '#10b981', fontWeight: 700, marginBottom: '8px' }}>{`// tech_stack.json`}</h5>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                {['React', 'Node.js', 'PostgreSQL', 'Docker', 'AWS', 'TypeScript'].map(tech => (
+                  <span key={tech} style={{ fontSize: '7px', padding: '2px 6px', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981', borderRadius: '2px' }}>{tech}</span>
+                ))}
+              </div>
+            </section>
           </div>
         )}
 
         {id === "elegant" && (
-          <div className="p-16 border-[20px] border-rose-50 flex flex-col items-center text-center font-serif bg-white">
-             <div className="w-20 h-px bg-rose-200 mb-10" />
-             <h4 className="text-6xl italic text-slate-900 mb-2">{profile.name}</h4>
-             <p className="text-xl uppercase tracking-[0.6em] text-rose-500 font-sans font-black mb-16">{profile.title}</p>
-             <div className="w-full h-px bg-rose-50 my-10" />
-             <div className="grid grid-cols-2 gap-20 w-full px-10">
-                <div className="space-y-6"><div className="h-3 bg-slate-50 rounded" /><div className="h-3 bg-slate-50 rounded w-3/4" /></div>
-                <div className="space-y-6"><div className="h-3 bg-slate-50 rounded" /><div className="h-3 bg-slate-50 rounded w-3/4" /></div>
-             </div>
-             <div className="mt-auto flex gap-4">
-                {[1,2,3].map(i => <div key={i} className="w-3 h-3 rounded-full bg-rose-100" />)}
-             </div>
-          </div>
-        )}
-
-        {id === "executive" && (
-          <div className="flex flex-col font-sans">
-             <div className="h-[30%] bg-indigo-900 p-16 flex justify-between items-end text-white">
-                <div>
-                   <h4 className="text-6xl font-serif font-black tracking-tight">{profile.name}</h4>
-                   <p className="text-2xl font-bold opacity-60 uppercase tracking-[0.3em] mt-4">{profile.title}</p>
-                </div>
-                <div className="text-right text-lg font-bold opacity-40 uppercase tracking-widest leading-relaxed">Libreville<br/>Gabon</div>
-             </div>
-             <div className="flex-1 p-16 grid grid-cols-12 gap-16 bg-white">
-                <div className="col-span-8 space-y-12">
-                   <div className="text-xl font-black border-b-4 border-indigo-900 pb-2 uppercase tracking-widest">Parcours Directionnel</div>
-                   <div className="space-y-8">
-                      {[1,2].map(i => <div key={i} className="h-6 w-full bg-slate-50 rounded-xl shadow-sm" />)}
-                   </div>
-                </div>
-                <div className="col-span-4 space-y-12">
-                   <div className="text-xl font-black border-b-4 border-indigo-900 pb-2 uppercase tracking-widest">Expertise</div>
-                   <div className="flex flex-col gap-4">
-                      {[1,2,3,4,5].map(i => <div key={i} className="h-3 w-full bg-indigo-50 rounded" />)}
-                   </div>
-                </div>
-             </div>
-          </div>
-        )}
-
-        {id === "minimal" && (
-          <div className="p-16 flex flex-col gap-12 bg-white">
-            <div className="space-y-4">
-              <h4 className="text-5xl font-light text-slate-900 tracking-tight">{profile.name}</h4>
-              <p className="text-xl tracking-[0.3em] uppercase text-slate-400 font-medium">{profile.title}</p>
+          <div style={{ padding: '28px', fontFamily: '"Cormorant Garamond", serif', color: '#1a1a1a', backgroundColor: 'white' }}>
+            <div style={{ textAlign: 'center', paddingBottom: '16px', marginBottom: '16px', position: 'relative' }}>
+              <h4 style={{ fontSize: '26px', fontWeight: 600, fontStyle: 'italic', letterSpacing: '1px', color: '#1a1a1a', lineHeight: 1 }}>Michel Nze</h4>
+              <p style={{ fontSize: '9px', textTransform: 'uppercase', letterSpacing: '3px', color: '#e11d48', fontWeight: 400, marginTop: '4px', fontFamily: 'sans-serif' }}>Avocat d'Affaires International</p>
+              <div style={{ width: '40px', height: '2px', background: '#e11d48', margin: '12px auto 0' }} />
             </div>
-            <div className="w-full h-px bg-slate-100" />
-            <div className="space-y-10">
-              <div className="space-y-4">
-                <div className="text-xs font-black uppercase tracking-widest text-slate-300">Expérience</div>
-                <div className="space-y-6">
-                  {[1,2].map(i => (
-                    <div key={i} className="flex justify-between items-baseline border-b border-slate-50 pb-4">
-                      <span className="text-xl font-medium text-slate-800">Poste Senior</span>
-                      <span className="text-sm text-slate-400">202{i}</span>
-                    </div>
-                  ))}
+
+            <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: '20px' }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                  <h5 style={{ fontSize: '7px', textTransform: 'uppercase', letterSpacing: '2px', color: '#e11d48', fontWeight: 600 }}>Parcours</h5>
+                  <div style={{ flex: 1, height: '1px', background: '#f0e6e6' }} />
+                  <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#e11d48' }} />
+                  <div style={{ flex: 1, height: '1px', background: '#f0e6e6' }} />
+                </div>
+                <div style={{ marginBottom: '14px' }}>
+                  <div style={{ fontSize: '11px', fontWeight: 600, color: '#1a1a1a', fontStyle: 'italic' }}>Cabinet Nzé & Associés — Associé Principal</div>
+                  <div style={{ fontSize: '8px', color: '#888', marginBottom: '4px', fontFamily: 'sans-serif' }}>Libreville — Depuis 2015</div>
+                  <div style={{ height: '1px', background: '#f9f9f9', marginBottom: '2px' }} />
+                  <div style={{ height: '1px', background: '#f9f9f9', width: '90%' }} />
                 </div>
               </div>
-            </div>
-          </div>
-        )}
-
-        {id === "creative" && (
-          <div className="flex flex-col bg-white">
-            <div className="p-16 bg-purple-600 text-white">
-              <h4 className="text-7xl font-black tracking-tighter leading-none">{profile.name}</h4>
-              <p className="text-2xl font-bold opacity-80 mt-4 uppercase tracking-widest">{profile.title}</p>
-            </div>
-            <div className="flex-1 p-16 flex gap-16">
-              <div className="flex-1 space-y-10">
-                <div className="text-xl font-black text-purple-600 uppercase tracking-widest">Projets</div>
-                <div className="space-y-8">
-                  {[1,2].map(i => (
-                    <div key={i} className="border-l-4 border-purple-100 pl-6 space-y-3">
-                      <div className="h-4 w-3/4 bg-slate-100 rounded" />
-                      <div className="h-3 w-full bg-slate-50 rounded" />
-                    </div>
-                  ))}
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                   <h5 style={{ fontSize: '7px', textTransform: 'uppercase', letterSpacing: '2px', color: '#e11d48', fontWeight: 600 }}>Formation</h5>
+                   <div style={{ flex: 1, height: '1px', background: '#f0e6e6' }} />
                 </div>
-              </div>
-              <div className="w-1/3 space-y-6">
-                <div className="text-xl font-black text-purple-600 uppercase tracking-widest">Outils</div>
-                <div className="flex flex-wrap gap-3">
-                  {[1,2,3,4].map(i => <div key={i} className="w-12 h-12 rounded-2xl bg-purple-50 border border-purple-100" />)}
+                <div style={{ marginBottom: '10px' }}>
+                  <div style={{ fontSize: '10px', fontWeight: 600 }}>Doctorat en Droit Privé</div>
+                  <div style={{ fontSize: '8px', color: '#666', fontFamily: 'sans-serif' }}>Paris II Panthéon-Assas</div>
                 </div>
               </div>
             </div>
@@ -264,36 +355,78 @@ const CVThumbnail = ({ id, profile }: { id: string; profile: any }) => {
         )}
 
         {id === "compact" && (
-          <div className="p-10 flex flex-col gap-6 bg-white">
-            <div className="flex justify-between items-center border-b-4 border-orange-500 pb-6">
+          <div style={{ padding: '20px 24px', fontSize: '8.5px', fontFamily: 'sans-serif', backgroundColor: 'white' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: '10px', borderBottom: '2px solid #ea580c', marginBottom: '12px' }}>
               <div>
-                <h4 className="text-4xl font-black text-slate-900 uppercase leading-none">{profile.name}</h4>
-                <p className="text-lg font-bold text-orange-600 uppercase tracking-widest mt-2">{profile.title}</p>
+                <h4 style={{ fontSize: '20px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#1a1a1a', lineHeight: 1 }}>Awa Traoré</h4>
+                <p style={{ fontSize: '9px', color: '#ea580c', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px', marginTop: '2px' }}>Chargée Ressources Humaines Senior</p>
               </div>
-              <div className="text-xs text-slate-400 font-bold uppercase text-right">Libreville<br/>Gabon</div>
+              <div style={{ textAlign: 'right', fontSize: '7px', color: '#666' }}>
+                Libreville, Gabon<br />awa.traore@email.ga
+              </div>
             </div>
-            <div className="grid grid-cols-2 gap-10">
-              <div className="space-y-6">
-                <div className="text-xs font-black bg-slate-900 text-white px-4 py-2 uppercase">Expériences</div>
-                {[1,2,3].map(i => (
-                  <div key={i} className="border-l-2 border-orange-100 pl-4 space-y-2">
-                    <div className="h-3 w-full bg-slate-100 rounded" />
-                    <div className="h-2 w-3/4 bg-slate-50 rounded" />
+
+            <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: '0 20px' }}>
+              <div>
+                <div style={{ fontSize: '7px', textTransform: 'uppercase', letterSpacing: '1.5px', color: 'white', background: '#ea580c', padding: '2px 6px', display: 'inline-block', marginBottom: '6px' }}>Expériences Clés</div>
+                <div style={{ marginBottom: '10px' }}>
+                  <div style={{ fontWeight: 700, color: '#1a1a1a' }}>COMILOG — Responsable Recrutement</div>
+                  <div style={{ fontSize: '7.5px', color: '#ea580c', marginBottom: '3px' }}>2019 — Présent</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                    <div style={{ height: '3px', background: '#f3f4f6', width: '100%' }} />
+                    <div style={{ height: '3px', background: '#f3f4f6', width: '95%' }} />
                   </div>
-                ))}
-              </div>
-              <div className="space-y-6">
-                <div className="text-xs font-black bg-slate-900 text-white px-4 py-2 uppercase">Formation</div>
-                {[1,2].map(i => (
-                  <div key={i} className="space-y-2">
-                    <div className="h-3 w-full bg-slate-100 rounded" />
-                    <div className="h-2 w-1/2 bg-slate-50 rounded" />
-                  </div>
-                ))}
-                <div className="flex flex-wrap gap-2 pt-4">
-                  {[1,2,3,4,5].map(i => <div key={i} className="h-3 w-10 bg-orange-50 rounded" />)}
+                </div>
+                <div style={{ marginBottom: '10px' }}>
+                  <div style={{ fontWeight: 700, color: '#1a1a1a' }}>Bolloré Africa Logistics — RH Junior</div>
+                  <div style={{ fontSize: '7.5px', color: '#ea580c' }}>2016 — 2019</div>
                 </div>
               </div>
+              <div>
+                <div style={{ fontSize: '7px', textTransform: 'uppercase', letterSpacing: '1.5px', color: 'white', background: '#1a1a1a', padding: '2px 6px', display: 'inline-block', marginBottom: '6px' }}>Compétences</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                   {['Gestion de Paie', 'Droit du Travail', 'Recrutement IT', 'Formation Staff'].map(item => (
+                     <div key={item} style={{ borderBottom: '1px solid #f3f4f6', paddingBottom: '2px' }}>{item}</div>
+                   ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {id === "creative" && (
+          <div style={{ display: 'flex', flexDirection: 'column', fontFamily: 'sans-serif', backgroundColor: 'white' }}>
+            <div style={{ padding: '24px 32px', background: '#9333ea', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h4 style={{ fontSize: '24px', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '-1px', lineHeight: 1 }}>Kevin Ondo</h4>
+                <p style={{ fontSize: '10px', fontWeight: 600, opacity: 0.8, textTransform: 'uppercase', letterSpacing: '2px', marginTop: '4px' }}>Product Designer UI/UX</p>
+              </div>
+              <div style={{ width: '56px', height: '56px', background: 'white', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#9333ea', fontSize: '20px', fontWeight: 900 }}>KO</div>
+            </div>
+
+            <div style={{ padding: '24px 32px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
+              <section>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                   <div style={{ width: '8px', height: '8px', background: '#9333ea', transform: 'rotate(45deg)' }} />
+                   <h5 style={{ fontSize: '9px', fontWeight: 800, textTransform: 'uppercase', color: '#9333ea' }}>Portfolio</h5>
+                </div>
+                <div style={{ marginBottom: '12px' }}>
+                  <div style={{ fontWeight: 700, fontSize: '10px' }}>Agence Créative — Lead Designer</div>
+                  <div style={{ fontSize: '8px', color: '#9333ea', marginBottom: '4px' }}>2021 — 2024</div>
+                  <div style={{ height: '40px', width: '100%', background: '#f3e8ff', borderRadius: '4px' }} />
+                </div>
+              </section>
+              <section>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                   <div style={{ width: '8px', height: '8px', background: '#9333ea', transform: 'rotate(45deg)' }} />
+                   <h5 style={{ fontSize: '9px', fontWeight: 800, textTransform: 'uppercase', color: '#9333ea' }}>Toolbox</h5>
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                  {['Figma', 'Webflow', 'React', 'Three.js', 'Blender'].map(tool => (
+                    <span key={tool} style={{ fontSize: '8px', padding: '3px 10px', background: '#f3e8ff', color: '#9333ea', borderRadius: '100px', fontWeight: 600 }}>{tool}</span>
+                  ))}
+                </div>
+              </section>
             </div>
           </div>
         )}
