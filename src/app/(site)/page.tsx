@@ -11,7 +11,7 @@ import {
   Paintbrush2,
   BrainCircuit
 } from "lucide-react";
-import { ClassicPreview, ModernPreview, MinimalPreview } from "@/components/marketing/template-previews";
+import { Templates } from "@/components/landing/Templates";
 import { RevealOnScroll } from "@/components/marketing/reveal-on-scroll";
 import { TypewriterHero } from "@/components/marketing/typewriter-hero";
 import { Sora, Inter } from "next/font/google";
@@ -165,49 +165,7 @@ export default function Home() {
       </section>
 
       {/* 3. Templates Section */}
-      <section id="templates" className="py-40 bg-slate-50/50 scroll-mt-20">
-        <div className="container mx-auto px-6 text-center">
-          <RevealOnScroll>
-            <h2 className={`text-4xl md:text-6xl font-black mb-6 tracking-tight ${sora.className}`}>Des modèles qui ouvrent des portes</h2>
-            <p className="text-slate-500 text-lg mb-20 max-w-2xl mx-auto">Conçus avec des recruteurs africains pour un impact immédiat dès la première lecture.</p>
-          </RevealOnScroll>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-7xl mx-auto">
-            {/* Classic */}
-            <RevealOnScroll delay={100}>
-              <div className="flex flex-col items-center">
-                <ClassicPreview />
-                <h3 className={`text-2xl font-bold mt-4 mb-3 ${sora.className}`}>Le Classique</h3>
-                <p className="text-slate-500 text-sm max-w-[240px] leading-relaxed">
-                  Sobre, structuré, intemporel. Le choix des secteurs Banque, Droit, Pétrole et Finance.
-                </p>
-              </div>
-            </RevealOnScroll>
-            
-            {/* Modern */}
-            <RevealOnScroll delay={250}>
-              <div className="flex flex-col items-center">
-                <ModernPreview />
-                <h3 className={`text-2xl font-bold mt-4 mb-3 ${sora.className}`}>Le Moderne</h3>
-                <p className="text-slate-500 text-sm max-w-[240px] leading-relaxed">
-                  Audacieux et mémorable. Idéal pour la Tech, le Marketing et les startups africaines.
-                </p>
-              </div>
-            </RevealOnScroll>
-            
-            {/* Minimal */}
-            <RevealOnScroll delay={400}>
-              <div className="flex flex-col items-center">
-                <MinimalPreview />
-                <h3 className={`text-2xl font-bold mt-4 mb-3 ${sora.className}`}>Le Minimaliste</h3>
-                <p className="text-slate-500 text-sm max-w-[240px] leading-relaxed">
-                  Épuré et efficace. L'IA recommande ce modèle pour les candidats avec une forte expérience à valoriser.
-                </p>
-              </div>
-            </RevealOnScroll>
-          </div>
-        </div>
-      </section>
+      <Templates />
 
       {/* 4. How It Works Section */}
       <section className="py-40 bg-slate-900 text-white relative overflow-hidden">

@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { motion } from "framer-motion"
 import Link from "next/link"
@@ -8,49 +8,49 @@ import { Card, CardContent } from "@/components/ui/card"
 const templates = [
   {
     id: "classic",
-    name: "The Classic",
+    name: "Le Classique",
     accent: "bg-zinc-800",
     description: "Elegant and timeless design for traditional industries.",
   },
   {
     id: "modern",
-    name: "Modern Pro",
+    name: "Le Moderne",
     accent: "bg-blue-600",
     description: "Sleek and professional with a touch of modern color.",
   },
   {
     id: "minimal",
-    name: "Minimalist",
+    name: "Le Minimaliste",
     accent: "bg-zinc-100 dark:bg-zinc-800",
     description: "Clean, distraction-free layout focusing on metrics.",
   },
   {
-    id: "executive",
-    name: "Executive",
+    id: "L'Exécutif",
+    name: "L'Exécutif",
     accent: "bg-indigo-600",
     description: "Sober and structured, perfect for management roles.",
   },
   {
     id: "creative",
-    name: "Creative Edge",
+    name: "Le Créatif",
     accent: "bg-purple-600",
     description: "Bold and unique for marketing and creative roles.",
   },
   {
-    id: "tech",
-    name: "Tech",
+    id: "Le Tech",
+    name: "Le Tech",
     accent: "bg-emerald-600",
     description: "Dark-accented theme ideal for developers and engineers.",
   },
   {
-    id: "elegant",
+    id: "L'�l�gant",
     name: "Elegant",
     accent: "bg-rose-600",
     description: "Refined typography and ornaments for a premium look.",
   },
   {
-    id: "compact",
-    name: "Compact",
+    id: "Le Compact",
+    name: "Le Compact",
     accent: "bg-orange-600",
     description: "Dense two-column layout maximizing content per page.",
   },
