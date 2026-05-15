@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { motion } from "framer-motion"
 import Link from "next/link"
@@ -10,55 +10,55 @@ const templates = [
     id: "classic",
     name: "Le Classique",
     accent: "bg-zinc-800",
-    description: "Elegant and timeless design for traditional industries.",
+    description: "Design élégant et intemporel pour les secteurs traditionnels.",
   },
   {
     id: "modern",
     name: "Le Moderne",
     accent: "bg-blue-600",
-    description: "Sleek and professional with a touch of modern color.",
+    description: "Épuré et professionnel avec une touche de couleur moderne.",
   },
   {
     id: "minimal",
     name: "Le Minimaliste",
     accent: "bg-zinc-100 dark:bg-zinc-800",
-    description: "Clean, distraction-free layout focusing on metrics.",
+    description: "Mise en page propre et sans distraction centrée sur le contenu.",
   },
   {
-    id: "L'Exécutif",
+    id: "executive",
     name: "L'Exécutif",
     accent: "bg-indigo-600",
-    description: "Sober and structured, perfect for management roles.",
+    description: "Sobre et structuré, parfait pour les rôles de direction.",
   },
   {
     id: "creative",
     name: "Le Créatif",
     accent: "bg-purple-600",
-    description: "Bold and unique for marketing and creative roles.",
+    description: "Audacieux et unique pour les rôles marketing et créatifs.",
   },
   {
-    id: "Le Tech",
+    id: "tech",
     name: "Le Tech",
     accent: "bg-emerald-600",
-    description: "Dark-accented theme ideal for developers and engineers.",
+    description: "Thème aux accents sombres idéal pour les développeurs.",
   },
   {
-    id: "L'�l�gant",
-    name: "Elegant",
+    id: "elegant",
+    name: "L'Élégant",
     accent: "bg-rose-600",
-    description: "Refined typography and ornaments for a premium look.",
+    description: "Typographie raffinée pour un aspect premium.",
   },
   {
-    id: "Le Compact",
+    id: "compact",
     name: "Le Compact",
     accent: "bg-orange-600",
-    description: "Dense two-column layout maximizing content per page.",
+    description: "Mise en page dense maximisant le contenu par page.",
   },
 ]
 
 export function Templates() {
   return (
-    <section id="templates" className="py-20">
+    <section id="templates" className="py-20 bg-slate-50/50 scroll-mt-20">
       <div className="container mx-auto px-4 md:px-8">
         <div className="text-center mb-16">
           <motion.h2
@@ -66,22 +66,22 @@ export function Templates() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-3xl md:text-4xl font-bold mb-4"
+            className="text-3xl md:text-5xl font-black mb-4 tracking-tight"
           >
-            Professional Templates
+            Modèles Professionnels
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-muted-foreground max-w-2xl mx-auto"
+            className="text-muted-foreground text-lg max-w-2xl mx-auto"
           >
-            Pre-optimized templates designed by recruitment experts.
+            Des modèles optimisés conçus par des experts en recrutement.
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
           {templates.map((template, index) => (
             <motion.div
               key={template.id}
@@ -90,7 +90,7 @@ export function Templates() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="group overflow-hidden border border-zinc-200 dark:border-zinc-800 transition-all hover:shadow-xl hover:border-primary/50">
+              <Card className="group overflow-hidden border border-zinc-200 dark:border-zinc-800 transition-all hover:shadow-xl hover:border-primary/50 bg-white shadow-sm rounded-2xl">
                 <div className="aspect-[1/1.4] bg-zinc-50 dark:bg-zinc-900 p-4 relative overflow-hidden flex flex-col gap-2">
                   {/* Mock Thumbnail Content */}
                   <div className={`h-1 w-1/3 ${template.accent} rounded-full mb-2`} />
@@ -114,14 +114,14 @@ export function Templates() {
 
                   {/* Overlay Button */}
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button asChild size="sm">
-                      <Link href={`/editor/new?template=${template.id}`}>Use This Template</Link>
+                    <Button asChild size="sm" className="rounded-full px-6">
+                      <Link href={`/editor/new?template=${template.id}`}>Utiliser ce modèle</Link>
                     </Button>
                   </div>
                 </div>
-                <CardContent className="p-4">
-                  <h3 className="font-bold text-lg mb-1">{template.name}</h3>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
+                <CardContent className="p-5">
+                  <h3 className="font-bold text-xl mb-2">{template.name}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     {template.description}
                   </p>
                 </CardContent>
