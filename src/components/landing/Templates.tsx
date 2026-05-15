@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { motion } from "framer-motion"
 import Link from "next/link"
@@ -25,7 +25,7 @@ const templates = [
     description: "Épuré et efficace. Recommandé par l'IA pour les profils expérimentés.",
   },
   {
-    id: "executive",
+    id: "L'Executif",
     name: "L'Executif",
     accent: "bg-indigo-600",
     description: "Sobre et structuré. Parfait pour les cadres et dirigeants.",
@@ -43,13 +43,13 @@ const templates = [
     description: "Moderne et technique. Conçu pour les développeurs et ingénieurs.",
   },
   {
-    id: "elegant",
+    id: "L'Elegant",
     name: "L'Elegant",
     accent: "bg-rose-600",
     description: "Typographie raffinée. Pour les juristes, consultants et profils premium.",
   },
   {
-    id: "compact",
+    id: "Le Compact",
     name: "Le Compact",
     accent: "bg-orange-600",
     description: "Dense et efficace. Maximise le contenu sur une seule page.",
