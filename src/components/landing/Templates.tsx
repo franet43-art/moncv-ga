@@ -80,7 +80,7 @@ const CVThumbnail = ({ image, name }: { image: string; name: string }) => {
       <img
         src={image}
         alt={`Aperçu du template ${name}`}
-        className="w-full h-full object-cover object-top"
+        className="absolute inset-0 w-full h-full object-contain object-top"
         style={{ display: 'block' }}
       />
     </div>
