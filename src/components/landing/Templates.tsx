@@ -10,49 +10,49 @@ const templates = [
     id: "classic",
     name: "Le Classique",
     accent: "bg-zinc-800",
-    description: "Design élégant et intemporel pour les secteurs traditionnels.",
+    description: "Sobre, structuré, intemporel. Idéal pour la Banque, le Droit et la Finance.",
   },
   {
     id: "modern",
     name: "Le Moderne",
     accent: "bg-blue-600",
-    description: "Épuré et professionnel avec une touche de couleur moderne.",
+    description: "Audacieux et mémorable. Idéal pour la Tech, le Marketing et les startups.",
   },
   {
     id: "minimal",
     name: "Le Minimaliste",
     accent: "bg-zinc-100 dark:bg-zinc-800",
-    description: "Mise en page propre et sans distraction centrée sur le contenu.",
+    description: "Épuré et efficace. Recommandé par l'IA pour les profils expérimentés.",
   },
   {
     id: "executive",
-    name: "L'Exécutif",
+    name: "L'Executif",
     accent: "bg-indigo-600",
-    description: "Sobre et structuré, parfait pour les rôles de direction.",
+    description: "Sobre et structuré. Parfait pour les cadres et dirigeants.",
   },
   {
     id: "creative",
-    name: "Le Créatif",
+    name: "Le Creatif",
     accent: "bg-purple-600",
-    description: "Audacieux et unique pour les rôles marketing et créatifs.",
+    description: "Expressif et original. Pour le design, la communication et le marketing.",
   },
   {
     id: "tech",
     name: "Le Tech",
     accent: "bg-emerald-600",
-    description: "Thème aux accents sombres idéal pour les développeurs.",
+    description: "Moderne et technique. Conçu pour les développeurs et ingénieurs.",
   },
   {
     id: "elegant",
-    name: "L'Élégant",
+    name: "L'Elegant",
     accent: "bg-rose-600",
-    description: "Typographie raffinée pour un aspect premium.",
+    description: "Typographie raffinée. Pour les juristes, consultants et profils premium.",
   },
   {
     id: "compact",
     name: "Le Compact",
     accent: "bg-orange-600",
-    description: "Mise en page dense maximisant le contenu par page.",
+    description: "Dense et efficace. Maximise le contenu sur une seule page.",
   },
 ]
 
@@ -68,7 +68,7 @@ export function Templates() {
             transition={{ duration: 0.5 }}
             className="text-3xl md:text-5xl font-black mb-4 tracking-tight"
           >
-            Modèles Professionnels
+            Nos modèles de CV
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -77,7 +77,7 @@ export function Templates() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-muted-foreground text-lg max-w-2xl mx-auto"
           >
-            Des modèles optimisés conçus par des experts en recrutement.
+            Conçus avec des recruteurs africains pour un impact immédiat.
           </motion.p>
         </div>
 
