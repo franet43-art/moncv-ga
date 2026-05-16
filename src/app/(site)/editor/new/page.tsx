@@ -59,7 +59,7 @@ import { cn } from "@/lib/utils"
 function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { currentCV, isHydrated } = useCVStore()
+  const { currentCV, isHydrated, setTemplateId } = useCVStore()
   const { user } = useAuth()
   const [activeTab, setActiveTab] = useState("personal")
   const [isImportModalOpen, setIsImportModalOpen] = useState(false)
@@ -79,6 +79,14 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
       resetCV()
     }
   }, [initialCvId, searchParams, resetCV])
+
+  // Applique le template passé en URL (?template=classic)
+  useEffect(() => {
+    const templateParam = searchParams.get('template')
+    if (templateParam) {
+      setTemplateId(templateParam)
+    }
+  }, [searchParams, setTemplateId])
 
   // Calculate completion progress
 

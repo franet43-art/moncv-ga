@@ -65,6 +65,7 @@ export function Templates() {
   const [visibleCount, setVisibleCount] = useState(3)
   const [isPaused, setIsPaused] = useState(false)
   const touchStartX = useRef<number | null>(null)
+  const touchStartY = useRef<number | null>(null)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
@@ -105,6 +106,17 @@ export function Templates() {
 
   const onTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX
+    touchStartY.current = e.touches[0].clientY
+  }
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return
+    const deltaX = Math.abs(e.touches[0].clientX - touchStartX.current)
+    const deltaY = Math.abs(e.touches[0].clientY - touchStartY.current)
+    // Si le mouvement est plus horizontal que vertical, on bloque le scroll
+    if (deltaX > deltaY && deltaX > 10) {
+      if (e.cancelable) e.preventDefault()
+    }
   }
 
   const onTouchEnd = (e: React.TouchEvent) => {
@@ -115,11 +127,14 @@ export function Templates() {
       pauseAndResume()
     }
     touchStartX.current = null
+    touchStartY.current = null
   }
 
   const GAP = 16
   const cardW = `calc(${100 / visibleCount}% - ${(GAP * (visibleCount - 1)) / visibleCount}px)`
-  const translateX = `calc(${currentIndex} * (${100 / visibleCount}% + ${GAP / visibleCount}px))`
+
+  // Remplace translateX par un nombre pur en pourcentage
+  const slidePercent = currentIndex * (100 / visibleCount)
 
   return (
     <section
@@ -172,12 +187,13 @@ export function Templates() {
           <div
             className="overflow-hidden py-3 md:py-5"
             onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
           >
             <motion.div
               className="flex"
               style={{ gap: GAP }}
-              animate={{ x: `-${translateX}` }}
+              animate={{ x: `-${slidePercent}%` }}
               transition={{ type: "spring", stiffness: 260, damping: 32 }}
             >
               {templates.map((t) => (
