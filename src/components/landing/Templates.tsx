@@ -1,9 +1,8 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef, useCallback } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
@@ -11,115 +10,133 @@ const templates = [
   {
     id: "classic",
     name: "Le Classique",
-    accent: "#c8a882",
     description: "Sobre, structuré, intemporel. Idéal pour la Banque, le Droit et la Finance.",
-    profile: { name: "Jean-Marc Mba", title: "Auditeur Financier", initials: "JM", color: "linear-gradient(135deg, #c8a882, #8b6b4a)" },
-    image: "/templates/classic.png"
+    image: "/templates/classic.png",
   },
   {
     id: "modern",
     name: "Le Moderne",
-    accent: "#2563eb",
     description: "Audacieux et mémorable. Idéal pour la Tech, le Marketing et les startups.",
-    profile: { name: "Sandrine Obame", title: "Directrice Marketing", initials: "SO", color: "#2563eb" },
-    image: "/templates/moderne.png"
+    image: "/templates/moderne.png",
   },
   {
     id: "minimal",
     name: "Le Minimaliste",
-    accent: "#71717a",
     description: "Épuré et efficace. Recommandé par l'IA pour les profils expérimentés.",
-    profile: { name: "Patrick Nguema", title: "Ingénieur Réseaux", initials: "PN", color: "#71717a" },
-    image: "/templates/minimaliste.png"
+    image: "/templates/minimaliste.png",
   },
   {
     id: "executive",
     name: "L'Executif",
-    accent: "#1e1b4b",
     description: "Sobre et structuré. Parfait pour les cadres et dirigeants.",
-    profile: { name: "Christine Mezui", title: "DG Adjointe", initials: "CM", color: "#1e1b4b" },
-    image: "/templates/executif.png"
+    image: "/templates/executif.png",
   },
   {
     id: "creative",
     name: "Le Creatif",
-    accent: "#9333ea",
     description: "Expressif et original. Pour le design, la communication et le marketing.",
-    profile: { name: "Kevin Ondo", title: "Designer UI/UX", initials: "KO", color: "#9333ea" },
-    image: "/templates/creatif.png"
+    image: "/templates/creatif.png",
   },
   {
     id: "tech",
     name: "Le Tech",
-    accent: "#059669",
     description: "Moderne et technique. Conçu pour les développeurs et ingénieurs.",
-    profile: { name: "Fatima Diallo", title: "Développeuse Full Stack", initials: "FD", color: "#059669" },
-    image: "/templates/tech.png"
+    image: "/templates/tech.png",
   },
   {
     id: "elegant",
     name: "L'Elegant",
-    accent: "#be123c",
     description: "Typographie raffinée. Pour les juristes, consultants et profils premium.",
-    profile: { name: "Michel Nze", title: "Avocat d'Affaires", initials: "MN", color: "#be123c" },
-    image: "/templates/elegant.png"
+    image: "/templates/elegant.png",
   },
   {
     id: "compact",
     name: "Le Compact",
-    accent: "#ea580c",
     description: "Dense et efficace. Maximise le contenu sur une seule page.",
-    profile: { name: "Awa Traoré", title: "Chargée RH Senior", initials: "AT", color: "#ea580c" },
-    image: "/templates/compact.png"
+    image: "/templates/compact.png",
   },
 ]
 
-const CVThumbnail = ({ image, name }: { image: string; name: string }) => {
-  return (
-    <div className="w-full h-full relative overflow-hidden bg-white">
-      <img
-        src={image}
-        alt={`Aperçu du template ${name}`}
-        className="absolute inset-0 w-full h-full object-contain object-top"
-        style={{ display: 'block' }}
-      />
-    </div>
-  )
-}
+const AUTOPLAY_MS = 3500
+const MIN_SWIPE_PX = 40
 
 export function Templates() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [visibleCount, setVisibleCount] = useState(3)
+  const [isPaused, setIsPaused] = useState(false)
+  const touchStartX = useRef<number | null>(null)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    const handleResize = () => {
+    const onResize = () => {
       if (window.innerWidth < 640) setVisibleCount(1)
       else if (window.innerWidth < 1024) setVisibleCount(2)
       else setVisibleCount(3)
     }
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    onResize()
+    window.addEventListener("resize", onResize)
+    return () => window.removeEventListener("resize", onResize)
   }, [])
 
-  const next = () => {
-    setCurrentIndex((prev) => (prev + 1) % templates.length)
+  const maxIndex = templates.length - visibleCount
+
+  const next = useCallback(() =>
+    setCurrentIndex((p) => (p >= maxIndex ? 0 : p + 1)),
+    [maxIndex])
+
+  const prev = useCallback(() =>
+    setCurrentIndex((p) => (p <= 0 ? maxIndex : p - 1)),
+    [maxIndex])
+
+  const goTo = useCallback((i: number) =>
+    setCurrentIndex(Math.max(0, Math.min(i, maxIndex))),
+    [maxIndex])
+
+  useEffect(() => {
+    if (isPaused) return
+    timerRef.current = setTimeout(next, AUTOPLAY_MS)
+    return () => { if (timerRef.current) clearTimeout(timerRef.current) }
+  }, [currentIndex, isPaused, next])
+
+  const pauseAndResume = () => {
+    setIsPaused(true)
+    setTimeout(() => setIsPaused(false), 2500)
   }
 
-  const prev = () => {
-    setCurrentIndex((prev) => (prev - 1 + templates.length) % templates.length)
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
   }
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return
+    const delta = touchStartX.current - e.changedTouches[0].clientX
+    if (Math.abs(delta) >= MIN_SWIPE_PX) {
+      delta > 0 ? next() : prev()
+      pauseAndResume()
+    }
+    touchStartX.current = null
+  }
+
+  const GAP = 16
+  const cardW = `calc(${100 / visibleCount}% - ${(GAP * (visibleCount - 1)) / visibleCount}px)`
+  const translateX = `calc(${currentIndex} * (${100 / visibleCount}% + ${GAP / visibleCount}px))`
 
   return (
-    <section id="templates" className="py-24 bg-[#FAFAF8] scroll-mt-20 overflow-hidden">
+    <section
+      id="templates"
+      className="py-10 md:py-20 bg-[#FAFAF8] scroll-mt-20 overflow-hidden"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
       <div className="container mx-auto px-4 md:px-8">
-        <div className="text-center mb-16 md:mb-24">
+
+        <div className="text-center mb-8 md:mb-16">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="text-4xl md:text-7xl font-black mb-8 tracking-tighter text-slate-900 leading-none"
+            className="text-3xl md:text-6xl font-black mb-3 tracking-tighter text-slate-900 leading-none"
           >
             Nos modèles de CV
           </motion.h2>
@@ -128,75 +145,89 @@ export function Templates() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-slate-500 text-xl md:text-2xl max-w-3xl mx-auto font-medium"
+            className="text-slate-500 text-sm md:text-lg max-w-2xl mx-auto"
           >
             Conçus avec des recruteurs africains pour un impact immédiat dès la première lecture.
           </motion.p>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 md:px-12">
-          {/* Nav Buttons */}
-          <div className="absolute top-1/2 -left-4 -right-4 -translate-y-1/2 flex justify-between pointer-events-none z-20">
-            <button 
-              onClick={prev}
-              className="w-14 h-14 rounded-full bg-white shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-slate-100 flex items-center justify-center text-slate-900 hover:scale-110 active:scale-95 transition-all pointer-events-auto"
-            >
-              <ChevronLeft size={32} />
-            </button>
-            <button 
-              onClick={next}
-              className="w-14 h-14 rounded-full bg-white shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-slate-100 flex items-center justify-center text-slate-900 hover:scale-110 active:scale-95 transition-all pointer-events-auto"
-            >
-              <ChevronRight size={32} />
-            </button>
-          </div>
+        <div className="relative max-w-5xl mx-auto px-8 md:px-10">
 
-          <div className="overflow-hidden py-10 px-2">
-            <motion.div 
-              className="flex gap-10"
-              animate={{ x: `-${currentIndex * (100 / visibleCount)}%` }}
-              transition={{ type: "spring", stiffness: 200, damping: 25 }}
-            >
-              {templates.map((template) => (
-                <div 
-                  key={template.id} 
-                  className="shrink-0"
-                  style={{ width: `calc(${100 / visibleCount}% - ${(10 * (visibleCount - 1)) / visibleCount}px)` }}
-                >
-                  <Card className="group overflow-hidden border-none transition-all duration-500 hover:shadow-[0_32px_64px_-12px_rgba(79,70,229,0.15)] bg-white rounded-[3rem] shadow-xl flex flex-col h-full">
-                    <div className="aspect-[1/1.35] bg-slate-50 relative overflow-hidden flex flex-col group-hover:bg-slate-100 transition-colors">
-                      {/* High-Fidelity CV Rendering */}
-                      <div className="w-full h-full shadow-inner transform group-hover:scale-[1.03] transition-transform duration-700">
-                        <CVThumbnail image={template.image} name={template.name} />
-                      </div>
+          <button
+            onClick={() => { prev(); pauseAndResume() }}
+            aria-label="Précédent"
+            className="absolute left-0 top-[38%] -translate-y-1/2 z-20 w-8 h-8 md:w-11 md:h-11 rounded-full bg-white shadow-md border border-slate-100 flex items-center justify-center text-slate-700 hover:scale-110 active:scale-95 transition-all"
+          >
+            <ChevronLeft size={18} />
+          </button>
 
-                      {/* Overlay Button */}
-                      <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-all duration-500 backdrop-blur-[3px] flex items-center justify-center p-10">
-                        <Button asChild className="w-full py-8 rounded-[2rem] bg-white text-slate-900 hover:bg-white/90 font-black text-xl shadow-2xl translate-y-10 group-hover:translate-y-0 transition-all duration-500 border-none">
-                          <Link href={`/editor/new?template=${template.id}`}>
-                            Utiliser ce modèle
-                          </Link>
-                        </Button>
+          <button
+            onClick={() => { next(); pauseAndResume() }}
+            aria-label="Suivant"
+            className="absolute right-0 top-[38%] -translate-y-1/2 z-20 w-8 h-8 md:w-11 md:h-11 rounded-full bg-white shadow-md border border-slate-100 flex items-center justify-center text-slate-700 hover:scale-110 active:scale-95 transition-all"
+          >
+            <ChevronRight size={18} />
+          </button>
+
+          <div
+            className="overflow-hidden py-3 md:py-5"
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
+          >
+            <motion.div
+              className="flex"
+              style={{ gap: GAP }}
+              animate={{ x: `-${translateX}` }}
+              transition={{ type: "spring", stiffness: 260, damping: 32 }}
+            >
+              {templates.map((t) => (
+                <div key={t.id} className="shrink-0" style={{ width: cardW }}>
+                  <Card className="group overflow-hidden border-none bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-400 flex flex-col h-full">
+
+                    <div className="aspect-[3/4] relative overflow-hidden bg-slate-50">
+                      <img
+                        src={t.image}
+                        alt={`Aperçu ${t.name}`}
+                        className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-[1.04] transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-slate-900/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3 md:p-5">
+                        <Link
+                          href={`/editor/new?template=${t.id}`}
+                          className="w-full py-2.5 md:py-3.5 rounded-xl bg-white text-slate-900 font-black text-xs md:text-sm text-center shadow-md translate-y-3 group-hover:translate-y-0 transition-transform duration-300 hover:bg-slate-50"
+                        >
+                          Utiliser ce modèle →
+                        </Link>
                       </div>
                     </div>
-                    <CardContent className="p-10 flex-1 flex flex-col justify-between">
-                      <div>
-                        <h3 className="font-black text-3xl mb-4 text-slate-900 leading-tight">{template.name}</h3>
-                        <p className="text-lg text-slate-500 leading-relaxed font-medium">
-                          {template.description}
-                        </p>
-                      </div>
-                      <div className="mt-8 flex items-center gap-4">
-                         <div className="h-px flex-1 bg-slate-100" />
-                         <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">Design Pro</span>
-                      </div>
+
+                    <CardContent className="p-3 md:p-5">
+                      <h3 className="font-black text-sm md:text-lg text-slate-900 mb-1 leading-tight">
+                        {t.name}
+                      </h3>
+                      <p className="text-[11px] md:text-sm text-slate-500 leading-snug">
+                        {t.description}
+                      </p>
                     </CardContent>
                   </Card>
                 </div>
               ))}
             </motion.div>
           </div>
+
+          <div className="flex justify-center gap-1.5 mt-3">
+            {Array.from({ length: maxIndex + 1 }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => { goTo(i); pauseAndResume() }}
+                aria-label={`Groupe ${i + 1}`}
+                className={`h-1 rounded-full transition-all duration-300 ${
+                  i === currentIndex ? "w-5 bg-indigo-600" : "w-1.5 bg-slate-300"
+                }`}
+              />
+            ))}
+          </div>
         </div>
+
       </div>
     </section>
   )
