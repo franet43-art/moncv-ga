@@ -13,7 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 export function UserMenu() {
   const { user, loading, signOut } = useAuth()
@@ -37,6 +37,7 @@ export function UserMenu() {
   }
 
   const userInitial = user.email ? user.email.charAt(0).toUpperCase() : "U"
+  const avatarUrl = user.user_metadata?.avatar_url || user.user_metadata?.picture
 
   const handleSignOut = async () => {
     await signOut()
@@ -48,6 +49,9 @@ export function UserMenu() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full focus-visible:ring-0 focus-visible:ring-offset-0 p-0">
           <Avatar className="h-8 w-8 border border-zinc-200 dark:border-zinc-800">
+            {avatarUrl ? (
+              <AvatarImage src={avatarUrl} alt={user.email || "User avatar"} />
+            ) : null}
             <AvatarFallback className="bg-primary text-primary-foreground text-sm font-semibold">
               {userInitial}
             </AvatarFallback>
