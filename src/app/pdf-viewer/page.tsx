@@ -86,7 +86,7 @@ export default async function PdfViewerPage({
 
       <div style={{
         width: '100%',
-        padding: `${tokens.mainPadding}px`,
+        padding: 0,
         position: 'relative', zIndex: 10,
       }}>
         {settings.templateId === 'classic' && (

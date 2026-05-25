@@ -5,7 +5,7 @@ export function MinimalTemplate({ content, settings, tokens }: { content: CVCont
   const { personalInfo, experiences, education, skills, languages, references, certifications = [], accomplishments = [], hobbies = [] } = content
 
   return (
-    <div className="flex flex-col px-4" style={{ gap: `${tokens.sectionGap}px` }}>
+    <div className="flex flex-col" style={{ padding: `${tokens.mainPadding}px`, gap: `${tokens.sectionGap}px` }}>
       {/* Header */}
       <header className="flex flex-col items-center text-center gap-4">
         {settings.photoUrl && (

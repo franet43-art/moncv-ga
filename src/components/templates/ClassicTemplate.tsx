@@ -21,7 +21,7 @@ export function ClassicTemplate({ content, settings, tokens }: { content: CVCont
   const { personalInfo, experiences, education, skills, languages, references, certifications = [], accomplishments = [], hobbies = [] } = content
 
   return (
-    <div className="flex flex-col" style={{ gap: `${tokens.sectionGap}px` }}>
+    <div className="flex flex-col" style={{ padding: `${tokens.mainPadding}px`, gap: `${tokens.sectionGap}px` }}>
       {/* Header */}
       <header className="text-center relative pb-6 border-b-2" style={{ borderBottomColor: settings.accentColor }}>
         {settings.photoUrl && (
