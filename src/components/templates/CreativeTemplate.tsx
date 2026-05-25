@@ -11,7 +11,7 @@ export function CreativeTemplate({ content, settings, tokens }: { content: CVCon
   return (
     <div className="flex" style={{ minHeight: '1123px' }}>
       {/* ── MAIN LEFT ── */}
-      <main className="flex-1 flex flex-col bg-white" style={{ padding: `${tokens.mainPadding}px`, gap: `${tokens.sectionGap}px` }}>
+      <main className="flex-1 flex flex-col" style={{ backgroundColor: settings.backgroundColor || '#ffffff', padding: `${tokens.mainPadding}px`, gap: `${tokens.sectionGap}px` }}>
         <header>
           {settings.photoUrl && (
             <div className="w-24 h-24 rounded-full overflow-hidden border-4 mb-4" style={{ borderColor: `${accent}30` }}>
