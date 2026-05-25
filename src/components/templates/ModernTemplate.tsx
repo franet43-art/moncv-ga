@@ -148,7 +148,8 @@ export function ModernTemplate({ content, settings, tokens }: { content: CVConte
       </aside>
 
       {/* Contenu DROIT */}
-      <main className="flex-1 flex flex-col bg-white" style={{ 
+      <main className="flex-1 flex flex-col" style={{ 
+        backgroundColor: settings.backgroundColor || '#ffffff',
         padding: `${tokens.mainPadding}px`,
         gap: `${tokens.sectionGap}px`
       }}>

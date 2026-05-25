@@ -15,7 +15,7 @@ export function TechTemplate({ content, settings, tokens }: { content: CVContent
   const accent = settings.accentColor
 
   return (
-    <div className="flex flex-col bg-white" style={{ minHeight: '1123px' }}>
+    <div className="flex flex-col" style={{ minHeight: '1123px', backgroundColor: settings.backgroundColor || '#ffffff' }}>
       {/* ── DARK HEADER (viewer only — PDF will use white+accent) ── */}
       <header style={{ 
         backgroundColor: '#09090b', 
