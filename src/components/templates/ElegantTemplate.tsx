@@ -14,6 +14,7 @@ export function ElegantTemplate({ content, settings, tokens }: { content: CVCont
     <div 
       className="flex flex-col" 
       style={{ 
+        minHeight: '1123px',
         padding: `${tokens.mainPadding}px`, 
         gap: `${tokens.sectionGap}px`,
         backgroundColor: settings.backgroundColor || '#ffffff'

@@ -9,7 +9,7 @@ export function CompactTemplate({ content, settings, tokens }: { content: CVCont
   const accent = settings.accentColor
 
   return (
-    <div className="flex flex-col" style={{ padding: `${tokens.mainPadding}px`, gap: `${tokens.sectionGap * 0.8}px`, backgroundColor: settings.backgroundColor || '#ffffff' }}>
+    <div className="flex flex-col" style={{ minHeight: '1123px', padding: `${tokens.mainPadding}px`, gap: `${tokens.sectionGap * 0.8}px`, backgroundColor: settings.backgroundColor || '#ffffff' }}>
 
       {/* ── HEADER compact 2 colonnes ── */}
       <header className="grid grid-cols-2 gap-6 pb-5 border-b-2" style={{ borderColor: accent }}>

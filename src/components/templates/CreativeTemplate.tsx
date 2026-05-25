@@ -9,7 +9,7 @@ export function CreativeTemplate({ content, settings, tokens }: { content: CVCon
   const accent = settings.accentColor
 
   return (
-    <div className="flex min-h-[1050px]">
+    <div className="flex" style={{ minHeight: '1123px' }}>
       {/* ── MAIN LEFT ── */}
       <main className="flex-1 flex flex-col bg-white" style={{ padding: `${tokens.mainPadding}px`, gap: `${tokens.sectionGap}px` }}>
         <header>
