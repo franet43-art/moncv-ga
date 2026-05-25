@@ -2,6 +2,11 @@ import { createServiceSupabaseClient } from '@/lib/supabase/server'
 import { ClassicTemplate } from '@/components/templates/ClassicTemplate'
 import { ModernTemplate } from '@/components/templates/ModernTemplate'
 import { MinimalTemplate } from '@/components/templates/MinimalTemplate'
+import { ExecutiveTemplate } from '@/components/templates/ExecutiveTemplate'
+import { CreativeTemplate } from '@/components/templates/CreativeTemplate'
+import { TechTemplate } from '@/components/templates/TechTemplate'
+import { ElegantTemplate } from '@/components/templates/ElegantTemplate'
+import { CompactTemplate } from '@/components/templates/CompactTemplate'
 import { getTokens } from '@/lib/cv-design-tokens'
 
 export const dynamic = 'force-dynamic'
@@ -92,6 +97,21 @@ export default async function PdfViewerPage({
         )}
         {settings.templateId === 'minimal' && (
           <MinimalTemplate content={content} settings={settings} tokens={tokens} />
+        )}
+        {settings.templateId === 'executive' && (
+          <ExecutiveTemplate content={content} settings={settings} tokens={tokens} />
+        )}
+        {settings.templateId === 'creative' && (
+          <CreativeTemplate content={content} settings={settings} tokens={tokens} />
+        )}
+        {settings.templateId === 'tech' && (
+          <TechTemplate content={content} settings={settings} tokens={tokens} />
+        )}
+        {settings.templateId === 'elegant' && (
+          <ElegantTemplate content={content} settings={settings} tokens={tokens} />
+        )}
+        {settings.templateId === 'compact' && (
+          <CompactTemplate content={content} settings={settings} tokens={tokens} />
         )}
       </div>
 
