@@ -125,13 +125,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ already_paid: true });
     }
 
-    // 2. Cas d'un produit déjà acheté globalement (Faille corrigée)
+    // 2. Cas d'un produit déjà acheté globalement
     if (step === 'already_purchased') {
-      console.warn('[PAYMENT_INITIATE] Tentative de réutilisation d\'un achat global détectée.');
-      return NextResponse.json({ 
-        error: "Ce produit a déjà été acheté via votre compte Chariow. Pour débloquer ce nouveau CV, un nouveau paiement est requis.",
-        code: 'ALREADY_PURCHASED'
-      }, { status: 409 });
+      console.log('[PAYMENT_INITIATE] already_purchased recu de Chariow — ignoré, continuation vers checkout.');
     }
 
     // 3. Cas déjà payé (champ direct)
