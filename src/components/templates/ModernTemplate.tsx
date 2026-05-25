@@ -12,7 +12,7 @@ export function ModernTemplate({ content, settings, tokens }: { content: CVConte
   const { personalInfo, experiences, education, skills, languages, references, certifications = [], accomplishments = [], hobbies = [] } = content
 
   return (
-    <div className="flex min-h-[1050px]">
+    <div className="flex" style={{ minHeight: '1123px' }}>
       {/* Sidebar GAUCHE */}
       <aside className="text-white flex flex-col flex-shrink-0" style={{ 
         width: tokens.sidebarWidth,

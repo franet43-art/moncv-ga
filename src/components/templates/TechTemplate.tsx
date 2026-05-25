@@ -15,9 +15,16 @@ export function TechTemplate({ content, settings, tokens }: { content: CVContent
   const accent = settings.accentColor
 
   return (
-    <div className="flex flex-col min-h-[1050px] bg-white">
+    <div className="flex flex-col bg-white" style={{ minHeight: '1123px' }}>
       {/* ── DARK HEADER (viewer only — PDF will use white+accent) ── */}
-      <header className="bg-zinc-950 text-white px-10 py-8">
+      <header style={{ 
+        backgroundColor: '#09090b', 
+        color: 'white', 
+        paddingLeft: '40px', 
+        paddingRight: '40px', 
+        paddingTop: '32px', 
+        paddingBottom: '32px' 
+      }}>
         <div className="flex items-start justify-between gap-6">
           <div className="flex items-center gap-5">
             {settings.photoUrl && (
