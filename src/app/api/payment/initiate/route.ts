@@ -106,18 +106,36 @@ export async function POST(req: Request) {
       chariowRes?.checkout_url;           // racine directe
 
     const step = resData?.step;
+    const amount = resData?.purchase?.amount?.value ?? resData?.payment?.amount?.value ?? 2000;
 
-    console.log('[PAYMENT_INITIATE] step:', step, '| checkout_url trouvée:', !!checkoutUrl);
+    console.log('[PAYMENT_INITIATE] step:', step, '| amount:', amount, '| checkout_url trouvée:', !!checkoutUrl);
 
     if (checkoutUrl) {
       return NextResponse.json({ checkout_url: checkoutUrl });
     }
 
-    if (step === 'completed' || step === 'already_purchased' || resData?.already_paid) {
-      // Marquer comme payé dans Supabase dans les deux cas
+    // GESTION SÉCURISÉE DES ÉTATS DE RETOUR
+    
+    // 1. Cas d'un achat gratuit (code promo 100%)
+    if (step === 'completed' && amount === 0) {
+      console.log('[PAYMENT_INITIATE] Achat gratuit détecté, déblocage immédiat.');
       await supabase.from('cvs').update({ is_paid: true })
         .eq('id', cvId).eq('user_id', user.id);
         
+      return NextResponse.json({ already_paid: true });
+    }
+
+    // 2. Cas d'un produit déjà acheté globalement (Faille corrigée)
+    if (step === 'already_purchased') {
+      console.warn('[PAYMENT_INITIATE] Tentative de réutilisation d'un achat global détectée.');
+      return NextResponse.json({ 
+        error: "Ce produit a déjà été acheté via votre compte Chariow. Pour débloquer ce nouveau CV, un nouveau paiement est requis.",
+        code: 'ALREADY_PURCHASED'
+      }, { status: 409 });
+    }
+
+    // 3. Cas déjà payé (champ direct)
+    if (resData?.already_paid) {
       return NextResponse.json({ already_paid: true });
     }
 
