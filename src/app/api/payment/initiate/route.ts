@@ -127,7 +127,7 @@ export async function POST(req: Request) {
 
     // 2. Cas d'un produit déjà acheté globalement (Faille corrigée)
     if (step === 'already_purchased') {
-      console.warn('[PAYMENT_INITIATE] Tentative de réutilisation d'un achat global détectée.');
+      console.warn('[PAYMENT_INITIATE] Tentative de réutilisation d\'un achat global détectée.');
       return NextResponse.json({ 
         error: "Ce produit a déjà été acheté via votre compte Chariow. Pour débloquer ce nouveau CV, un nouveau paiement est requis.",
         code: 'ALREADY_PURCHASED'
