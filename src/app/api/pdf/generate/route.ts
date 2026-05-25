@@ -52,18 +52,24 @@ export async function POST(req: NextRequest) {
     await page.setViewport({ width: 794, height: 1123, deviceScaleFactor: 1 })
 
     await page.goto(targetUrl, {
-      waitUntil: 'networkidle0',
-      timeout: 30000,
+      waitUntil: 'networkidle2',
+      timeout: 45000,
     })
 
     // 4. Attendre que le CV soit visible
-    await page.waitForSelector('#cv-root', { timeout: 10000 })
+    await page.waitForSelector('#cv-root', { timeout: 20000 })
+
+    // Vérifier que le contenu est injecté
+    await page.waitForFunction(
+      () => (document.querySelector('#cv-root')?.children.length ?? 0) > 0,
+      { timeout: 15000 }
+    )
 
     // Attendre les fonts
     await page.evaluate(() => document.fonts.ready)
 
     // Buffer supplémentaire pour les images
-    await new Promise(r => setTimeout(r, 500))
+    await new Promise(r => setTimeout(r, 1500))
 
     // 5. Générer PDF
     const pdfBuffer = await page.pdf({
