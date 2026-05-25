@@ -11,7 +11,14 @@ export function ElegantTemplate({ content, settings, tokens }: { content: CVCont
   const accent = settings.accentColor
 
   return (
-    <div className="flex flex-col bg-white" style={{ padding: `${tokens.mainPadding}px`, gap: `${tokens.sectionGap}px` }}>
+    <div 
+      className="flex flex-col" 
+      style={{ 
+        padding: `${tokens.mainPadding}px`, 
+        gap: `${tokens.sectionGap}px`,
+        backgroundColor: settings.backgroundColor || '#ffffff'
+      }}
+    >
 
       {/* ── HEADER — centré ornementé ── */}
       <header className="text-center" style={{ paddingBottom: `${tokens.sectionGap / 1.5}px` }}>

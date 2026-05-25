@@ -52,7 +52,7 @@ export default async function PdfViewerPage({
       style={{
         fontFamily: fontMap[settings.fontFamily] || 'Inter, sans-serif',
         fontSize: `${tokens.bodySize}px`,
-        backgroundColor: 'white',
+        backgroundColor: settings.backgroundColor || '#ffffff',
         color: '#18181b',
         width: '794px',
         minHeight: '1123px',

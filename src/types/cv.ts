@@ -78,6 +78,7 @@ export const hobbySchema = z.object({
 export const cvSettingsSchema = z.object({
   templateId: z.enum(["classic", "modern", "minimal", "executive", "creative", "tech", "elegant", "compact"]).default("classic"),
   accentColor: z.string().default("#6C63FF"),
+  backgroundColor: z.string().default("#ffffff"),
   fontFamily: z.enum(["inter", "merriweather", "playfair", "roboto"]).default("inter"),
   photoUrl: z.string().optional(),
   fontSize: z.enum(["small", "medium", "large"]).default("medium"),
@@ -126,6 +127,7 @@ export const defaultPersonalInfo: PersonalInfo = {
 export const defaultSettings: CVSettings = {
   templateId: "classic",
   accentColor: "#6C63FF",
+  backgroundColor: "#ffffff",
   fontFamily: "inter",
   fontSize: "medium",
 };

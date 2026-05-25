@@ -25,6 +25,17 @@ const FONTS = [
   { id: "roboto", name: "Roboto", desc: "Neutre & Clair", family: "Roboto, sans-serif" },
 ]
 
+const BACKGROUND_COLORS = [
+  { color: '#ffffff', name: 'Blanc' },
+  { color: '#F8F7F4', name: 'Crème' },
+  { color: '#F0F4F8', name: 'Bleu clair' },
+  { color: '#F5F0FF', name: 'Lavande' },
+  { color: '#F0FFF4', name: 'Menthe' },
+  { color: '#FFF5F5', name: 'Rose pâle' },
+  { color: '#FAFAFA', name: 'Gris clair' },
+  { color: '#1a1a2e', name: 'Nuit' },
+]
+
 export function DesignPanel() {
   const { currentCV, updateSettings } = useCVStore()
   const { settings } = currentCV
@@ -220,6 +231,48 @@ export function DesignPanel() {
                   type="color" 
                   value={settings.accentColor}
                   onChange={(e) => updateSettings({ accentColor: e.target.value })}
+                  className="absolute -inset-2 w-14 h-14 p-0 border-none cursor-pointer"
+                />
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-white mix-blend-difference">
+                  <Pipette className="h-4 w-4" />
+                </div>
+             </div>
+             <span className="text-xs font-medium text-muted-foreground group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors">Sur mesure</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Couleur de fond */}
+      <section className="space-y-4">
+        <div className="space-y-1">
+          <h3 className="text-lg font-bold tracking-tight">Couleur de fond</h3>
+          <p className="text-sm text-muted-foreground">La couleur de fond de votre CV.</p>
+        </div>
+
+        <div className="flex flex-wrap gap-3 items-center">
+          {BACKGROUND_COLORS.map((bg) => (
+            <button
+              key={bg.color}
+              onClick={() => updateSettings({ backgroundColor: bg.color })}
+              className={cn(
+                "w-10 h-10 rounded-full border-2 transition-transform hover:scale-110 shadow-sm flex items-center justify-center",
+                bg.color === '#ffffff' ? "border-zinc-200" : "border-transparent",
+                settings.backgroundColor === bg.color ? "border-zinc-950 dark:border-white ring-2 ring-primary/20 scale-110" : ""
+              )}
+              style={{ backgroundColor: bg.color }}
+            >
+              {settings.backgroundColor === bg.color && (
+                <Check className="h-5 w-5 text-white mix-blend-difference" />
+              )}
+            </button>
+          ))}
+          
+          <div className="relative group flex items-center gap-3 ml-2 pl-4 border-l border-zinc-200 dark:border-zinc-800">
+             <div className="relative w-10 h-10 rounded-full overflow-hidden border-2 border-zinc-100 dark:border-zinc-800 hover:border-primary transition-colors cursor-pointer group shadow-sm">
+                <Input 
+                  type="color" 
+                  value={settings.backgroundColor || '#ffffff'}
+                  onChange={(e) => updateSettings({ backgroundColor: e.target.value })}
                   className="absolute -inset-2 w-14 h-14 p-0 border-none cursor-pointer"
                 />
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-white mix-blend-difference">
