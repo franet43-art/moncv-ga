@@ -7,7 +7,7 @@ export function ExecutiveTemplate({ content, settings, tokens }: { content: CVCo
   const accent = settings.accentColor
 
   return (
-    <div className="flex flex-col bg-white" style={{ minHeight: '1123px' }}>
+    <div className="flex flex-col" style={{ minHeight: '1123px', backgroundColor: settings.backgroundColor || '#ffffff' }}>
       {/* ── TOP ACCENT BAND ── */}
       <div className="h-2 w-full" style={{ backgroundColor: accent }} />
 
