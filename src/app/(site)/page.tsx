@@ -251,7 +251,7 @@ export default function Home() {
                   post: "Comptable OHADA"
                 }
               ].map((testimonial, i) => (
-                <div key={i} className="bg-white border border-slate-100 rounded-3xl p-8 shadow-lg shadow-slate-100">
+                <div key={i} className="bg-white border border-slate-100 rounded-3xl p-8 shadow-lg shadow-slate-100 hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
                   <div className="flex gap-0.5 mb-4">
                     {[...Array(5)].map((_, starIndex) => (
                       <span key={starIndex} className="text-amber-400">★</span>

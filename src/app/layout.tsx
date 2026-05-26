@@ -20,8 +20,8 @@ const roboto = Roboto({
 })
 
 export const metadata: Metadata = {
-  title: "MonCV — Professional CV Builder",
-  description: "Create a stunning professional CV in minutes.",
+  title: "MonCV.ga — Créez votre CV professionnel en 10 minutes",
+  description: "Créez un CV professionnel percutant en quelques minutes. Optimisé pour l'Afrique francophone.",
 }
 
 export default function RootLayout({
