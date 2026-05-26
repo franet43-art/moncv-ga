@@ -198,7 +198,7 @@ export function Templates() {
             >
               {templates.map((t) => (
                 <div key={t.id} className="shrink-0" style={{ width: cardW }}>
-                  <Card className="group overflow-hidden border-none bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-400 flex flex-col h-full">
+                  <Card className="group overflow-hidden border-none bg-white rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 flex flex-col h-full">
 
                     <div className="aspect-[3/4] relative overflow-hidden bg-slate-50">
                       <img

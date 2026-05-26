@@ -97,7 +97,7 @@ export default function Home() {
             <TypewriterHero />
             
             <p 
-              className="text-xl md:text-2xl text-slate-500 mb-14 leading-relaxed max-w-2xl mx-auto font-medium animate-fade-up"
+              className="text-base md:text-xl text-slate-500 mb-10 md:mb-14 leading-relaxed max-w-xl mx-auto font-medium animate-fade-up"
               style={{ animationDelay: '300ms' }}
             >
               Des candidats à travers toute l'Afrique francophone utilisent MonCV.ga pour créer des CV professionnels assistés par l'IA en moins de 10 minutes — et décrocher des entretiens.
@@ -118,14 +118,14 @@ export default function Home() {
               </Link>
               <Link 
                 href="#templates" 
-                className="w-full sm:w-auto px-10 py-5 bg-white border-2 border-slate-100 hover:border-slate-200 text-slate-600 rounded-2xl font-bold text-xl transition-all flex items-center justify-center gap-2 hover:bg-slate-50"
+                className="w-full sm:w-auto px-10 py-5 bg-white border-2 border-slate-100 hover:border-slate-200 text-slate-600 rounded-2xl font-bold text-xl transition-all flex items-center justify-center gap-2 hover:bg-slate-50 hover:-translate-y-1"
               >
                 Voir les modèles ↓
               </Link>
             </div>
             
             <div 
-              className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-xs font-black uppercase tracking-widest text-slate-400 animate-fade-up"
+              className="hidden sm:flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-xs font-black uppercase tracking-widest text-slate-400 animate-fade-up"
               style={{ animationDelay: '600ms' }}
             >
               <div className="flex items-center gap-2 group cursor-help">
