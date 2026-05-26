@@ -78,6 +78,24 @@ export default function Home() {
         .animate-blink {
           animation: blink 530ms step-end infinite;
         }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-6px); }
+        }
+        .float-card {
+          animation: float 4s ease-in-out infinite;
+        }
+        .float-card-slow {
+          animation: float 6s ease-in-out infinite;
+        }
+        .float-card-delay {
+          animation: float 4s ease-in-out infinite;
+          animation-delay: 1s;
+        }
+        .float-card-delay-2 {
+          animation: float 4s ease-in-out infinite;
+          animation-delay: 2s;
+        }
       `}} />
 
       {/* 1. Hero Section */}
@@ -100,7 +118,7 @@ export default function Home() {
               className="text-base md:text-xl text-slate-500 mb-10 md:mb-14 leading-relaxed max-w-xl mx-auto font-medium animate-fade-up"
               style={{ animationDelay: '300ms' }}
             >
-              Des candidats à travers toute l'Afrique francophone utilisent MonCV.ga pour créer des CV professionnels assistés par l'IA en moins de 10 minutes — et décrocher des entretiens.
+              Crée un CV professionnel en 10 minutes. <br className="hidden sm:block" /> Optimisé pour l'Afrique francophone.
             </p>
             
             <div 
@@ -203,7 +221,7 @@ export default function Home() {
                 { icon: Download, title: "3. Télécharge", text: "Paye 2 000 FCFA uniquement si le résultat te convainc. Mobile Money, carte bancaire ou Wave — paiement sécurisé via Chariow, disponible partout en Afrique." }
               ].map((step, i) => (
                 <RevealOnScroll key={i} delay={i * 200} className="relative z-10 flex flex-col items-center text-center group">
-                  <div className="w-24 h-24 bg-slate-800/50 rounded-3xl flex items-center justify-center mb-8 border border-slate-700 transition-all duration-500 group-hover:border-indigo-500 group-hover:bg-indigo-500/20 group-hover:-translate-y-2">
+                  <div className={`w-24 h-24 bg-slate-800/50 rounded-3xl flex items-center justify-center mb-8 border border-slate-700 transition-all duration-500 group-hover:border-indigo-500 group-hover:bg-indigo-500/20 ${i === 0 ? 'float-card' : i === 1 ? 'float-card-delay' : 'float-card-delay-2'}`}>
                     <step.icon size={40} className="text-indigo-400 group-hover:text-indigo-300 transition-colors" />
                   </div>
                   <h4 className={`text-2xl font-bold mb-4 ${sora.className}`}>{step.title}</h4>
@@ -251,7 +269,7 @@ export default function Home() {
                   post: "Comptable OHADA"
                 }
               ].map((testimonial, i) => (
-                <div key={i} className="bg-white border border-slate-100 rounded-3xl p-8 shadow-lg shadow-slate-100 hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+                <div key={i} className="bg-white border border-slate-100 rounded-3xl p-8 shadow-lg shadow-slate-100 hover:shadow-xl transition-all duration-300 float-card-slow">
                   <div className="flex gap-0.5 mb-4">
                     {[...Array(5)].map((_, starIndex) => (
                       <span key={starIndex} className="text-amber-400">★</span>
@@ -265,10 +283,6 @@ export default function Home() {
                 </div>
               ))}
             </div>
-            
-            <p className="text-xs text-slate-300 mt-8 italic text-center">
-              Témoignages illustratifs — prénoms modifiés.
-            </p>
           </div>
         </RevealOnScroll>
       </section>
