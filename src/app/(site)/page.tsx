@@ -146,21 +146,38 @@ export default function Home() {
       </section>
 
       {/* 2. Trust Badges Section */}
-      <section className="py-16 border-y border-slate-100 bg-white shadow-sm relative z-10">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-wrap justify-center items-center gap-x-16 gap-y-10">
-            {[
-              { icon: ShieldCheck, text: "Mobile Money, Cartes & Wave — Powered by Chariow" },
-              { icon: Zap, text: "Optimisé pour passer les filtres ATS" },
-              { icon: Smartphone, text: "Créé sur mobile en 10 minutes" },
-              { icon: Lock, text: "Tes données t'appartiennent" }
-            ].map((badge, i) => (
-              <div key={i} className="flex items-center gap-3 text-slate-400 font-bold text-sm normal-case md:uppercase tracking-normal md:tracking-widest group transition-all hover:text-indigo-600 hover:-translate-y-1">
-                <badge.icon size={22} className="text-slate-300 group-hover:text-indigo-500 transition-colors" />
-                <span>{badge.text}</span>
-              </div>
-            ))}
-          </div>
+      <section className="py-4 border-y border-slate-100 bg-white shadow-sm relative z-10 overflow-hidden">
+        <style>{`
+          @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+          .marquee-track {
+            display: flex;
+            width: max-content;
+            animation: marquee 20s linear infinite;
+          }
+          .marquee-track:hover {
+            animation-play-state: paused;
+          }
+        `}</style>
+        <div className="marquee-track">
+          {[
+            { icon: ShieldCheck, text: "Mobile Money, Cartes & Wave — Powered by Chariow" },
+            { icon: Zap, text: "Optimisé pour passer les filtres ATS" },
+            { icon: Smartphone, text: "Créé sur mobile en 10 minutes" },
+            { icon: Lock, text: "Tes données t'appartiennent" },
+            { icon: ShieldCheck, text: "Mobile Money, Cartes & Wave — Powered by Chariow" },
+            { icon: Zap, text: "Optimisé pour passer les filtres ATS" },
+            { icon: Smartphone, text: "Créé sur mobile en 10 minutes" },
+            { icon: Lock, text: "Tes données t'appartiennent" },
+          ].map((badge, i) => (
+            <div key={i} className="flex items-center gap-3 text-slate-400 font-bold text-sm tracking-widest px-10 whitespace-nowrap group hover:text-indigo-600 transition-colors">
+              <badge.icon size={18} className="text-slate-300 group-hover:text-indigo-500 transition-colors flex-shrink-0" />
+              <span>{badge.text}</span>
+              <span className="mx-6 text-slate-200">◆</span>
+            </div>
+          ))}
         </div>
       </section>
 
