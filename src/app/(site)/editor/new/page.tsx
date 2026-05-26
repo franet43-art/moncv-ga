@@ -68,6 +68,7 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
   const [cvId, setCvId] = useState<string | null>(initialCvId || null)
   const [isSaving, setIsSaving] = useState(false)
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false)
+  const [showLoginModal, setShowLoginModal] = useState(false)
   const { resetCV } = useCVStore()
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -129,12 +130,7 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
 
   const handleDownloadClick = async () => {
     if (!user) {
-      toast.info("Connectez-vous pour télécharger votre CV", {
-        action: {
-          label: "Se connecter",
-          onClick: () => router.push("/login?next=/editor/new"),
-        },
-      })
+      setShowLoginModal(true)
       return
     }
 
@@ -381,6 +377,44 @@ function NewEditorInner({ initialCvId }: { initialCvId?: string }) {
         }} 
       />
       <ImportCVModal open={isImportModalOpen} onOpenChange={setIsImportModalOpen} />
+
+      {showLoginModal && (
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300"
+          onClick={() => setShowLoginModal(false)}
+        >
+          <div 
+            className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl text-center scale-in-center animate-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <User size={32} className="text-indigo-600" />
+            </div>
+            <h3 className="text-xl font-black text-slate-900 mb-3">
+              Connexion requise
+            </h3>
+            <p className="text-slate-500 mb-8 leading-relaxed">
+              Connectez-vous pour télécharger votre CV en PDF HD.
+            </p>
+            <div className="flex flex-col gap-3">
+              <Button
+                onClick={() => router.push("/login?next=/editor/new")}
+                className="w-full py-6 bg-indigo-600 text-white rounded-2xl font-black text-lg hover:bg-indigo-700 transition-colors"
+              >
+                Se connecter
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() => setShowLoginModal(false)}
+                className="w-full py-6 text-slate-500 font-bold text-lg hover:bg-slate-50 rounded-2xl"
+              >
+                Plus tard
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Content Area */}
       <main className="flex-1 max-w-[1600px] mx-auto w-full flex overflow-hidden">
         {/* Left Side: Forms */}
